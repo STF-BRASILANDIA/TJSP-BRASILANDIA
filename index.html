@@ -705,7 +705,7 @@
         }
 
         function checkStoredLogin() {
-            const storedUser = localStorage.getItem('tjsp-current-user');
+            const storedUser = localStorage.getItem('tjspUser');
             const rememberMe = localStorage.getItem('tjsp-remember-me');
             
             if (storedUser && rememberMe === 'true') {
@@ -767,8 +767,11 @@
                     currentUser = user;
                     isLoggedIn = true;
                     
-                    // Salvar no localStorage
-                    localStorage.setItem('tjsp-current-user', JSON.stringify(user));
+                    console.log('✅ Login realizado:', user);
+                    console.log('🔑 Level do usuário:', user.level);
+                    
+                    // Salvar no localStorage (usar chave consistente)
+                    localStorage.setItem('tjspUser', JSON.stringify(user));
                     localStorage.setItem('tjsp-remember-me', rememberMe.toString());
                     
                     // Registrar login no Firebase
@@ -1018,7 +1021,7 @@
                 firebaseDB.ref(`system/activeUsers/${currentUser.id}`).remove();
             }
             
-            localStorage.removeItem('tjsp-current-user');
+            localStorage.removeItem('tjspUser');
             localStorage.removeItem('tjsp-remember-me');
             
             currentUser = null;
