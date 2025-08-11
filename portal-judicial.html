@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Judicial - TJSP Brasilândia</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2310b981'/><text y='65' x='50' font-family='Arial' font-size='45' fill='white' text-anchor='middle' font-weight='bold'>⚖️</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --secondary-color: #059669;
+            --accent-color: #047857;
+            --background-dark: #0f172a;
+            --surface-dark: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #134e4a 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn {
+            @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            @apply bg-gray-600 hover:bg-gray-700 text-white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .process-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .process-card:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pendente {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-andamento {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fde68a;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .status-concluido {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .cargo-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .level-indicator {
+            background: linear-gradient(45deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .notification {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-responsive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .sidebar {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .main-content {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .nav-item {
+            @apply flex items-center px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 4px solid #10b981;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-slate-900/95 backdrop-blur-sm border-b border-green-500/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo e Título -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-gavel text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Portal Judicial</h1>
+                        <p class="text-sm text-gray-400">Juízes e Desembargadores</p>
+                    </div>
+                </div>
+
+                <!-- Informações do Usuário -->
+                <div class="flex items-center space-x-4">
+                    <!-- Notificações -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="text-gray-400 hover:text-green-400 transition-colors">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span id="notificationBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Info do Usuário -->
+                    <div class="flex items-center space-x-3 bg-slate-800/50 rounded-lg px-3 py-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p id="userName" class="text-sm font-medium text-white">Carregando...</p>
+                            <p id="userRole" class="text-xs text-gray-400">Verificando cargo...</p>
+                        </div>
+                        <span id="userLevel" class="level-indicator text-sm font-bold">Nv. 0</span>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="flex items-center space-x-2">
+                        <button onclick="window.location.href='index.html'" class="btn btn-secondary text-sm py-2 px-4">
+                            <i class="fas fa-home mr-2"></i>
+                            Voltar
+                        </button>
+                        <button id="logoutBtn" class="btn btn-danger text-sm py-2 px-4">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Layout Principal -->
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 p-4">
+            <nav class="space-y-2">
+                <div class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt text-green-400 w-5"></i>
+                    <span class="ml-3">Dashboard</span>
+                </div>
+                <div class="nav-item" data-section="processos-pendentes">
+                    <i class="fas fa-clock text-yellow-400 w-5"></i>
+                    <span class="ml-3">Processos Pendentes</span>
+                    <span id="pendentesCount" class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                </div>
+                <div class="nav-item" data-section="meus-processos">
+                    <i class="fas fa-folder text-blue-400 w-5"></i>
+                    <span class="ml-3">Meus Processos</span>
+                    <span id="meusProcessosCount" class="ml-auto bg-blue-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                </div>
+                <div class="nav-item" data-section="distribuicao">
+                    <i class="fas fa-random text-purple-400 w-5"></i>
+                    <span class="ml-3">Distribuição</span>
+                </div>
+                <div class="nav-item" data-section="advogados">
+                    <i class="fas fa-users text-cyan-400 w-5"></i>
+                    <span class="ml-3">Solicitar Advogados</span>
+                </div>
+                <div class="nav-item" data-section="decisoes">
+                    <i class="fas fa-stamp text-orange-400 w-5"></i>
+                    <span class="ml-3">Decisões</span>
+                </div>
+                <div class="nav-item" data-section="relatorios">
+                    <i class="fas fa-chart-bar text-green-400 w-5"></i>
+                    <span class="ml-3">Relatórios</span>
+                </div>
+
+                <!-- Separador -->
+                <div class="border-t border-gray-600 my-4"></div>
+
+                <!-- Acesso Rápido aos Portais -->
+                <div class="nav-item" onclick="window.open('portal-stf.html', '_blank')">
+                    <i class="fas fa-crown text-yellow-400 w-5"></i>
+                    <span class="ml-3">Portal STF</span>
+                </div>
+                <div class="nav-item" onclick="window.open('portal-ministerio-publico.html', '_blank')">
+                    <i class="fas fa-user-shield text-red-400 w-5"></i>
+                    <span class="ml-3">Portal MP</span>
+                </div>
+                <div class="nav-item" onclick="window.open('portal-advogado.html', '_blank')">
+                    <i class="fas fa-user-tie text-blue-400 w-5"></i>
+                    <span class="ml-3">Portal Advogados</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content flex-1 p-6 overflow-y-auto">
+            <!-- Dashboard -->
+            <div id="dashboard" class="section active fade-in">
+                <!-- Estatísticas Rápidas -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Processos Pendentes</p>
+                                <p id="totalPendentes" class="text-3xl font-bold text-red-400">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-clock text-red-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Em Andamento</p>
+                                <p id="totalAndamento" class="text-3xl font-bold text-yellow-400">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-cogs text-yellow-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Concluídos</p>
+                                <p id="totalConcluidos" class="text-3xl font-bold text-green-400">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Este Mês</p>
+                                <p id="totalMes" class="text-3xl font-bold text-blue-400">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-calendar text-blue-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas -->
+                <div class="card p-6 mb-8">
+                    <h3 class="text-xl font-bold text-white mb-6">Ações Rápidas</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="assumirProximo()" class="btn btn-primary flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-hand-paper"></i>
+                            <span>Assumir Próximo Processo</span>
+                        </button>
+                        <button onclick="showSection('processos-pendentes')" class="btn btn-warning flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-list"></i>
+                            <span>Ver Processos Pendentes</span>
+                        </button>
+                        <button onclick="showSection('advogados')" class="btn btn-secondary flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-users"></i>
+                            <span>Solicitar Advogados</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Processos Recentes -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold text-white mb-6">Processos Recentes</h3>
+                    <div id="processosRecentes" class="space-y-4">
+                        <!-- Será preenchido pelo JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processos Pendentes -->
+            <div id="processos-pendentes" class="section hidden fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Processos Pendentes de Distribuição</h2>
+                    <div class="flex space-x-2">
+                        <button onclick="assumirProximo()" class="btn btn-primary">
+                            <i class="fas fa-hand-paper mr-2"></i>
+                            Assumir Próximo
+                        </button>
+                        <button onclick="refreshProcessos()" class="btn btn-secondary">
+                            <i class="fas fa-sync mr-2"></i>
+                            Atualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div id="processosPendentesList" class="grid-responsive">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- Meus Processos -->
+            <div id="meus-processos" class="section hidden fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Meus Processos</h2>
+                    <button onclick="refreshMeusProcessos()" class="btn btn-secondary">
+                        <i class="fas fa-sync mr-2"></i>
+                        Atualizar
+                    </button>
+                </div>
+
+                <div id="meusProcessosList" class="grid-responsive">
+                    <!-- Será preenchido pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- Sistema de Distribuição -->
+            <div id="distribuicao" class="section hidden fade-in">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold text-white mb-6">Sistema de Distribuição Automática</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4">Configurações de Distribuição</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-300">Distribuição Automática</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="autoDistribuicao" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-300">Prioridade por Urgência</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="prioridadeUrgencia" class="sr-only peer" checked>
+                                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4">Estatísticas</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Processos Distribuídos Hoje:</span>
+                                    <span class="text-green-400 font-bold">5</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Média de Distribuição/Hora:</span>
+                                    <span class="text-blue-400 font-bold">2.3</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Tempo Médio de Resposta:</span>
+                                    <span class="text-yellow-400 font-bold">15 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button onclick="forcarDistribuicao()" class="btn btn-warning">
+                            <i class="fas fa-bolt mr-2"></i>
+                            Forçar Distribuição Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sistema de Solicitação de Advogados -->
+            <div id="advogados" class="section hidden fade-in">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold text-white mb-6">Sistema de Solicitação de Advogados</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4">Solicitar Advogado Específico</h3>
+                            
+                            <form id="solicitarAdvogadoForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-300 mb-2">Processo</label>
+                                    <select id="processoSelect" class="w-full p-3 bg-slate-700 border border-gray-600 rounded-lg text-white">
+                                        <option value="">Selecione um processo</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-300 mb-2">Advogado</label>
+                                    <select id="advogadoSelect" class="w-full p-3 bg-slate-700 border border-gray-600 rounded-lg text-white">
+                                        <option value="">Carregando advogados...</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-300 mb-2">Motivo da Solicitação</label>
+                                    <textarea id="motivoSolicitacao" rows="3" class="w-full p-3 bg-slate-700 border border-gray-600 rounded-lg text-white" placeholder="Explique o motivo da solicitação..."></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-full">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    Enviar Solicitação
+                                </button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4">Solicitações Pendentes</h3>
+                            <div id="solicitacoesPendentes" class="space-y-3 max-h-96 overflow-y-auto">
+                                <!-- Será preenchido pelo JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decisões -->
+            <div id="decisoes" class="section hidden fade-in">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold text-white mb-6">Decisões Judiciais</h2>
+                    <!-- Conteúdo será implementado -->
+                </div>
+            </div>
+
+            <!-- Relatórios -->
+            <div id="relatorios" class="section hidden fade-in">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold text-white mb-6">Relatórios</h2>
+                    <!-- Conteúdo será implementado -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === VARIÁVEIS GLOBAIS ===
+        let currentUser = null;
+        let processos = [];
+        let meusProcessos = [];
+        let advogados = [];
+        let solicitacoes = [];
+
+        // === INICIALIZAÇÃO ===
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAccess();
+            loadUserData();
+            loadProcessos();
+            loadAdvogados();
+            loadSolicitacoes();
+            setupEventListeners();
+            updateCounters();
+            
+            // Atualizar dados periodicamente
+            setInterval(updateCounters, 30000); // 30 segundos
+        });
+
+        // === VERIFICAÇÃO DE ACESSO ===
+        function checkAccess() {
+            const user = JSON.parse(localStorage.getItem('tjspUser') || '{}');
+            
+            if (!user.id || !user.permissions || !user.permissions.includes('portal-judicial')) {
+                alert('❌ Acesso negado! Você não tem permissão para acessar o Portal Judicial.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (user.level < 4) {
+                alert('❌ Nível insuficiente! Portal Judicial requer nível 4 ou superior.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            currentUser = user;
+        }
+
+        // === CARREGAR DADOS DO USUÁRIO ===
+        function loadUserData() {
+            if (!currentUser) return;
+
+            document.getElementById('userName').textContent = currentUser.name || 'Usuário';
+            document.getElementById('userRole').textContent = getRoleDisplay(currentUser.role) || 'Cargo não definido';
+            document.getElementById('userLevel').textContent = `Nv. ${currentUser.level || 0}`;
+        }
+
+        function getRoleDisplay(role) {
+            const roles = {
+                '1-juiz-estadual': '1º Juiz Estadual',
+                '2-juiz-estadual': '2º Juiz Estadual', 
+                '1-desembargador': '1º Desembargador',
+                '2-desembargador': '2º Desembargador',
+                '1-juiz-federal': '1º Juiz Federal',
+                '2-juiz-federal': '2º Juiz Federal',
+                '3-juiz-federal': '3º Juiz Federal'
+            };
+            return roles[role] || role;
+        }
+
+        // === SISTEMA DE NAVEGAÇÃO ===
+        function setupEventListeners() {
+            // Navegação sidebar
+            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+                item.addEventListener('click', () => {
+                    const section = item.getAttribute('data-section');
+                    showSection(section);
+                    
+                    // Atualizar active state
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Formulário de solicitação
+            document.getElementById('solicitarAdvogadoForm').addEventListener('submit', handleSolicitarAdvogado);
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        }
+
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Mostrar seção selecionada
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Carregar dados específicos da seção
+            if (sectionId === 'processos-pendentes') {
+                loadProcessosPendentes();
+            } else if (sectionId === 'meus-processos') {
+                loadMeusProcessos();
+            } else if (sectionId === 'advogados') {
+                loadAdvogadosSelect();
+                loadProcessosSelect();
+            }
+        }
+
+        // === SISTEMA DE PROCESSOS ===
+        function loadProcessos() {
+            // Simular dados de processos
+            processos = [
+                {
+                    id: 'PROC001',
+                    numero: '1000001-12.2024.8.26.0001',
+                    tipo: 'Ação Penal',
+                    autor: 'Ministério Público',
+                    reu: 'João Silva Santos',
+                    status: 'pendente',
+                    urgencia: 'alta',
+                    dataAbertura: '2024-01-15',
+                    descricao: 'Ação penal por tráfico de drogas'
+                },
+                {
+                    id: 'PROC002', 
+                    numero: '1000002-12.2024.8.26.0001',
+                    tipo: 'Ação Civil',
+                    autor: 'Maria Santos',
+                    reu: 'Empresa XYZ Ltda',
+                    status: 'pendente',
+                    urgencia: 'media',
+                    dataAbertura: '2024-01-16',
+                    descricao: 'Ação de indenização por danos morais'
+                },
+                {
+                    id: 'PROC003',
+                    numero: '1000003-12.2024.8.26.0001', 
+                    tipo: 'Mandado de Segurança',
+                    autor: 'Pedro Oliveira',
+                    reu: 'Prefeitura Municipal',
+                    status: 'andamento',
+                    juiz: currentUser.id,
+                    urgencia: 'alta',
+                    dataAbertura: '2024-01-14',
+                    descricao: 'MS contra ato administrativo'
+                }
+            ];
+
+            meusProcessos = processos.filter(p => p.juiz === currentUser.id);
+        }
+
+        function loadProcessosPendentes() {
+            const pendentes = processos.filter(p => p.status === 'pendente');
+            const container = document.getElementById('processosPendentesList');
+            
+            if (pendentes.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full card p-8 text-center">
+                        <i class="fas fa-inbox text-6xl text-gray-500 mb-4"></i>
+                        <p class="text-gray-400 text-lg">Nenhum processo pendente</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = pendentes.map(processo => `
+                <div class="process-card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">${processo.numero}</h3>
+                            <p class="text-gray-400">${processo.tipo}</p>
+                        </div>
+                        <span class="status-badge status-${processo.status}">
+                            ${processo.status.toUpperCase()}
+                        </span>
+                    </div>
+
+                    <div class="space-y-2 mb-4">
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            <strong>Autor:</strong> ${processo.autor}
+                        </p>
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-user mr-2"></i>
+                            <strong>Réu:</strong> ${processo.reu}
+                        </p>
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-calendar mr-2"></i>
+                            <strong>Abertura:</strong> ${formatDate(processo.dataAbertura)}
+                        </p>
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            ${processo.descricao}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs px-2 py-1 rounded-full ${getUrgenciaClass(processo.urgencia)}">
+                            ${processo.urgencia.toUpperCase()}
+                        </span>
+                        <button onclick="assumirProcesso('${processo.id}')" class="btn btn-primary text-sm py-2 px-4">
+                            <i class="fas fa-hand-paper mr-1"></i>
+                            Assumir
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadMeusProcessos() {
+            const container = document.getElementById('meusProcessosList');
+            
+            if (meusProcessos.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full card p-8 text-center">
+                        <i class="fas fa-folder-open text-6xl text-gray-500 mb-4"></i>
+                        <p class="text-gray-400 text-lg">Você não possui processos atribuídos</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = meusProcessos.map(processo => `
+                <div class="process-card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">${processo.numero}</h3>
+                            <p class="text-gray-400">${processo.tipo}</p>
+                        </div>
+                        <span class="status-badge status-${processo.status}">
+                            ${processo.status.toUpperCase()}
+                        </span>
+                    </div>
+
+                    <div class="space-y-2 mb-4">
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            <strong>Autor:</strong> ${processo.autor}
+                        </p>
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-user mr-2"></i>
+                            <strong>Réu:</strong> ${processo.reu}
+                        </p>
+                        <p class="text-sm text-gray-300">
+                            <i class="fas fa-calendar mr-2"></i>
+                            <strong>Abertura:</strong> ${formatDate(processo.dataAbertura)}
+                        </p>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs px-2 py-1 rounded-full ${getUrgenciaClass(processo.urgencia)}">
+                            ${processo.urgencia.toUpperCase()}
+                        </span>
+                        <div class="space-x-2">
+                            <button onclick="verProcesso('${processo.id}')" class="btn btn-secondary text-sm py-2 px-4">
+                                <i class="fas fa-eye mr-1"></i>
+                                Ver
+                            </button>
+                            <button onclick="decidirProcesso('${processo.id}')" class="btn btn-primary text-sm py-2 px-4">
+                                <i class="fas fa-gavel mr-1"></i>
+                                Decidir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // === SISTEMA DE ADVOGADOS ===
+        function loadAdvogados() {
+            // Simular dados de advogados
+            advogados = [
+                { id: 'adv001', name: 'Dr. Carlos Silva', oab: '123456/SP', especialidade: 'Penal' },
+                { id: 'adv002', name: 'Dra. Ana Santos', oab: '789012/SP', especialidade: 'Civil' },
+                { id: 'adv003', name: 'Dr. Pedro Oliveira', oab: '345678/SP', especialidade: 'Trabalhista' },
+                { id: 'adv004', name: 'Dra. Maria Costa', oab: '901234/SP', especialidade: 'Família' }
+            ];
+        }
+
+        function loadAdvogadosSelect() {
+            const select = document.getElementById('advogadoSelect');
+            select.innerHTML = '<option value="">Selecione um advogado</option>' +
+                advogados.map(adv => `<option value="${adv.id}">${adv.name} - OAB ${adv.oab}</option>`).join('');
+        }
+
+        function loadProcessosSelect() {
+            const select = document.getElementById('processoSelect');
+            select.innerHTML = '<option value="">Selecione um processo</option>' +
+                meusProcessos.map(proc => `<option value="${proc.id}">${proc.numero} - ${proc.tipo}</option>`).join('');
+        }
+
+        function loadSolicitacoes() {
+            solicitacoes = [
+                {
+                    id: 'SOL001',
+                    processo: 'PROC003',
+                    advogado: 'adv001',
+                    motivo: 'Necessário advogado especialista em direito penal para defesa técnica',
+                    status: 'pendente',
+                    data: '2024-01-17'
+                }
+            ];
+
+            updateSolicitacoesPendentes();
+        }
+
+        function updateSolicitacoesPendentes() {
+            const container = document.getElementById('solicitacoesPendentes');
+            const pendentes = solicitacoes.filter(s => s.status === 'pendente');
+
+            if (pendentes.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhuma solicitação pendente</p>';
+                return;
+            }
+
+            container.innerHTML = pendentes.map(sol => {
+                const processo = processos.find(p => p.id === sol.processo);
+                const advogado = advogados.find(a => a.id === sol.advogado);
+                
+                return `
+                    <div class="notification p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-white">Processo ${processo?.numero}</h4>
+                            <span class="text-xs text-gray-400">${formatDate(sol.data)}</span>
+                        </div>
+                        <p class="text-sm text-gray-300 mb-2">
+                            <strong>Advogado:</strong> ${advogado?.name}
+                        </p>
+                        <p class="text-sm text-gray-300 mb-3">${sol.motivo}</p>
+                        <div class="flex space-x-2">
+                            <button onclick="aprovarSolicitacao('${sol.id}')" class="btn btn-primary text-xs py-1 px-3">
+                                Aprovar
+                            </button>
+                            <button onclick="rejeitarSolicitacao('${sol.id}')" class="btn btn-danger text-xs py-1 px-3">
+                                Rejeitar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // === AÇÕES ===
+        function assumirProcesso(processoId) {
+            const processo = processos.find(p => p.id === processoId);
+            if (!processo) return;
+
+            if (confirm(`Deseja assumir o processo ${processo.numero}?`)) {
+                processo.status = 'andamento';
+                processo.juiz = currentUser.id;
+                meusProcessos.push(processo);
+                
+                showNotification(`✅ Processo ${processo.numero} assumido com sucesso!`, 'success');
+                updateCounters();
+                loadProcessosPendentes();
+            }
+        }
+
+        function assumirProximo() {
+            const pendentes = processos.filter(p => p.status === 'pendente');
+            if (pendentes.length === 0) {
+                showNotification('ℹ️ Não há processos pendentes para assumir', 'info');
+                return;
+            }
+
+            // Assumir processo com maior urgência
+            const processo = pendentes.sort((a, b) => {
+                const urgencia = { 'alta': 3, 'media': 2, 'baixa': 1 };
+                return urgencia[b.urgencia] - urgencia[a.urgencia];
+            })[0];
+
+            assumirProcesso(processo.id);
+        }
+
+        function handleSolicitarAdvogado(e) {
+            e.preventDefault();
+
+            const processoId = document.getElementById('processoSelect').value;
+            const advogadoId = document.getElementById('advogadoSelect').value;
+            const motivo = document.getElementById('motivoSolicitacao').value;
+
+            if (!processoId || !advogadoId || !motivo) {
+                showNotification('❌ Preencha todos os campos', 'error');
+                return;
+            }
+
+            const novaSolicitacao = {
+                id: 'SOL' + (Date.now() % 1000).toString().padStart(3, '0'),
+                processo: processoId,
+                advogado: advogadoId,
+                motivo: motivo,
+                status: 'pendente',
+                data: new Date().toISOString().split('T')[0]
+            };
+
+            solicitacoes.push(novaSolicitacao);
+            updateSolicitacoesPendentes();
+
+            // Limpar formulário
+            document.getElementById('solicitarAdvogadoForm').reset();
+            
+            showNotification('✅ Solicitação enviada com sucesso!', 'success');
+        }
+
+        function aprovarSolicitacao(solId) {
+            const solicitacao = solicitacoes.find(s => s.id === solId);
+            if (!solicitacao) return;
+
+            solicitacao.status = 'aprovada';
+            updateSolicitacoesPendentes();
+            
+            showNotification('✅ Solicitação aprovada!', 'success');
+        }
+
+        function rejeitarSolicitacao(solId) {
+            const solicitacao = solicitacoes.find(s => s.id === solId);
+            if (!solicitacao) return;
+
+            if (confirm('Tem certeza que deseja rejeitar esta solicitação?')) {
+                solicitacao.status = 'rejeitada';
+                updateSolicitacoesPendentes();
+                
+                showNotification('❌ Solicitação rejeitada', 'warning');
+            }
+        }
+
+        // === FUNÇÕES AUXILIARES ===
+        function updateCounters() {
+            const pendentes = processos.filter(p => p.status === 'pendente').length;
+            const andamento = processos.filter(p => p.status === 'andamento').length;
+            const concluidos = processos.filter(p => p.status === 'concluido').length;
+            const meusCount = meusProcessos.length;
+
+            document.getElementById('totalPendentes').textContent = pendentes;
+            document.getElementById('totalAndamento').textContent = andamento;
+            document.getElementById('totalConcluidos').textContent = concluidos;
+            document.getElementById('totalMes').textContent = pendentes + andamento + concluidos;
+
+            document.getElementById('pendentesCount').textContent = pendentes;
+            document.getElementById('meusProcessosCount').textContent = meusCount;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('pt-BR');
+        }
+
+        function getUrgenciaClass(urgencia) {
+            const classes = {
+                'alta': 'bg-red-500/20 text-red-300 border border-red-500/30',
+                'media': 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
+                'baixa': 'bg-green-500/20 text-green-300 border border-green-500/30'
+            };
+            return classes[urgencia] || classes['media'];
+        }
+
+        function showNotification(message, type) {
+            // Implementar sistema de notificações
+            alert(message);
+        }
+
+        function refreshProcessos() {
+            loadProcessos();
+            loadProcessosPendentes();
+            updateCounters();
+            showNotification('✅ Processos atualizados!', 'success');
+        }
+
+        function refreshMeusProcessos() {
+            loadMeusProcessos();
+            updateCounters();
+            showNotification('✅ Seus processos atualizados!', 'success');
+        }
+
+        function logout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                localStorage.removeItem('tjspUser');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Funções placeholder para desenvolvimento futuro
+        function verProcesso(processoId) {
+            showNotification('🔧 Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function decidirProcesso(processoId) {
+            showNotification('🔧 Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function forcarDistribuicao() {
+            showNotification('🔄 Forçando distribuição automática...', 'info');
+            setTimeout(() => {
+                showNotification('✅ Distribuição realizada!', 'success');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

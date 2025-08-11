@@ -23,6 +23,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Sistema Unificado TJSP -->
+    <script src="sistema-unificado.js"></script>
+    
     <!-- 
     ===== FIREBASE DESABILITADO PARA DESENVOLVIMENTO =====
     Para ativar Firebase em produção:
@@ -652,8 +655,8 @@
                 borderColor: 'border-green-500/50',
                 color: 'text-green-400',
                 url: 'portal-judicial.html',
-                requiredLevel: 5,
-                status: 'development'
+                requiredLevel: 4,
+                status: 'online'
             },
             'portal-stf': {
                 title: 'Portal do STF',
@@ -773,6 +776,12 @@
                     // Salvar no localStorage (usar chave consistente)
                     localStorage.setItem('tjspUser', JSON.stringify(user));
                     localStorage.setItem('tjsp-remember-me', rememberMe.toString());
+                    
+                    // Registrar login no Sistema Unificado
+                    if (window.TJSP) {
+                        window.TJSP.loginUser(user);
+                        console.log('🏛️ Usuário registrado no Sistema Unificado');
+                    }
                     
                     // Registrar login no Firebase
                     if (firebaseInitialized) {

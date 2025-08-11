@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal do STF - Supremo Tribunal Federal</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f59e0b'/><text y='65' x='50' font-family='Arial' font-size='45' fill='white' text-anchor='middle' font-weight='bold'>👑</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #fbbf24;
-            --secondary-color: #f59e0b;
+            --primary-color: #f59e0b;
+            --secondary-color: #d97706;
             --accent-color: #92400e;
             --background-dark: #0f172a;
             --surface-dark: #1e293b;
@@ -18,69 +24,160 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #451a03 100%);
             min-height: 100vh;
+            color: var(--text-primary);
         }
 
         .card {
             background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.2);
             border-radius: 16px;
             transition: all 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-4px);
-            border-color: rgba(251, 191, 36, 0.4);
-            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.1);
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.1);
         }
 
         .btn {
-            @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            cursor: pointer;
+            border: none;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #0f172a;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
         }
 
         .btn-secondary {
-            @apply bg-gray-600 hover:bg-gray-700 text-white;
+            background: #374151;
+            color: white;
+            border: 1px solid #4b5563;
         }
 
-        .portal-selector {
-            background: rgba(251, 191, 36, 0.1);
-            border: 2px solid rgba(251, 191, 36, 0.3);
-            border-radius: 12px;
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
         }
 
-        .portal-selector:hover {
-            border-color: rgba(251, 191, 36, 0.5);
-            background: rgba(251, 191, 36, 0.15);
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .portal-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .portal-card:hover {
+            border-color: rgba(245, 158, 11, 0.6);
+            background: rgba(245, 158, 11, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .status-online {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-offline {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-maintenance {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fde68a;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
         .cargo-badge {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #0f172a;
-            padding: 4px 12px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
         }
 
         .level-indicator {
-            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            background: linear-gradient(45deg, #f59e0b, #d97706);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: bold;
+        }
+
+        .sidebar {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .main-content {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(245, 158, 11, 0.2);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .stats-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card:hover {
+            border-color: rgba(245, 158, 11, 0.4);
         }
 
         .fade-in {
@@ -97,414 +194,885 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
         }
+
+        .crown-icon {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
 </head>
-<body class="text-white">
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-yellow-900/40 to-yellow-800/40 border-b border-yellow-500/20 sticky top-0 z-50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-                        <i class="fas fa-crown text-yellow-900 text-xl"></i>
+<body>
+    <!-- Header Supremo -->
+    <header class="bg-slate-900/95 backdrop-blur-sm border-b-2 border-yellow-500/30 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo STF -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-crown crown-icon text-2xl"></i>
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold text-white">Portal do STF</h1>
-                        <p class="text-yellow-200 text-sm">Supremo Tribunal Federal - Administração Central</p>
+                        <p class="text-sm text-yellow-300">Supremo Tribunal Federal - Administração Total</p>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="text-right">
-                        <div class="text-white font-semibold" id="user-name">Ministro Alexandre de Moraes</div>
-                        <div class="text-yellow-200 text-sm">Presidente do STF</div>
+
+                <!-- Info do Presidente STF -->
+                <div class="flex items-center space-x-6">
+                    <!-- Sistema Status -->
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-sm text-green-300 font-medium">Sistema Online</span>
                     </div>
-                    <button onclick="logout()" class="btn btn-secondary">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Sair
-                    </button>
+
+                    <!-- Info do Usuário -->
+                    <div class="flex items-center space-x-4 bg-slate-800/50 rounded-xl px-4 py-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-crown text-white"></i>
+                        </div>
+                        <div>
+                            <p id="userName" class="text-sm font-bold text-white">Carregando...</p>
+                            <div class="flex items-center space-x-2">
+                                <p id="userRole" class="text-xs text-yellow-300">Presidente STF</p>
+                                <span id="userLevel" class="level-indicator text-sm font-bold">Nv. 10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="flex items-center space-x-3">
+                        <button onclick="window.location.href='index.html'" class="btn btn-secondary text-sm py-2 px-4">
+                            <i class="fas fa-home mr-2"></i>
+                            Portal Principal
+                        </button>
+                        <button id="logoutBtn" class="btn btn-danger text-sm py-2 px-4">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Sair
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        
-        <!-- Welcome Section -->
-        <section class="mb-8 fade-in">
-            <div class="card p-8 text-center bg-gradient-to-r from-yellow-900/40 to-yellow-800/40">
-                <h2 class="text-4xl font-bold text-white mb-4">
-                    <i class="fas fa-crown text-yellow-400 mr-3"></i>
-                    Bem-vindo ao Portal do STF
-                </h2>
-                <p class="text-yellow-200 text-lg">
-                    Como Presidente do STF, você tem acesso total a todos os portais do sistema judiciário.
-                </p>
-                <p class="text-yellow-200 mt-2">
-                    Selecione um portal abaixo e escolha o cargo específico para acessá-lo.
-                </p>
-            </div>
-        </section>
+    <!-- Layout Principal -->
+    <div class="flex h-screen">
+        <!-- Sidebar Administrativa -->
+        <div class="sidebar w-80 p-6">
+            <nav class="space-y-3">
+                <!-- Seções Administrativas -->
+                <div class="mb-6">
+                    <h3 class="text-xs uppercase font-bold text-yellow-400 mb-3">ADMINISTRAÇÃO STF</h3>
+                    <div class="nav-item active" data-section="dashboard-stf">
+                        <i class="fas fa-tachometer-alt text-yellow-400 w-5"></i>
+                        <span class="ml-3">Dashboard STF</span>
+                    </div>
+                    <div class="nav-item" data-section="controle-portais">
+                        <i class="fas fa-network-wired text-blue-400 w-5"></i>
+                        <span class="ml-3">Controle de Portais</span>
+                        <span class="ml-auto bg-blue-500 text-white text-xs rounded-full px-2 py-1">4</span>
+                    </div>
+                    <div class="nav-item" data-section="distribuicao-automatica">
+                        <i class="fas fa-robot text-purple-400 w-5"></i>
+                        <span class="ml-3">Distribuição Automática</span>
+                    </div>
+                    <div class="nav-item" data-section="monitoramento">
+                        <i class="fas fa-chart-line text-green-400 w-5"></i>
+                        <span class="ml-3">Monitoramento</span>
+                    </div>
+                </div>
 
-        <!-- Portal Selection -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                <i class="fas fa-building text-yellow-400 mr-3"></i>
-                Acesso aos Portais
-            </h3>
-            
-            <div class="grid-responsive">
+                <!-- Seções de Trabalho STF -->
+                <div class="mb-6">
+                    <h3 class="text-xs uppercase font-bold text-yellow-400 mb-3">TRABALHO STF</h3>
+                    <div class="nav-item" data-section="meus-processos-stf">
+                        <i class="fas fa-folder text-orange-400 w-5"></i>
+                        <span class="ml-3">Meus Processos STF</span>
+                        <span id="meusProcessosSTFCount" class="ml-auto bg-orange-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                    </div>
+                    <div class="nav-item" data-section="recursos-extraordinarios">
+                        <i class="fas fa-balance-scale text-red-400 w-5"></i>
+                        <span class="ml-3">Recursos Extraordinários</span>
+                        <span id="recursosCount" class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                    </div>
+                    <div class="nav-item" data-section="acoes-diretas">
+                        <i class="fas fa-gavel text-cyan-400 w-5"></i>
+                        <span class="ml-3">Ações Diretas</span>
+                    </div>
+                    <div class="nav-item" data-section="decisoes-stf">
+                        <i class="fas fa-stamp text-yellow-400 w-5"></i>
+                        <span class="ml-3">Decisões STF</span>
+                    </div>
+                </div>
+
+                <!-- Acesso aos Portais -->
+                <div>
+                    <h3 class="text-xs uppercase font-bold text-yellow-400 mb-3">ACESSO DIRETO</h3>
+                    <div class="nav-item" onclick="abrirPortal('portal-judicial.html')">
+                        <i class="fas fa-gavel text-green-400 w-5"></i>
+                        <span class="ml-3">Portal Judicial</span>
+                        <i class="fas fa-external-link-alt ml-auto text-xs"></i>
+                    </div>
+                    <div class="nav-item" onclick="abrirPortal('portal-ministerio-publico.html')">
+                        <i class="fas fa-user-shield text-red-400 w-5"></i>
+                        <span class="ml-3">Portal MP</span>
+                        <i class="fas fa-external-link-alt ml-auto text-xs"></i>
+                    </div>
+                    <div class="nav-item" onclick="abrirPortal('portal-advogado.html')">
+                        <i class="fas fa-user-tie text-blue-400 w-5"></i>
+                        <span class="ml-3">Portal Advogados</span>
+                        <i class="fas fa-external-link-alt ml-auto text-xs"></i>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content flex-1 p-8 overflow-y-auto">
+            <!-- Dashboard STF -->
+            <div id="dashboard-stf" class="section active fade-in">
+                <!-- Boas-vindas Presidenciais -->
+                <div class="card p-8 mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-white mb-2">Bem-vindo ao STF, Presidente!</h2>
+                            <p class="text-gray-300 text-lg">Controle total do Sistema Judicial Unificado - GTA RP Brasilândia</p>
+                        </div>
+                        <div class="text-6xl text-yellow-400">
+                            <i class="fas fa-crown crown-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas Gerais do Sistema -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stats-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Processos Ativos</p>
+                                <p id="totalProcessosAtivos" class="text-3xl font-bold text-blue-400">0</p>
+                                <p class="text-xs text-gray-500">Em todos os portais</p>
+                            </div>
+                            <div class="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-folder-open text-blue-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Usuários Online</p>
+                                <p id="usuariosOnline" class="text-3xl font-bold text-green-400">0</p>
+                                <p class="text-xs text-gray-500">Todos os portais</p>
+                            </div>
+                            <div class="w-14 h-14 bg-green-500/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-users text-green-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Recursos no STF</p>
+                                <p id="totalRecursosSTF" class="text-3xl font-bold text-red-400">0</p>
+                                <p class="text-xs text-gray-500">Aguardando decisão</p>
+                            </div>
+                            <div class="w-14 h-14 bg-red-500/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-balance-scale text-red-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Decisões Hoje</p>
+                                <p id="decisoesHoje" class="text-3xl font-bold text-yellow-400">0</p>
+                                <p class="text-xs text-gray-500">Todas as instâncias</p>
+                            </div>
+                            <div class="w-14 h-14 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-gavel text-yellow-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas Presidenciais -->
+                <div class="card p-6 mb-8">
+                    <h3 class="text-xl font-bold text-white mb-6">Ações Presidenciais</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <button onclick="assumirRecursoExtraordinario()" class="btn btn-warning flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-hand-paper"></i>
+                            <span>Assumir RE</span>
+                        </button>
+                        <button onclick="showSection('distribuicao-automatica')" class="btn btn-primary flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-robot"></i>
+                            <span>Distribuição</span>
+                        </button>
+                        <button onclick="showSection('controle-portais')" class="btn btn-secondary flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Controlar Portais</span>
+                        </button>
+                        <button onclick="gerarRelatorioGeral()" class="btn btn-success flex items-center justify-center space-x-2 py-4">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Relatório</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sistema Unificado em Tempo Real -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Últimas Atividades -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-white mb-4">Atividades Recentes - Sistema Unificado</h3>
+                        <div id="atividadesRecentes" class="space-y-3 max-h-80 overflow-y-auto">
+                            <!-- Será preenchido pelo JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Status dos Portais -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-white mb-4">Status dos Portais</h3>
+                        <div id="statusPortais" class="space-y-3">
+                            <!-- Será preenchido pelo JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controle de Portais -->
+            <div id="controle-portais" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Controle Total dos Portais</h2>
                 
-                <!-- Portal dos Advogados -->
-                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('advogado')">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-user-tie text-white text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold text-lg mb-2">Portal dos Advogados</h4>
-                        <p class="text-gray-300 text-sm mb-4">Gestão de processos e documentos para advogados</p>
-                        
-                        <!-- Cargos Disponíveis -->
-                        <div class="mb-4">
-                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
-                            <div class="flex flex-wrap gap-2 justify-center">
-                                <span class="cargo-badge">Advogado 1ª & 2ª Instância</span>
-                                <span class="cargo-badge">Defensor Público</span>
-                                <span class="cargo-badge">Advogado Licenciado</span>
-                                <span class="cargo-badge">Presidente da OAB</span>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Lista de Portais -->
+                    <div class="space-y-6">
+                        <!-- Portal Judicial -->
+                        <div class="portal-card p-6" onclick="abrirPortal('portal-judicial.html')">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-gavel text-green-400 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-white">Portal Judicial</h3>
+                                        <p class="text-gray-400 text-sm">Juízes e Desembargadores</p>
+                                    </div>
+                                </div>
+                                <span class="status-online px-3 py-1 rounded-full text-sm font-semibold">ONLINE</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-400">
+                                <span>Usuários: <strong class="text-white">12</strong></span>
+                                <span>Processos: <strong class="text-white">45</strong></span>
+                                <span>Nível Min: <strong class="text-green-400">4</strong></span>
                             </div>
                         </div>
-                        
-                        <div class="level-indicator text-sm">
-                            <i class="fas fa-shield-alt mr-1"></i>
-                            Níveis 1-6
+
+                        <!-- Portal MP -->
+                        <div class="portal-card p-6" onclick="abrirPortal('portal-ministerio-publico.html')">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-user-shield text-red-400 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-white">Portal MP</h3>
+                                        <p class="text-gray-400 text-sm">Ministério Público</p>
+                                    </div>
+                                </div>
+                                <span class="status-online px-3 py-1 rounded-full text-sm font-semibold">ONLINE</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-400">
+                                <span>Usuários: <strong class="text-white">8</strong></span>
+                                <span>Processos: <strong class="text-white">23</strong></span>
+                                <span>Nível Min: <strong class="text-red-400">3</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Portal Advogados -->
+                        <div class="portal-card p-6" onclick="abrirPortal('portal-advogado.html')">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-user-tie text-blue-400 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-white">Portal Advogados</h3>
+                                        <p class="text-gray-400 text-sm">Advogados e Defensores</p>
+                                    </div>
+                                </div>
+                                <span class="status-online px-3 py-1 rounded-full text-sm font-semibold">ONLINE</span>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-400">
+                                <span>Usuários: <strong class="text-white">25</strong></span>
+                                <span>Processos: <strong class="text-white">67</strong></span>
+                                <span>Nível Min: <strong class="text-blue-400">1</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controles Administrativos -->
+                    <div class="space-y-6">
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-white mb-4">Controles do Sistema</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-300">Sistema de Sincronização</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="sincronizacao" class="sr-only peer" checked>
+                                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-300">Notificações em Tempo Real</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="notificacoes" class="sr-only peer" checked>
+                                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-300">Log de Atividades</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="logging" class="sr-only peer" checked>
+                                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 space-y-2">
+                                <button onclick="reiniciarSistema()" class="btn btn-warning w-full">
+                                    <i class="fas fa-sync mr-2"></i>
+                                    Reiniciar Sistema Completo
+                                </button>
+                                <button onclick="backupSistema()" class="btn btn-success w-full">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Backup do Sistema
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-white mb-4">Estatísticas de Uso</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Uptime do Sistema:</span>
+                                    <span class="text-green-400 font-bold">99.8%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Processos/Hora:</span>
+                                    <span class="text-blue-400 font-bold">12.5</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Tempo Médio Resposta:</span>
+                                    <span class="text-yellow-400 font-bold">0.8s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">Usuários Simultâneos:</span>
+                                    <span class="text-purple-400 font-bold">45</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Portal do Ministério Público -->
-                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('mp')">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-user-shield text-white text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold text-lg mb-2">Portal do Ministério Público</h4>
-                        <p class="text-gray-300 text-sm mb-4">Investigações, denúncias e procedimentos ministeriais</p>
-                        
-                        <!-- Cargos Disponíveis -->
-                        <div class="mb-4">
-                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
-                            <div class="flex flex-wrap gap-2 justify-center">
-                                <span class="cargo-badge">2º ao 6º Promotor</span>
-                                <span class="cargo-badge">1º Promotor</span>
-                                <span class="cargo-badge">Procurador Geral</span>
-                                <span class="cargo-badge">Procurador da República</span>
-                            </div>
-                        </div>
-                        
-                        <div class="level-indicator text-sm">
-                            <i class="fas fa-shield-alt mr-1"></i>
-                            Níveis 3-7
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Portal Judicial -->
-                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('judicial')">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-gavel text-white text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold text-lg mb-2">Portal Judicial</h4>
-                        <p class="text-gray-300 text-sm mb-4">Área restrita para magistrados e julgamentos</p>
-                        
-                        <!-- Cargos Disponíveis -->
-                        <div class="mb-4">
-                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
-                            <div class="flex flex-wrap gap-2 justify-center">
-                                <span class="cargo-badge">2º ao 4º Juiz Estadual</span>
-                                <span class="cargo-badge">1º Juiz Estadual</span>
-                                <span class="cargo-badge">Desembargador</span>
-                                <span class="cargo-badge">Juiz Federal</span>
-                            </div>
-                        </div>
-                        
-                        <div class="level-indicator text-sm">
-                            <i class="fas fa-shield-alt mr-1"></i>
-                            Níveis 5-10
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Portal dos Oficiais de Justiça -->
-                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('oficiais')">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-file-signature text-white text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold text-lg mb-2">Portal dos Oficiais de Justiça</h4>
-                        <p class="text-gray-300 text-sm mb-4">Cumprimento de mandados e diligências judiciais</p>
-                        
-                        <!-- Cargos Disponíveis -->
-                        <div class="mb-4">
-                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
-                            <div class="flex flex-wrap gap-2 justify-center">
-                                <span class="cargo-badge">1º Oficial - 1ª Instância</span>
-                                <span class="cargo-badge">1º Oficial - 2ª Instância</span>
-                            </div>
-                        </div>
-                        
-                        <div class="level-indicator text-sm">
-                            <i class="fas fa-shield-alt mr-1"></i>
-                            Níveis 2-3
-                        </div>
-                    </div>
-                </div>
-
             </div>
-        </section>
 
-        <!-- Administrative Tools -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
-                <i class="fas fa-tools text-yellow-400 mr-3"></i>
-                Ferramentas Administrativas
-            </h3>
-            
-            <div class="grid-responsive">
+            <!-- Distribuição Automática -->
+            <div id="distribuicao-automatica" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Sistema de Distribuição Automática</h2>
                 
-                <!-- Sistema de Usuários -->
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-users text-white text-2xl"></i>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Configurações -->
+                    <div class="lg:col-span-2">
+                        <div class="card p-6">
+                            <h3 class="text-xl font-bold text-white mb-6">Configurações de Distribuição</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white mb-4">Regras Gerais</h4>
+                                    
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Distribuição Automática</span>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" id="autoDistribuicao" class="sr-only peer" checked>
+                                                <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Prioridade por Urgência</span>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" id="prioridadeUrgencia" class="sr-only peer" checked>
+                                                <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-300">Balanceamento de Carga</span>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" id="balanceamento" class="sr-only peer" checked>
+                                                <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white mb-4">Intervalos</h4>
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-gray-300 mb-2">Intervalo de Verificação (segundos)</label>
+                                            <input type="number" id="intervaloVerificacao" value="30" class="w-full p-3 bg-slate-700 border border-gray-600 rounded-lg text-white">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-gray-300 mb-2">Máximo por Juiz</label>
+                                            <input type="number" id="maxPorJuiz" value="10" class="w-full p-3 bg-slate-700 border border-gray-600 rounded-lg text-white">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-gray-300 mb-2">Timeout (minutos)</label>
+                                            <input type="number" id="timeoutDistribuicao" value="5" class="w-full p-3 bg-slate-700 border border-gray-600 rounded-lg text-white">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 flex space-x-4">
+                                <button onclick="salvarConfiguracoes()" class="btn btn-primary">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Salvar Configurações
+                                </button>
+                                <button onclick="forcarDistribuicaoGeral()" class="btn btn-warning">
+                                    <i class="fas fa-bolt mr-2"></i>
+                                    Forçar Distribuição Agora
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="text-white font-bold text-lg mb-2">Gerenciar Usuários</h4>
-                    <p class="text-gray-300 text-sm mb-4">Adicionar, remover e modificar permissões de usuários</p>
-                    <button onclick="showSection('usuarios')" class="btn btn-primary w-full">
-                        Gerenciar
-                    </button>
+
+                    <!-- Estatísticas -->
+                    <div>
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-white mb-4">Estatísticas</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-300 text-sm">Distribuídos Hoje</span>
+                                        <span class="text-green-400 font-bold">23</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-300 text-sm">Taxa de Sucesso</span>
+                                        <span class="text-blue-400 font-bold">98%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 98%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-300 text-sm">Tempo Médio</span>
+                                        <span class="text-yellow-400 font-bold">2.3min</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-2">
+                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 space-y-2">
+                                <button onclick="verLogDistribuicao()" class="btn btn-secondary w-full text-sm">
+                                    <i class="fas fa-list mr-2"></i>
+                                    Ver Log
+                                </button>
+                                <button onclick="resetarEstatisticas()" class="btn btn-danger w-full text-sm">
+                                    <i class="fas fa-trash mr-2"></i>
+                                    Reset Stats
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoramento -->
+            <div id="monitoramento" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Monitoramento do Sistema</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Gráfico de Atividades -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-white mb-4">Atividades por Hora</h3>
+                        <div class="h-64 bg-slate-800/50 rounded-lg flex items-center justify-center">
+                            <p class="text-gray-400">📊 Gráfico em desenvolvimento</p>
+                        </div>
+                    </div>
+
+                    <!-- Performance -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-white mb-4">Performance do Sistema</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-300">CPU Usage</span>
+                                    <span class="text-green-400 font-bold">45%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-3">
+                                    <div class="bg-green-500 h-3 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-300">Memory Usage</span>
+                                    <span class="text-yellow-400 font-bold">67%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-3">
+                                    <div class="bg-yellow-500 h-3 rounded-full" style="width: 67%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-300">Network I/O</span>
+                                    <span class="text-blue-400 font-bold">23%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-3">
+                                    <div class="bg-blue-500 h-3 rounded-full" style="width: 23%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Relatórios Gerais -->
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                <!-- Log do Sistema -->
+                <div class="card p-6">
+                    <h3 class="text-lg font-bold text-white mb-4">Log do Sistema - Últimas 24h</h3>
+                    <div id="systemLog" class="bg-slate-900 rounded-lg p-4 h-64 overflow-y-auto font-mono text-sm">
+                        <!-- Será preenchido pelo JavaScript -->
                     </div>
-                    <h4 class="text-white font-bold text-lg mb-2">Relatórios Gerais</h4>
-                    <p class="text-gray-300 text-sm mb-4">Estatísticas e métricas de todos os portais</p>
-                    <button onclick="showSection('relatorios')" class="btn btn-primary w-full">
-                        Visualizar
-                    </button>
                 </div>
+            </div>
 
-                <!-- Configurações do Sistema -->
-                <div class="card p-6 text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-cog text-white text-2xl"></i>
-                    </div>
-                    <h4 class="text-white font-bold text-lg mb-2">Configurações</h4>
-                    <p class="text-gray-300 text-sm mb-4">Ajustes gerais do sistema judiciário</p>
-                    <button onclick="showSection('configuracoes')" class="btn btn-primary w-full">
-                        Configurar
-                    </button>
+            <!-- Meus Processos STF -->
+            <div id="meus-processos-stf" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Meus Processos no STF</h2>
+                <div class="card p-6">
+                    <p class="text-gray-400 text-center py-8">🔧 Seção em desenvolvimento - Processos específicos do STF</p>
                 </div>
-
             </div>
-        </section>
 
-    </main>
+            <!-- Recursos Extraordinários -->
+            <div id="recursos-extraordinarios" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Recursos Extraordinários</h2>
+                <div class="card p-6">
+                    <p class="text-gray-400 text-center py-8">🔧 Seção em desenvolvimento - Sistema de Recursos Extraordinários</p>
+                </div>
+            </div>
 
-    <!-- Modal de Seleção de Cargo -->
-    <div id="cargoModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-        <div class="card p-8 max-w-md w-full mx-4">
-            <div class="text-center mb-6">
-                <h3 class="text-xl font-bold text-white mb-2">Selecionar Cargo</h3>
-                <p class="text-gray-300 text-sm">Escolha o cargo específico para acessar o portal</p>
+            <!-- Ações Diretas -->
+            <div id="acoes-diretas" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Ações Diretas de Inconstitucionalidade</h2>
+                <div class="card p-6">
+                    <p class="text-gray-400 text-center py-8">🔧 Seção em desenvolvimento - Sistema de ADI/ADC</p>
+                </div>
             </div>
-            
-            <div id="cargoOptions" class="space-y-3 mb-6">
-                <!-- Options will be populated by JavaScript -->
-            </div>
-            
-            <div class="flex gap-3">
-                <button onclick="closeCargoModal()" class="btn btn-secondary flex-1">Cancelar</button>
-                <button id="accessPortalBtn" onclick="accessSelectedPortal()" class="btn btn-primary flex-1">Acessar Portal</button>
+
+            <!-- Decisões STF -->
+            <div id="decisoes-stf" class="section hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Decisões do STF</h2>
+                <div class="card p-6">
+                    <p class="text-gray-400 text-center py-8">🔧 Seção em desenvolvimento - Sistema de Decisões STF</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let selectedPortal = null;
-        let selectedCargo = null;
-
-        const portalCargos = {
-            'advogado': {
-                url: 'portal-advogado.html',
-                cargos: [
-                    { id: 'advogado-licenciado', name: 'Advogado Licenciado', description: 'Nível 1 - Funções essenciais à justiça' },
-                    { id: 'advogado-instancia', name: 'Advogado 1ª & 2ª Instância', description: 'Nível 1 - Atuação em todas as instâncias' },
-                    { id: 'defensor', name: 'Defensor Público 1ª & 2ª Instância', description: 'Nível 1 - Defesa dos necessitados' },
-                    { id: 'presidente-oab', name: 'Presidente da OAB', description: 'Nível 6 - Liderança da advocacia' }
-                ]
-            },
-            'mp': {
-                url: 'portal-ministerio-publico.html',
-                cargos: [
-                    { id: '2-6-promotor', name: '2º ao 6º Promotor - 1ª Instância', description: 'Nível 3 - Promotores auxiliares' },
-                    { id: '1-promotor', name: '1º Promotor - Líder da Promotoria Geral', description: 'Nível 4 - Líder dos promotores' },
-                    { id: '3-procurador', name: '3º Procurador Geral de Justiça - 1ª Instância', description: 'Nível 5 - Procurador de primeira instância' },
-                    { id: '2-procurador', name: '2º Procurador Geral de Justiça - 2ª Instância', description: 'Nível 6 - Procurador de segunda instância' },
-                    { id: '1-procurador', name: '1º Procurador Geral da República', description: 'Nível 7 - Liderança do MP Federal' }
-                ]
-            },
-            'judicial': {
-                url: 'portal-judicial.html',
-                cargos: [
-                    { id: '2-4-juiz-estadual', name: '2º ao 4º Juiz Estadual - 1ª Instância', description: 'Nível 4 - Juízes de base' },
-                    { id: '1-juiz-estadual', name: '1º Juiz Estadual - 1ª Instância', description: 'Nível 5 - Juiz principal de primeira instância' },
-                    { id: '3-desembargador', name: '3º Desembargador', description: 'Nível 6 - Desembargador júnior' },
-                    { id: '2-desembargador', name: '2º Desembargador', description: 'Nível 6 - Desembargador intermediário' },
-                    { id: '1-desembargador', name: '1º Desembargador', description: 'Nível 7 - Liderança dos desembargadores' },
-                    { id: '3-juiz-federal', name: '3º Juiz Federal', description: 'Nível 8 - Alta cúpula federal' },
-                    { id: '2-juiz-federal', name: '2º Juiz Federal', description: 'Nível 9 - Cúpula da Justiça Federal' },
-                    { id: '1-juiz-federal', name: '1º Juiz Federal - Presidente STF/STJ/STB', description: 'Nível 10 - Autoridade máxima' }
-                ]
-            },
-            'oficiais': {
-                url: 'portal-oficiais-justica.html',
-                cargos: [
-                    { id: '1-oficial-1-instancia', name: '1º Oficial de Justiça - 1ª Instância', description: 'Nível 2 - Cumprimento de mandados' },
-                    { id: '1-oficial-2-instancia', name: '1º Oficial de Justiça - 2ª Instância', description: 'Nível 3 - Oficial sênior' }
-                ]
-            }
+        // === VARIÁVEIS GLOBAIS ===
+        let currentUser = null;
+        let systemData = {
+            processosAtivos: 0,
+            usuariosOnline: 0,
+            recursosSTF: 0,
+            decisoesHoje: 0
         };
 
-        function selectPortal(portal) {
-            selectedPortal = portal;
-            showCargoModal(portal);
-        }
+        // === INICIALIZAÇÃO ===
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSTFAccess();
+            loadUserData();
+            loadSystemData();
+            setupEventListeners();
+            startRealTimeUpdates();
+        });
 
-        function showCargoModal(portal) {
-            const modal = document.getElementById('cargoModal');
-            const cargoOptions = document.getElementById('cargoOptions');
+        // === VERIFICAÇÃO DE ACESSO STF ===
+        function checkSTFAccess() {
+            const user = JSON.parse(localStorage.getItem('tjspUser') || '{}');
             
-            cargoOptions.innerHTML = '';
-            
-            portalCargos[portal].cargos.forEach(cargo => {
-                const option = document.createElement('div');
-                option.className = 'cursor-pointer p-3 rounded-lg border-2 border-transparent hover:border-yellow-400 transition-all';
-                option.onclick = () => selectCargo(cargo.id);
-                
-                option.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <input type="radio" name="cargo" value="${cargo.id}" class="text-yellow-500">
-                        <div>
-                            <div class="text-white font-semibold">${cargo.name}</div>
-                            <div class="text-gray-400 text-sm">${cargo.description}</div>
-                        </div>
-                    </div>
-                `;
-                
-                cargoOptions.appendChild(option);
-            });
-            
-            modal.classList.remove('hidden');
-        }
-
-        function selectCargo(cargoId) {
-            selectedCargo = cargoId;
-            // Update radio buttons
-            const radios = document.querySelectorAll('input[name="cargo"]');
-            radios.forEach(radio => {
-                radio.checked = radio.value === cargoId;
-            });
-            // Update visual selection
-            const options = document.querySelectorAll('#cargoOptions > div');
-            options.forEach(option => {
-                option.classList.remove('border-yellow-400', 'bg-yellow-400/10');
-                if (option.onclick.toString().includes(cargoId)) {
-                    option.classList.add('border-yellow-400', 'bg-yellow-400/10');
-                }
-            });
-        }
-
-        function closeCargoModal() {
-            document.getElementById('cargoModal').classList.add('hidden');
-            selectedPortal = null;
-            selectedCargo = null;
-        }
-
-        function accessSelectedPortal() {
-            if (!selectedPortal || !selectedCargo) {
-                alert('Por favor, selecione um cargo antes de prosseguir.');
+            if (!user.id || !user.permissions || !user.permissions.includes('portal-stf')) {
+                alert('❌ Acesso negado! Você não tem permissão para acessar o Portal STF.');
+                window.location.href = 'index.html';
                 return;
             }
 
-            const portal = portalCargos[selectedPortal];
-            
-            // Store selected cargo in localStorage for the target portal
-            localStorage.setItem('adminSelectedCargo', JSON.stringify({
-                portal: selectedPortal,
-                cargo: selectedCargo,
-                timestamp: Date.now()
-            }));
+            if (user.level < 10) {
+                alert('❌ Nível insuficiente! Portal STF requer nível 10 (Presidente STF).');
+                window.location.href = 'index.html';
+                return;
+            }
 
-            // Redirect to the selected portal
-            window.location.href = portal.url;
+            currentUser = user;
+        }
+
+        // === CARREGAR DADOS DO USUÁRIO ===
+        function loadUserData() {
+            if (!currentUser) return;
+
+            document.getElementById('userName').textContent = currentUser.name || 'Presidente STF';
+            document.getElementById('userRole').textContent = getRoleDisplay(currentUser.role) || '1º Juiz Federal';
+            document.getElementById('userLevel').textContent = `Nv. ${currentUser.level || 10}`;
+        }
+
+        function getRoleDisplay(role) {
+            const roles = {
+                '1-juiz-federal': '1º Juiz Federal - Presidente STF',
+                '2-juiz-federal': '2º Juiz Federal',
+                '3-juiz-federal': '3º Juiz Federal'
+            };
+            return roles[role] || 'Juiz Federal';
+        }
+
+        // === SISTEMA DE NAVEGAÇÃO ===
+        function setupEventListeners() {
+            // Navegação sidebar
+            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+                item.addEventListener('click', () => {
+                    const section = item.getAttribute('data-section');
+                    showSection(section);
+                    
+                    // Atualizar active state
+                    document.querySelectorAll('.nav-item[data-section]').forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        }
+
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Mostrar seção selecionada
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Carregar dados específicos da seção
+            if (sectionId === 'monitoramento') {
+                loadSystemLog();
+            } else if (sectionId === 'controle-portais') {
+                updatePortalStatus();
+            }
+        }
+
+        // === DADOS DO SISTEMA ===
+        function loadSystemData() {
+            // Simular dados do sistema
+            systemData = {
+                processosAtivos: Math.floor(Math.random() * 100) + 150,
+                usuariosOnline: Math.floor(Math.random() * 50) + 25,
+                recursosSTF: Math.floor(Math.random() * 20) + 5,
+                decisoesHoje: Math.floor(Math.random() * 10) + 3
+            };
+
+            updateDashboard();
+            loadAtividadesRecentes();
+            loadStatusPortais();
+        }
+
+        function updateDashboard() {
+            document.getElementById('totalProcessosAtivos').textContent = systemData.processosAtivos;
+            document.getElementById('usuariosOnline').textContent = systemData.usuariosOnline;
+            document.getElementById('totalRecursosSTF').textContent = systemData.recursosSTF;
+            document.getElementById('decisoesHoje').textContent = systemData.decisoesHoje;
+        }
+
+        function loadAtividadesRecentes() {
+            const atividades = [
+                { tipo: 'processo', texto: 'Novo processo distribuído no Portal Judicial', tempo: '2 min atrás', icon: 'fa-gavel', color: 'text-green-400' },
+                { tipo: 'usuario', texto: 'Dr. Carlos Silva entrou no Portal Advogados', tempo: '5 min atrás', icon: 'fa-user-tie', color: 'text-blue-400' },
+                { tipo: 'decisao', texto: 'Sentença publicada - Processo 1000123', tempo: '12 min atrás', icon: 'fa-stamp', color: 'text-yellow-400' },
+                { tipo: 'recurso', texto: 'Novo RE recebido no STF', tempo: '18 min atrás', icon: 'fa-balance-scale', color: 'text-red-400' },
+                { tipo: 'sistema', texto: 'Backup automático realizado', tempo: '25 min atrás', icon: 'fa-save', color: 'text-purple-400' }
+            ];
+
+            const container = document.getElementById('atividadesRecentes');
+            container.innerHTML = atividades.map(atividade => `
+                <div class="flex items-start space-x-3 p-3 bg-slate-800/30 rounded-lg">
+                    <div class="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center">
+                        <i class="fas ${atividade.icon} ${atividade.color} text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-white">${atividade.texto}</p>
+                        <p class="text-xs text-gray-400">${atividade.tempo}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadStatusPortais() {
+            const portais = [
+                { nome: 'Portal Judicial', status: 'online', usuarios: 12, processos: 45 },
+                { nome: 'Portal MP', status: 'online', usuarios: 8, processos: 23 },
+                { nome: 'Portal Advogados', status: 'online', usuarios: 25, processos: 67 },
+                { nome: 'Portal STF', status: 'online', usuarios: 1, processos: 5 }
+            ];
+
+            const container = document.getElementById('statusPortais');
+            container.innerHTML = portais.map(portal => `
+                <div class="flex items-center justify-between p-3 bg-slate-800/30 rounded-lg">
+                    <div>
+                        <p class="text-sm font-medium text-white">${portal.nome}</p>
+                        <p class="text-xs text-gray-400">${portal.usuarios} usuários • ${portal.processos} processos</p>
+                    </div>
+                    <span class="status-${portal.status} px-2 py-1 rounded-full text-xs font-semibold">
+                        ${portal.status.toUpperCase()}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function loadSystemLog() {
+            const logs = [
+                '[2024-01-17 10:30:15] INFO: Sistema iniciado com sucesso',
+                '[2024-01-17 10:30:16] INFO: Portais conectados: 4/4',
+                '[2024-01-17 10:32:45] INFO: Processo PROC001 distribuído automaticamente',
+                '[2024-01-17 10:35:12] INFO: Usuário admin logado no Portal STF',
+                '[2024-01-17 10:37:23] INFO: Backup automático iniciado',
+                '[2024-01-17 10:37:45] INFO: Backup concluído com sucesso',
+                '[2024-01-17 10:40:11] INFO: Sincronização entre portais ativa',
+                '[2024-01-17 10:42:33] INFO: Novo processo recebido do Portal MP',
+                '[2024-01-17 10:45:07] INFO: Decisão publicada - Processo 1000123',
+                '[2024-01-17 10:47:21] INFO: Performance do sistema: OK',
+            ];
+
+            const container = document.getElementById('systemLog');
+            container.innerHTML = logs.reverse().map(log => `<div class="text-green-300 mb-1">${log}</div>`).join('');
+        }
+
+        // === AÇÕES ADMINISTRATIVAS ===
+        function abrirPortal(portalUrl) {
+            window.open(portalUrl, '_blank');
+        }
+
+        function assumirRecursoExtraordinario() {
+            showNotification('🔧 Funcionalidade em desenvolvimento - Sistema de Recursos Extraordinários', 'info');
+        }
+
+        function gerarRelatorioGeral() {
+            showNotification('📊 Gerando relatório geral do sistema...', 'info');
+            setTimeout(() => {
+                showNotification('✅ Relatório gerado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function reiniciarSistema() {
+            if (confirm('⚠️ Tem certeza que deseja reiniciar todo o sistema? Isso afetará todos os portais.')) {
+                showNotification('🔄 Reiniciando sistema completo...', 'warning');
+                setTimeout(() => {
+                    showNotification('✅ Sistema reiniciado com sucesso!', 'success');
+                }, 3000);
+            }
+        }
+
+        function backupSistema() {
+            showNotification('💾 Iniciando backup completo do sistema...', 'info');
+            setTimeout(() => {
+                showNotification('✅ Backup realizado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function forcarDistribuicaoGeral() {
+            showNotification('🤖 Forçando distribuição automática em todos os portais...', 'info');
+            setTimeout(() => {
+                showNotification('✅ Distribuição realizada com sucesso!', 'success');
+            }, 1500);
+        }
+
+        function salvarConfiguracoes() {
+            showNotification('💾 Salvando configurações de distribuição...', 'info');
+            setTimeout(() => {
+                showNotification('✅ Configurações salvas!', 'success');
+            }, 1000);
+        }
+
+        function verLogDistribuicao() {
+            showNotification('📋 Abrindo log de distribuição...', 'info');
+        }
+
+        function resetarEstatisticas() {
+            if (confirm('Tem certeza que deseja resetar todas as estatísticas?')) {
+                showNotification('🗑️ Estatísticas resetadas!', 'warning');
+            }
+        }
+
+        function updatePortalStatus() {
+            loadStatusPortais();
+        }
+
+        // === SISTEMA EM TEMPO REAL ===
+        function startRealTimeUpdates() {
+            // Atualizar dados a cada 10 segundos
+            setInterval(() => {
+                loadSystemData();
+                updatePortalStatus();
+            }, 10000);
+
+            // Simular notificações em tempo real
+            setInterval(() => {
+                const notifications = [
+                    '📄 Novo processo recebido',
+                    '✅ Processo decidido',
+                    '👤 Usuário conectado',
+                    '🔄 Sistema sincronizado'
+                ];
+                
+                const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+                // Implementar sistema de notificações push aqui
+            }, 30000);
+        }
+
+        // === FUNÇÕES AUXILIARES ===
+        function showNotification(message, type) {
+            // Sistema de notificações
+            alert(message);
         }
 
         function logout() {
-            localStorage.removeItem('tjspUser');
-            localStorage.removeItem('adminSelectedCargo');
-            window.location.href = 'index.html';
-        }
-
-        function showSection(section) {
-            alert(`Seção "${section}" em desenvolvimento. Será implementada na próxima versão.`);
-        }
-
-        // Check if user has admin access
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(localStorage.getItem('tjspUser') || '{}');
-            
-            console.log('👤 Usuário atual:', user); // Debug
-            
-            // Se não há usuário logado OU se o usuário não tem nível 10
-            if (!user.id || user.level !== 10) {
-                console.log('⚠️ Usuário sem acesso. Level:', user.level);
-                
-                // Se não há usuário, fazer login automático
-                if (!user.id) {
-                    const adminUser = {
-                        id: 'admin001',
-                        name: '1º Juiz Federal Alexandre de Moraes',
-                        email: 'presidente@stf.jus.br',
-                        role: '1-juiz-federal',
-                        permissions: ['portal-stf', 'portal-judicial', 'portal-ministerio-publico', 'portal-advogado', 'portal-oficiais-justica'],
-                        level: 10,
-                        loginTime: Date.now(),
-                        lastActivity: Date.now()
-                    };
-                    
-                    localStorage.setItem('tjspUser', JSON.stringify(adminUser));
-                    console.log('🔑 Login automático realizado');
-                    
-                    // Recarregar página para aplicar as mudanças
-                    window.location.reload();
-                    return;
-                } else {
-                    // Usuário logado mas sem nível adequado
-                    alert(`Acesso negado. Apenas usuários de nível 10 podem acessar este portal. Seu nível: ${user.level || 'indefinido'}`);
-                    window.location.href = 'index.html';
-                    return;
-                }
+            if (confirm('Deseja realmente sair do Portal STF?')) {
+                localStorage.removeItem('tjspUser');
+                window.location.href = 'index.html';
             }
-            
-            console.log('✅ Acesso autorizado para usuário nível', user.level);
-            
-            // Update user info in header
-            document.getElementById('user-name').textContent = user.name || '1º Juiz Federal Alexandre de Moraes';
-        });
+        }
     </script>
 </body>
 </html>
