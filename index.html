@@ -368,6 +368,56 @@
                 opacity: 0.5;
             }
         }
+
+        /* Botões padronizados */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Status badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-online {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+        
+        .status-maintenance {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+        }
+        
+        .status-offline {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -823,8 +873,8 @@
                     </div>
                     
                     <button onclick="accessPortal('${key}')" 
-                            class="btn w-full ${portal.status === 'online' ? 'btn-primary' : 'btn-secondary'}"
-                            ${portal.status !== 'online' ? 'disabled' : ''}>
+                            class="btn w-full"
+                            ${portal.status !== 'online' ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                         <i class="fas fa-arrow-right mr-2"></i>
                         ${portal.status === 'online' ? 'Acessar Portal' : 'Em Desenvolvimento'}
                     </button>
@@ -866,7 +916,16 @@
         }
 
         function accessPortal(portalKey) {
+            console.log('accessPortal chamada com:', portalKey);
+            console.log('portalsConfig disponível:', Object.keys(portalsConfig));
+            
             const portal = portalsConfig[portalKey];
+            console.log('Portal encontrado:', portal);
+            
+            if (!portal) {
+                showNotification(`Portal "${portalKey}" não encontrado`, 'error');
+                return;
+            }
             
             if (portal.status !== 'online') {
                 showNotification('Este portal está em desenvolvimento', 'info');
@@ -874,6 +933,7 @@
             }
             
             showNotification(`Redirecionando para ${portal.title}...`, 'info');
+            console.log('Redirecionando para:', portal.url);
             
             // Registrar acesso
             if (firebaseInitialized) {
@@ -886,6 +946,7 @@
             
             // Redirecionar após delay
             setTimeout(() => {
+                console.log('Executando redirecionamento para:', portal.url);
                 window.location.href = portal.url;
             }, 1500);
         }
