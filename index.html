@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TJSP Brasilândia - Portal Unificado</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%234f46e5'/><text y='65' x='50' font-family='Arial' font-size='45' fill='white' text-anchor='middle' font-weight='bold'>⚖️</text></svg>">
+    
+    <!-- Tailwind CSS - NOTA: Para produção, usar build local -->
+    <script>
+        // Suprimir aviso de desenvolvimento do Tailwind
+        window.process = {env: {NODE_ENV: 'development'}};
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -554,9 +563,11 @@
 
     <script>
         // === CONFIGURAÇÃO FIREBASE ===
+        // NOTA: Esta é uma configuração de demonstração
+        // Para produção real, substitua pelas suas credenciais do Firebase Console
         const firebaseConfig = {
             apiKey: "AIzaSyC8ZxQ1x2N3Y4M5L6P7R8S9T0U1V2W3X4Y5",
-            authDomain: "tjsp-brasilandia.firebaseapp.com",
+            authDomain: "tjsp-brasilandia.firebaseapp.com", 
             databaseURL: "https://tjsp-brasilandia-default-rtdb.firebaseio.com",
             projectId: "tjsp-brasilandia",
             storageBucket: "tjsp-brasilandia.appspot.com",
@@ -564,19 +575,27 @@
             appId: "1:123456789012:web:abc123def456ghi789"
         };
 
-        // Inicializar Firebase
+        // Inicializar Firebase com tratamento robusto de erro
         let firebaseInitialized = false;
         let firebaseDB = null;
         let firebaseAuth = null;
 
         try {
-            firebase.initializeApp(firebaseConfig);
-            firebaseDB = firebase.database();
-            firebaseAuth = firebase.auth();
-            firebaseInitialized = true;
-            console.log('Firebase inicializado com sucesso');
+            // Em ambiente de desenvolvimento, verificar disponibilidade
+            if (window.location.protocol === 'file:') {
+                console.log('⚠️  Modo offline detectado - Firebase desabilitado');
+                firebaseInitialized = false;
+            } else {
+                firebase.initializeApp(firebaseConfig);
+                firebaseDB = firebase.database();
+                firebaseAuth = firebase.auth();
+                firebaseInitialized = true;
+                console.log('✅ Firebase inicializado com sucesso');
+            }
         } catch (error) {
-            console.warn('Firebase não disponível, usando modo offline:', error);
+            console.warn('⚠️  Firebase não disponível - modo offline:', error.message);
+            console.log('📱 Sistema funcionará localmente');
+            firebaseInitialized = false;
         }
 
         // === DADOS DE USUÁRIOS E PERMISSÕES ===
