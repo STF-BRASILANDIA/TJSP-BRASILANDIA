@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TJSP Brasilândia - Portal Unificado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 1s ease-out;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        .glow {
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        /* Logo e Brasão */
+        .logo-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .brasao {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 50%, #f59e0b 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            margin-right: 1rem;
+        }
+        
+        .brasao i {
+            font-size: 3rem;
+            color: #1a1a2e;
+        }
+        
+        /* Cards dos Portais */
+        .portal-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .portal-card:hover::before {
+            left: 100%;
+        }
+        
+        /* Formulário de Login */
+        .login-form {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            min-height: 3rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+        }
+        
+        /* Status Indicators */
+        .status-online {
+            color: #10b981;
+        }
+        
+        .status-offline {
+            color: #ef4444;
+        }
+        
+        .status-maintenance {
+            color: #f59e0b;
+        }
+        
+        /* Notificações */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: all 0.4s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .notification.info {
+            border-left: 4px solid #3b82f6;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .portal-card {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .login-form {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .brasao {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .brasao i {
+                font-size: 2rem;
+            }
+            
+            .notification {
+                top: 1rem;
+                right: 1rem;
+                left: 1rem;
+                transform: translateY(-100px);
+            }
+            
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+        
+        /* Efeitos especiais */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas de fundo -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Container principal -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-7xl">
+            
+            <!-- Header com Logo -->
+            <div class="text-center mb-12 fade-in-up">
+                <div class="logo-container">
+                    <div class="brasao glow">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="text-left">
+                        <h1 class="text-4xl md:text-6xl font-bold text-white mb-2">TJSP</h1>
+                        <p class="text-xl md:text-2xl text-blue-300 font-medium">Brasilândia</p>
+                        <p class="text-sm md:text-base text-gray-300">Sistema Judicial Unificado</p>
+                    </div>
+                </div>
+                
+                <!-- Status do Sistema -->
+                <div class="flex items-center justify-center gap-4 mt-8 p-4 bg-black/20 rounded-2xl backdrop-blur-sm border border-white/10">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full pulse"></div>
+                        <span class="text-green-400 font-medium">Sistema Online</span>
+                    </div>
+                    <div class="h-4 w-px bg-white/20"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-users text-blue-400"></i>
+                        <span class="text-white" id="usersOnline">24 usuários conectados</span>
+                    </div>
+                    <div class="h-4 w-px bg-white/20"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-sync text-yellow-400"></i>
+                        <span class="text-white" id="lastSync">Sincronizado há 2min</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área de Login/Portais -->
+            <div id="loginArea" class="slide-in-left">
+                <div class="login-form">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-white mb-2">Acesso ao Sistema</h2>
+                        <p class="text-gray-300">Faça login para acessar os portais especializados</p>
+                    </div>
+
+                    <form id="loginForm" class="space-y-6">
+                        <div>
+                            <label class="block text-white font-medium mb-2">
+                                <i class="fas fa-user mr-2"></i>Usuário / CPF
+                            </label>
+                            <input type="text" id="username" class="form-input" 
+                                   placeholder="Digite seu usuário ou CPF" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-white font-medium mb-2">
+                                <i class="fas fa-lock mr-2"></i>Senha
+                            </label>
+                            <input type="password" id="password" class="form-input" 
+                                   placeholder="Digite sua senha" required>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center text-gray-300">
+                                <input type="checkbox" id="rememberMe" class="mr-2 rounded">
+                                Lembrar-me
+                            </label>
+                            <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors">
+                                Esqueci minha senha
+                            </a>
+                        </div>
+
+                        <button type="submit" class="btn w-full" id="loginBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span id="loginBtnText">Entrar no Sistema</span>
+                        </button>
+
+                        <div class="text-center">
+                            <p class="text-gray-400 text-sm">Não tem acesso? Entre em contato com a administração</p>
+                        </div>
+                    </form>
+
+                    <!-- Login Rápido para Testes -->
+                    <div class="mt-8 p-4 bg-black/20 rounded-xl border border-white/10">
+                        <h3 class="text-white font-semibold mb-4 text-center">
+                            <i class="fas fa-rocket mr-2"></i>Acesso Rápido para Testes
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button onclick="quickLogin('advogado')" class="btn btn-success w-full text-sm">
+                                <i class="fas fa-user-tie mr-1"></i>Advogado
+                            </button>
+                            <button onclick="quickLogin('promotor')" class="btn btn-danger w-full text-sm">
+                                <i class="fas fa-user-shield mr-1"></i>Promotor
+                            </button>
+                            <button onclick="quickLogin('juiz')" class="btn w-full text-sm">
+                                <i class="fas fa-gavel mr-1"></i>Juiz
+                            </button>
+                            <button onclick="quickLogin('admin')" class="btn btn-warning w-full text-sm">
+                                <i class="fas fa-crown mr-1"></i>Administrador
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área dos Portais (após login) -->
+            <div id="portalsArea" class="hidden">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-white mb-4">Selecione o Portal</h2>
+                    <p class="text-gray-300 text-lg">Acesse o portal específico para seu perfil profissional</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portalsGrid">
+                    <!-- Portais serão carregados dinamicamente -->
+                </div>
+
+                <div class="text-center mt-12">
+                    <button onclick="logout()" class="btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair do Sistema
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de notificações -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // === CONFIGURAÇÃO FIREBASE ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8ZxQ1x2N3Y4M5L6P7R8S9T0U1V2W3X4Y5",
+            authDomain: "tjsp-brasilandia.firebaseapp.com",
+            databaseURL: "https://tjsp-brasilandia-default-rtdb.firebaseio.com",
+            projectId: "tjsp-brasilandia",
+            storageBucket: "tjsp-brasilandia.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abc123def456ghi789"
+        };
+
+        // Inicializar Firebase
+        let firebaseInitialized = false;
+        let firebaseDB = null;
+        let firebaseAuth = null;
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            firebaseDB = firebase.database();
+            firebaseAuth = firebase.auth();
+            firebaseInitialized = true;
+            console.log('Firebase inicializado com sucesso');
+        } catch (error) {
+            console.warn('Firebase não disponível, usando modo offline:', error);
+        }
+
+        // === DADOS DE USUÁRIOS E PERMISSÕES ===
+        const usersDatabase = {
+            'advogado': {
+                id: 'adv001',
+                name: 'Dr. Carlos Silva',
+                email: 'carlos@advogado.com',
+                role: 'advogado',
+                oab: '123456/SP',
+                permissions: ['portal-advogado'],
+                level: 1
+            },
+            'promotor': {
+                id: 'prom001', 
+                name: 'Dr. Marcos Silva',
+                email: 'marcos@mp.sp.gov.br',
+                role: 'promotor',
+                permissions: ['portal-ministerio-publico'],
+                level: 4
+            },
+            'juiz': {
+                id: 'juiz001',
+                name: 'Dr. Ana Santos',
+                email: 'ana@tjsp.jus.br',
+                role: 'juiz',
+                permissions: ['portal-judicial'],
+                level: 5
+            },
+            'admin': {
+                id: 'admin001',
+                name: 'Alexandre de Moraes',
+                email: 'alexandre@stf.jus.br',
+                role: 'juiz-federal',
+                permissions: ['portal-autoridade-maxima', 'portal-judicial', 'portal-ministerio-publico', 'portal-advogado'],
+                level: 10
+            }
+        };
+
+        // === CONFIGURAÇÃO DOS PORTAIS ===
+        const portalsConfig = {
+            'portal-advogado': {
+                title: 'Portal dos Advogados',
+                description: 'Gestão de processos e documentos para advogados',
+                icon: 'fas fa-user-tie',
+                color: 'text-blue-400',
+                bgGradient: 'from-blue-500/20 to-blue-700/20',
+                borderColor: 'border-blue-500/50',
+                url: 'portal-advogado.html',
+                requiredLevel: 1,
+                status: 'online'
+            },
+            'portal-ministerio-publico': {
+                title: 'Portal do Ministério Público',
+                description: 'Sistema para Promotores, Procuradores e Oficiais de Justiça',
+                icon: 'fas fa-user-shield',
+                color: 'text-red-400',
+                bgGradient: 'from-red-500/20 to-red-700/20',
+                borderColor: 'border-red-500/50',
+                url: 'portal-ministerio-publico.html',
+                requiredLevel: 3,
+                status: 'online'
+            },
+            'portal-judicial': {
+                title: 'Portal Judicial',
+                description: 'Sistema para Juízes e Desembargadores',
+                icon: 'fas fa-gavel',
+                bgGradient: 'from-green-500/20 to-green-700/20',
+                borderColor: 'border-green-500/50',
+                color: 'text-green-400',
+                url: 'portal-judicial.html',
+                requiredLevel: 5,
+                status: 'development'
+            },
+            'portal-autoridade-maxima': {
+                title: 'Portal da Autoridade Máxima',
+                description: 'Controle administrativo e supervisão geral',
+                icon: 'fas fa-crown',
+                color: 'text-yellow-400',
+                bgGradient: 'from-yellow-500/20 to-yellow-700/20',
+                borderColor: 'border-yellow-500/50',
+                url: 'portal-autoridade-maxima.html',
+                requiredLevel: 10,
+                status: 'development'
+            }
+        };
+
+        // === VARIÁVEIS GLOBAIS ===
+        let currentUser = null;
+        let isLoggedIn = false;
+
+        // === INICIALIZAÇÃO ===
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParticles();
+            checkStoredLogin();
+            updateSystemStatus();
+            
+            // Event listeners
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Atualizar status periodicamente
+            setInterval(updateSystemStatus, 30000); // 30 segundos
+            
+            // Verificar conexão com Firebase
+            if (firebaseInitialized) {
+                setupFirebaseListeners();
+            }
+        });
+
+        function initializeParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function checkStoredLogin() {
+            const storedUser = localStorage.getItem('tjsp-current-user');
+            const rememberMe = localStorage.getItem('tjsp-remember-me');
+            
+            if (storedUser && rememberMe === 'true') {
+                currentUser = JSON.parse(storedUser);
+                isLoggedIn = true;
+                showPortals();
+            }
+        }
+
+        function updateSystemStatus() {
+            // Simular dados em tempo real
+            const usersCount = Math.floor(Math.random() * 10) + 20;
+            const lastSyncMinutes = Math.floor(Math.random() * 5) + 1;
+            
+            document.getElementById('usersOnline').textContent = `${usersCount} usuários conectados`;
+            document.getElementById('lastSync').textContent = `Sincronizado há ${lastSyncMinutes}min`;
+        }
+
+        function setupFirebaseListeners() {
+            // Listener para usuários online
+            firebaseDB.ref('system/usersOnline').on('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                document.getElementById('usersOnline').textContent = `${count} usuários conectados`;
+            });
+
+            // Listener para status do sistema
+            firebaseDB.ref('system/lastSync').on('value', (snapshot) => {
+                const lastSync = snapshot.val();
+                if (lastSync) {
+                    const minutes = Math.floor((Date.now() - lastSync) / 60000);
+                    document.getElementById('lastSync').textContent = `Sincronizado há ${minutes}min`;
+                }
+            });
+        }
+
+        // === SISTEMA DE LOGIN ===
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            if (!username || !password) {
+                showNotification('Por favor, preencha todos os campos', 'error');
+                return;
+            }
+            
+            setLoadingState(true);
+            
+            try {
+                // Simular delay de autenticação
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Verificar credenciais
+                const user = authenticateUser(username, password);
+                
+                if (user) {
+                    currentUser = user;
+                    isLoggedIn = true;
+                    
+                    // Salvar no localStorage
+                    localStorage.setItem('tjsp-current-user', JSON.stringify(user));
+                    localStorage.setItem('tjsp-remember-me', rememberMe.toString());
+                    
+                    // Registrar login no Firebase
+                    if (firebaseInitialized) {
+                        await firebaseDB.ref(`system/activeUsers/${user.id}`).set({
+                            name: user.name,
+                            role: user.role,
+                            loginTime: Date.now(),
+                            lastActivity: Date.now()
+                        });
+                    }
+                    
+                    showNotification(`Bem-vindo(a), ${user.name}!`, 'success');
+                    setTimeout(() => showPortals(), 1000);
+                } else {
+                    showNotification('Credenciais inválidas. Tente novamente.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Erro no login:', error);
+                showNotification('Erro interno. Tente novamente.', 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        function authenticateUser(username, password) {
+            // Autenticação simples para demonstração
+            // Em produção, usar Firebase Auth ou API backend
+            
+            if (usersDatabase[username]) {
+                // Para demonstração, qualquer senha funciona
+                return usersDatabase[username];
+            }
+            
+            // Verificar por CPF ou email
+            for (const [key, user] of Object.entries(usersDatabase)) {
+                if (user.email === username || user.id === username) {
+                    return user;
+                }
+            }
+            
+            return null;
+        }
+
+        function quickLogin(userType) {
+            if (usersDatabase[userType]) {
+                document.getElementById('username').value = userType;
+                document.getElementById('password').value = '123456';
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        }
+
+        function setLoadingState(loading) {
+            const loginBtn = document.getElementById('loginBtn');
+            const loginBtnText = document.getElementById('loginBtnText');
+            
+            if (loading) {
+                loginBtn.disabled = true;
+                loginBtnText.innerHTML = '<div class="loading-spinner mr-2"></div>Entrando...';
+            } else {
+                loginBtn.disabled = false;
+                loginBtnText.innerHTML = 'Entrar no Sistema';
+            }
+        }
+
+        // === EXIBIÇÃO DOS PORTALS ===
+        function showPortals() {
+            document.getElementById('loginArea').classList.add('hidden');
+            document.getElementById('portalsArea').classList.remove('hidden');
+            
+            const portalsGrid = document.getElementById('portalsGrid');
+            portalsGrid.innerHTML = '';
+            
+            // Filtrar portais baseado nas permissões do usuário
+            const availablePortals = Object.entries(portalsConfig).filter(([key, portal]) => {
+                return currentUser.permissions.includes(key) && currentUser.level >= portal.requiredLevel;
+            });
+            
+            availablePortals.forEach(([key, portal], index) => {
+                const portalCard = createPortalCard(key, portal, index);
+                portalsGrid.appendChild(portalCard);
+            });
+        }
+
+        function createPortalCard(key, portal, index) {
+            const div = document.createElement('div');
+            div.className = `portal-card bg-gradient-to-br ${portal.bgGradient} border-2 ${portal.borderColor} hover:${portal.borderColor}`;
+            div.style.animationDelay = `${index * 0.2}s`;
+            
+            const statusIcon = getStatusIcon(portal.status);
+            const statusText = getStatusText(portal.status);
+            const statusColor = getStatusColor(portal.status);
+            
+            div.innerHTML = `
+                <div class="text-center">
+                    <div class="mb-6">
+                        <i class="${portal.icon} ${portal.color} text-6xl mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-2">${portal.title}</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">${portal.description}</p>
+                    </div>
+                    
+                    <div class="flex items-center justify-center gap-2 mb-6">
+                        <i class="fas ${statusIcon} ${statusColor}"></i>
+                        <span class="text-sm ${statusColor} font-medium">${statusText}</span>
+                    </div>
+                    
+                    <button onclick="accessPortal('${key}')" 
+                            class="btn w-full ${portal.status === 'online' ? 'btn-primary' : 'btn-secondary'}"
+                            ${portal.status !== 'online' ? 'disabled' : ''}>
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        ${portal.status === 'online' ? 'Acessar Portal' : 'Em Desenvolvimento'}
+                    </button>
+                </div>
+            `;
+            
+            div.classList.add('fade-in-up');
+            return div;
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'online': 'fa-circle',
+                'offline': 'fa-circle',
+                'maintenance': 'fa-tools',
+                'development': 'fa-code'
+            };
+            return icons[status] || 'fa-circle';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'online': 'Online',
+                'offline': 'Offline', 
+                'maintenance': 'Manutenção',
+                'development': 'Em Desenvolvimento'
+            };
+            return texts[status] || 'Desconhecido';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'online': 'text-green-400',
+                'offline': 'text-red-400',
+                'maintenance': 'text-yellow-400',
+                'development': 'text-blue-400'
+            };
+            return colors[status] || 'text-gray-400';
+        }
+
+        function accessPortal(portalKey) {
+            const portal = portalsConfig[portalKey];
+            
+            if (portal.status !== 'online') {
+                showNotification('Este portal está em desenvolvimento', 'info');
+                return;
+            }
+            
+            showNotification(`Redirecionando para ${portal.title}...`, 'info');
+            
+            // Registrar acesso
+            if (firebaseInitialized) {
+                firebaseDB.ref(`system/portalAccess/${currentUser.id}`).push({
+                    portal: portalKey,
+                    timestamp: Date.now(),
+                    userAgent: navigator.userAgent
+                });
+            }
+            
+            // Redirecionar após delay
+            setTimeout(() => {
+                window.location.href = portal.url;
+            }, 1500);
+        }
+
+        function logout() {
+            if (firebaseInitialized && currentUser) {
+                firebaseDB.ref(`system/activeUsers/${currentUser.id}`).remove();
+            }
+            
+            localStorage.removeItem('tjsp-current-user');
+            localStorage.removeItem('tjsp-remember-me');
+            
+            currentUser = null;
+            isLoggedIn = false;
+            
+            document.getElementById('portalsArea').classList.add('hidden');
+            document.getElementById('loginArea').classList.remove('hidden');
+            
+            // Limpar formulário
+            document.getElementById('loginForm').reset();
+            
+            showNotification('Logout realizado com sucesso', 'success');
+        }
+
+        // === SISTEMA DE NOTIFICAÇÕES ===
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            
+            // Remover classes anteriores
+            notification.classList.remove('success', 'error', 'info', 'show');
+            
+            // Definir conteúdo e tipo
+            notification.textContent = message;
+            notification.classList.add(type);
+            
+            // Mostrar notificação
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Esconder após 4 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // === MONITORAMENTO E ANALYTICS ===
+        function trackUserActivity() {
+            if (firebaseInitialized && currentUser) {
+                firebaseDB.ref(`system/activeUsers/${currentUser.id}/lastActivity`).set(Date.now());
+            }
+        }
+
+        // Trackear atividade a cada minuto
+        setInterval(trackUserActivity, 60000);
+
+        // Trackear atividade no mouse/teclado
+        document.addEventListener('mousemove', trackUserActivity);
+        document.addEventListener('keypress', trackUserActivity);
+
+        // === CONTROLE DE VERSÃO E UPDATES ===
+        function checkSystemUpdates() {
+            if (firebaseInitialized) {
+                firebaseDB.ref('system/version').once('value', (snapshot) => {
+                    const serverVersion = snapshot.val();
+                    const localVersion = localStorage.getItem('tjsp-system-version') || '1.0.0';
+                    
+                    if (serverVersion && serverVersion !== localVersion) {
+                        showNotification('Nova versão disponível! A página será recarregada.', 'info');
+                        setTimeout(() => {
+                            localStorage.setItem('tjsp-system-version', serverVersion);
+                            window.location.reload();
+                        }, 3000);
+                    }
+                });
+            }
+        }
+
+        // Verificar updates a cada 5 minutos
+        setInterval(checkSystemUpdates, 300000);
+
+        // Verificar na inicialização
+        setTimeout(checkSystemUpdates, 2000);
+    </script>
+</body>
+</html>

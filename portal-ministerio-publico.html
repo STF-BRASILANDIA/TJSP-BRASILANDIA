@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Portal do Ministério Público - Sistema Jurídico BRASILÂNDIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, onValue, push, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        // Configuração Firebase (será conectada posteriormente)
+        const firebaseConfig = {
+            // Configuração será adicionada quando conectar ao Firebase real
+            databaseURL: 'https://brasilandia-juridico-default-rtdb.firebaseio.com/'
+        };
+        
+        // Inicialização Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+        
+        // Disponibilizar globalmente
+        window.firebaseDB = database;
+        window.firebaseAuth = auth;
+        window.firebaseRefs = { ref, set, onValue, push, remove };
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --primary-red: #B91C1C;
+            --secondary-red: #DC2626;
+            --accent-red: #991B1B;
+            --dark-red: #7F1D1D;
+            --light-red: #FCA5A5;
+            --dark-bg: #0f172a;
+            --card-bg: rgba(185, 28, 28, 0.1);
+            --hover-bg: rgba(185, 28, 28, 0.15);
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #7F1D1D 0%, #B91C1C 25%, #DC2626 50%, #991B1B 75%, #450A0A 100%) fixed;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(127, 29, 29, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(185, 28, 28, 0.3);
+            transform: translateX(0);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid rgba(185, 28, 28, 0.2);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--secondary-red) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 16px rgba(185, 28, 28, 0.3);
+        }
+
+        .sidebar-logo-text {
+            flex: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-logo-text {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            color: #FCA5A5;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 1rem;
+            margin-bottom: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0.5rem;
+            color: #E5E7EB;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--secondary-red) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+        }
+
+        .nav-item-icon {
+            font-size: 1.125rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .nav-item-text {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .nav-item-badge {
+            margin-left: auto;
+            background: var(--secondary-red);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .sidebar.collapsed .nav-item-badge {
+            position: absolute;
+            right: -8px;
+            top: 8px;
+            transform: scale(0.8);
+        }
+
+        /* Toggle Button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--secondary-red) 100%);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(185, 28, 28, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+            padding: 2rem;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: var(--sidebar-collapsed);
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.15) 0%, rgba(127, 29, 29, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(185, 28, 28, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.25) 0%, rgba(127, 29, 29, 0.15) 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(185, 28, 28, 0.2);
+            border-color: rgba(185, 28, 28, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--secondary-red) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(185, 28, 28, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary-red) 0%, var(--accent-red) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(185, 28, 28, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(75, 85, 99, 0.8);
+            color: white;
+            border: 1px solid rgba(156, 163, 175, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(55, 65, 81, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #B91C1C 0%, #991B1B 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Grid System */
+        .grid-responsive {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-cards {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .grid-stats {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-novo { background: #FEF3C7; color: #92400E; }
+        .status-andamento { background: #DBEAFE; color: #1E40AF; }
+        .status-concluido { background: #D1FAE5; color: #065F46; }
+        .status-arquivado { background: #F3F4F6; color: #374151; }
+
+        /* User Profile Section */
+        .user-profile {
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.2) 0%, rgba(127, 29, 29, 0.15) 100%);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+
+        /* Scroll customizado */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-red);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-red);
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            max-width: 400px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.success { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .notification.error { background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); }
+        .notification.info { background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); }
+        .notification.warning { background: linear-gradient(135deg, #D97706 0%, #B45309 100%); }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="sidebar-logo-text">
+                    <div class="text-white font-bold text-lg">Ministério Público</div>
+                    <div class="text-red-300 text-sm">Sistema BRASILÂNDIA</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <div class="sidebar-nav">
+            <!-- Dashboard Section -->
+            <div class="nav-section">
+                <div class="nav-section-title">Principal</div>
+                <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+                    <i class="nav-item-icon fas fa-home"></i>
+                    <span class="nav-item-text">Dashboard</span>
+                    <span class="nav-item-badge" id="dashboard-badge">3</span>
+                </a>
+            </div>
+
+            <!-- Cases Section -->
+            <div class="nav-section">
+                <div class="nav-section-title">Processos</div>
+                <a href="#" class="nav-item" onclick="showSection('casos-novos')">
+                    <i class="nav-item-icon fas fa-inbox"></i>
+                    <span class="nav-item-text">Casos Novos</span>
+                    <span class="nav-item-badge" id="novos-badge">12</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('casos-andamento')">
+                    <i class="nav-item-icon fas fa-clock"></i>
+                    <span class="nav-item-text">Em Andamento</span>
+                    <span class="nav-item-badge" id="andamento-badge">8</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('investigacoes')">
+                    <i class="nav-item-icon fas fa-search"></i>
+                    <span class="nav-item-text">Investigações</span>
+                </a>
+            </div>
+
+            <!-- Documents Section -->
+            <div class="nav-section">
+                <div class="nav-section-title">Documentos</div>
+                <a href="#" class="nav-item" onclick="showSection('documentos')">
+                    <i class="nav-item-icon fas fa-file-alt"></i>
+                    <span class="nav-item-text">Gerador</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('modelos')">
+                    <i class="nav-item-icon fas fa-folder-open"></i>
+                    <span class="nav-item-text">Modelos</span>
+                </a>
+            </div>
+
+            <!-- Tools Section (Permissions based) -->
+            <div class="nav-section" id="promotor-tools">
+                <div class="nav-section-title">Ferramentas</div>
+                <a href="#" class="nav-item" onclick="showSection('denuncias')">
+                    <i class="nav-item-icon fas fa-gavel"></i>
+                    <span class="nav-item-text">Denúncias</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('calculadora')">
+                    <i class="nav-item-icon fas fa-calculator"></i>
+                    <span class="nav-item-text">Calculadora</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('hierarquia')">
+                    <i class="nav-item-icon fas fa-sitemap"></i>
+                    <span class="nav-item-text">Hierarquia</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('pareceres')">
+                    <i class="nav-item-icon fas fa-file-signature"></i>
+                    <span class="nav-item-text">Pareceres</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('processos')">
+                    <i class="nav-item-icon fas fa-folder-open"></i>
+                    <span class="nav-item-text">Processos</span>
+                </a>
+            </div>
+
+            <!-- Admin Section (Procurador only) -->
+            <div class="nav-section" id="procurador-tools" style="display: none;">
+                <div class="nav-section-title">Supervisão</div>
+                <a href="#" class="nav-item" onclick="showSection('recursos')">
+                    <i class="nav-item-icon fas fa-layer-group"></i>
+                    <span class="nav-item-text">Recursos</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('relatorios')">
+                    <i class="nav-item-icon fas fa-chart-line"></i>
+                    <span class="nav-item-text">Relatórios</span>
+                </a>
+            </div>
+
+            <!-- Oficial Section (Oficial only) -->
+            <div class="nav-section" id="oficial-tools" style="display: none;">
+                <div class="nav-section-title">Operacional</div>
+                <a href="#" class="nav-item" onclick="showSection('mandados')">
+                    <i class="nav-item-icon fas fa-file-signature"></i>
+                    <span class="nav-item-text">Mandados</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('diligencias')">
+                    <i class="nav-item-icon fas fa-route"></i>
+                    <span class="nav-item-text">Diligências</span>
+                </a>
+            </div>
+
+            <!-- System Section -->
+            <div class="nav-section">
+                <div class="nav-section-title">Sistema</div>
+                <a href="#" class="nav-item" onclick="showHierarchy()">
+                    <i class="nav-item-icon fas fa-sitemap"></i>
+                    <span class="nav-item-text">Hierarquia</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showProfile()">
+                    <i class="nav-item-icon fas fa-user"></i>
+                    <span class="nav-item-text">Perfil</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSettings()">
+                    <i class="nav-item-icon fas fa-cog"></i>
+                    <span class="nav-item-text">Configurações</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="nav-item-icon fas fa-sign-out-alt"></i>
+                    <span class="nav-item-text">Sair</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <!-- User Profile Card -->
+            <div class="user-profile">
+                <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+                    <!-- Avatar e Info Básica -->
+                    <div class="flex items-center gap-4">
+                        <div class="w-20 h-20 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            <span id="user-initials">MP</span>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold text-xl mb-1" id="user-name">Dr. Marcos Silva</h3>
+                            <p class="text-red-200 text-sm mb-1" id="user-position">1º Promotor</p>
+                            <p class="text-red-300 text-xs flex items-center gap-2">
+                                <i class="fas fa-id-card"></i>
+                                <span>Registro <span id="user-registro">MP-001</span></span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Status e Informações -->
+                    <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="flex items-center gap-2 text-green-400">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-sm">Online</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-red-200">
+                            <i class="fas fa-folder-open text-red-400"></i>
+                            <span class="text-sm"><span id="active-cases">8</span> casos ativos</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-red-200">
+                            <i class="fas fa-clock text-yellow-400"></i>
+                            <span class="text-sm">Último acesso: <span id="last-access">Hoje</span></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="showProfile()" class="btn btn-secondary text-sm px-4 py-2">
+                            <i class="fas fa-user mr-2"></i>Perfil
+                        </button>
+                        <button onclick="showHierarchy()" class="btn btn-secondary text-sm px-4 py-2">
+                            <i class="fas fa-sitemap mr-2"></i>Hierarquia
+                        </button>
+                        <button onclick="showSettings()" class="btn btn-secondary text-sm px-4 py-2">
+                            <i class="fas fa-cog mr-2"></i>Config
+                        </button>
+                        <button onclick="logout()" class="btn btn-danger text-sm px-4 py-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <h1 class="text-white text-3xl font-bold mb-2">Bem-vindo ao Ministério Público</h1>
+                <p class="text-red-200">Sistema integrado para promotores, procuradores e oficiais de justiça</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid-responsive grid-stats mb-8">
+                <div class="card p-6 text-center">
+                    <div class="text-3xl font-bold text-red-400 mb-2" id="stat-novos">12</div>
+                    <div class="text-red-200 text-sm">Casos Novos</div>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="text-3xl font-bold text-yellow-400 mb-2" id="stat-andamento">8</div>
+                    <div class="text-red-200 text-sm">Em Andamento</div>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="text-3xl font-bold text-green-400 mb-2" id="stat-concluidos">24</div>
+                    <div class="text-red-200 text-sm">Concluídos</div>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="text-3xl font-bold text-blue-400 mb-2" id="stat-investigacoes">5</div>
+                    <div class="text-red-200 text-sm">Investigações</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid-responsive grid-cards">
+                <!-- Casos Novos -->
+                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('casos-novos')">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-inbox text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Casos Novos</h3>
+                    <p class="text-red-200 text-sm mb-4">Processos aguardando análise</p>
+                    <div class="btn btn-primary w-full">
+                        Acessar <span class="ml-2 bg-red-800 px-2 py-1 rounded-full text-xs">12</span>
+                    </div>
+                </div>
+
+                <!-- Investigações -->
+                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('investigacoes')">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Investigações</h3>
+                    <p class="text-red-200 text-sm mb-4">Inquéritos em andamento</p>
+                    <div class="btn btn-primary w-full">
+                        Acessar
+                    </div>
+                </div>
+
+                <!-- Documentos -->
+                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('documentos')">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-file-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Documentos</h3>
+                    <p class="text-red-200 text-sm mb-4">Gerador de peças jurídicas</p>
+                    <div class="btn btn-primary w-full">
+                        Acessar
+                    </div>
+                </div>
+
+                <!-- Calculadora -->
+                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('calculadora')">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-calculator text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Calculadora</h3>
+                    <p class="text-red-200 text-sm mb-4">Cálculo de penas e multas</p>
+                    <div class="btn btn-primary w-full">
+                        Acessar
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="mt-8">
+                <h2 class="text-white text-xl font-bold mb-4">Atividade Recente</h2>
+                <div class="card p-6">
+                    <div class="space-y-4" id="recent-activity">
+                        <!-- Activity items will be loaded here -->
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                            <i class="fas fa-plus-circle text-green-400"></i>
+                            <div>
+                                <div class="text-white font-medium">Novo caso recebido</div>
+                                <div class="text-red-300 text-sm">Processo #2024-001234 - Há 2 minutos</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                            <i class="fas fa-file-alt text-blue-400"></i>
+                            <div>
+                                <div class="text-white font-medium">Denúncia enviada</div>
+                                <div class="text-red-300 text-sm">Processo #2024-001230 - Há 1 hora</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <div>
+                                <div class="text-white font-medium">Investigação concluída</div>
+                                <div class="text-red-300 text-sm">Processo #2024-001225 - Há 3 horas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Casos Novos Section -->
+        <section id="casos-novos" class="section">
+            <div class="mb-6">
+                <button onclick="showSection('dashboard')" class="btn btn-secondary mb-4">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar ao Dashboard
+                </button>
+                <h2 class="text-white text-3xl font-bold mb-2">
+                    <i class="fas fa-inbox mr-3 text-red-400"></i>
+                    Casos Novos
+                </h2>
+                <p class="text-red-200">Processos recebidos aguardando análise inicial</p>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="card p-6 mb-8">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" placeholder="Buscar por número do processo..." 
+                               class="w-full px-4 py-3 bg-gray-800/50 border border-red-300/30 rounded-lg text-white placeholder-red-300/50 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400/20">
+                    </div>
+                    <div class="flex gap-2">
+                        <select class="px-4 py-3 bg-gray-800/50 border border-red-300/30 rounded-lg text-white focus:border-red-400 focus:outline-none">
+                            <option>Todos os tipos</option>
+                            <option>Criminal</option>
+                            <option>Cível</option>
+                            <option>Trabalhista</option>
+                        </select>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-search mr-2"></i>Buscar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cases List -->
+            <div class="space-y-4" id="casos-novos-list">
+                <!-- Case items will be loaded here -->
+                <div class="card p-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="status-badge status-novo">
+                                    <i class="fas fa-circle"></i>Novo
+                                </span>
+                                <span class="text-white font-bold">#2024-001234</span>
+                            </div>
+                            <h3 class="text-white font-semibold mb-1">Denúncia por Furto Qualificado</h3>
+                            <p class="text-red-300 text-sm mb-2">Origem: Portal dos Advogados - Dr. Roberto Silva</p>
+                            <div class="flex items-center gap-4 text-red-200 text-xs">
+                                <span><i class="fas fa-calendar mr-1"></i>Recebido: 11/08/2025</span>
+                                <span><i class="fas fa-clock mr-1"></i>14:30</span>
+                                <span><i class="fas fa-user mr-1"></i>João da Silva</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn btn-primary" onclick="analizarCaso('2024-001234')">
+                                <i class="fas fa-eye mr-2"></i>Analisar
+                            </button>
+                            <button class="btn btn-secondary" onclick="arquivarCaso('2024-001234')">
+                                <i class="fas fa-archive mr-2"></i>Arquivar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="status-badge status-novo">
+                                    <i class="fas fa-circle"></i>Novo
+                                </span>
+                                <span class="text-white font-bold">#2024-001233</span>
+                            </div>
+                            <h3 class="text-white font-semibold mb-1">Lesão Corporal - Violência Doméstica</h3>
+                            <p class="text-red-300 text-sm mb-2">Origem: Portal dos Advogados - Dra. Maria Santos</p>
+                            <div class="flex items-center gap-4 text-red-200 text-xs">
+                                <span><i class="fas fa-calendar mr-1"></i>Recebido: 11/08/2025</span>
+                                <span><i class="fas fa-clock mr-1"></i>13:15</span>
+                                <span><i class="fas fa-user mr-1"></i>Maria Oliveira</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn btn-primary" onclick="analizarCaso('2024-001233')">
+                                <i class="fas fa-eye mr-2"></i>Analisar
+                            </button>
+                            <button class="btn btn-secondary" onclick="arquivarCaso('2024-001233')">
+                                <i class="fas fa-archive mr-2"></i>Arquivar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Outras seções serão implementadas progressivamente -->
+        
+        <!-- Placeholder para outras seções -->
+        <section id="casos-andamento" class="section">
+            <h2 class="text-white text-2xl font-bold mb-4">Em Desenvolvimento</h2>
+            <p class="text-red-200">Esta seção está sendo implementada...</p>
+        </section>
+
+        <section id="investigacoes" class="section">
+            <h2 class="text-white text-2xl font-bold mb-4">Em Desenvolvimento</h2>
+            <p class="text-red-200">Esta seção está sendo implementada...</p>
+        </section>
+
+        <section id="documentos" class="section">
+            <h2 class="text-white text-2xl font-bold mb-4">Em Desenvolvimento</h2>
+            <p class="text-red-200">Esta seção está sendo implementada...</p>
+        </section>
+
+        <section id="calculadora" class="section">
+            <h2 class="text-white text-2xl font-bold mb-4">Em Desenvolvimento</h2>
+            <p class="text-red-200">Esta seção está sendo implementada...</p>
+        </section>
+    </main>
+
+    <script>
+        // === SISTEMA DE USUÁRIO E PERMISSÕES ===
+        
+        let currentUser = {
+            id: 'mp001',
+            name: 'Dr. Marcos Silva',
+            position: 'promotor', // promotor | procurador | oficial
+            level: 1,
+            permissions: []
+        };
+
+        // Configurar permissões baseadas no cargo
+        function setupUserPermissions() {
+            const permissions = {
+                'promotor': ['denuncias', 'investigacoes', 'documentos', 'calculadora', 'casos-novos'],
+                'procurador': ['denuncias', 'investigacoes', 'documentos', 'calculadora', 'casos-novos', 'recursos', 'relatorios', 'supervisao'],
+                'oficial': ['mandados', 'diligencias', 'citacoes', 'cumprimentos', 'relatorios-operacionais']
+            };
+            
+            currentUser.permissions = permissions[currentUser.position] || [];
+            updateInterfacePermissions();
+        }
+
+        // Atualizar interface baseada em permissões
+        function updateInterfacePermissions() {
+            // Mostrar/ocultar seções baseadas no cargo
+            const promotorTools = document.getElementById('promotor-tools');
+            const procuradorTools = document.getElementById('procurador-tools');
+            const oficialTools = document.getElementById('oficial-tools');
+            
+            if (currentUser.position === 'promotor') {
+                promotorTools.style.display = 'block';
+                procuradorTools.style.display = 'none';
+                oficialTools.style.display = 'none';
+            } else if (currentUser.position === 'procurador') {
+                promotorTools.style.display = 'block';
+                procuradorTools.style.display = 'block';
+                oficialTools.style.display = 'none';
+            } else if (currentUser.position === 'oficial') {
+                promotorTools.style.display = 'none';
+                procuradorTools.style.display = 'none';
+                oficialTools.style.display = 'block';
+            }
+            
+            // Atualizar informações do usuário na interface
+            updateUserDisplay();
+        }
+
+        // Atualizar display do usuário
+        function updateUserDisplay() {
+            const positions = {
+                'promotor': '1º Promotor',
+                'procurador': 'Procurador Geral',
+                'oficial': 'Oficial de Justiça'
+            };
+            
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('user-position').textContent = positions[currentUser.position];
+            document.getElementById('user-initials').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        // === SISTEMA DE NAVEGAÇÃO ===
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function showSection(sectionId) {
+            // Verificar permissões
+            if (!hasPermission(sectionId)) {
+                showNotification('Acesso negado para esta seção', 'error');
+                return;
+            }
+            
+            // Seções especiais que requerem conteúdo dinâmico
+            if (sectionId === 'calculadora') {
+                showSentenceCalculator();
+                return;
+            }
+            
+            if (sectionId === 'documentos') {
+                showDocuments();
+                return;
+            }
+            
+            if (sectionId === 'hierarquia') {
+                showHierarchy();
+                return;
+            }
+            
+            // Ocultar todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar seção específica
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            } else {
+                // Criar seção dinamicamente se não existir
+                createDynamicSection(sectionId);
+            }
+            
+            // Atualizar navegação ativa
+            updateActiveNavigation(sectionId);
+            
+            // Atualizar contadores se for dashboard
+            if (sectionId === 'dashboard') {
+                updateStats();
+                refreshDashboard();
+            }
+        }
+
+        function createDynamicSection(sectionId) {
+            const mainContent = document.getElementById('main-content');
+            
+            const sectionContent = {
+                'pareceres': `
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-8">
+                            <i class="fas fa-file-signature text-red-400 text-2xl"></i>
+                            <h1 class="text-3xl font-bold text-white">Pareceres</h1>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-2">
+                                <div class="card p-6 mb-6">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h2 class="text-xl font-semibold text-white">Pareceres Pendentes</h2>
+                                        <button class="btn btn-primary" onclick="novoParecer()">
+                                            <i class="fas fa-plus mr-2"></i>Novo Parecer
+                                        </button>
+                                    </div>
+                                    <div id="pareceres-list" class="space-y-4">
+                                        <!-- Lista será carregada via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="card p-6">
+                                    <h3 class="text-lg font-semibold text-white mb-4">Estatísticas</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-red-200">Pendentes:</span>
+                                            <span class="text-white font-semibold">12</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-red-200">Em análise:</span>
+                                            <span class="text-white font-semibold">5</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-red-200">Concluídos:</span>
+                                            <span class="text-white font-semibold">89</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                'processos': `
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-folder-open text-red-400 text-2xl"></i>
+                                <h1 class="text-3xl font-bold text-white">Processos</h1>
+                            </div>
+                            <div class="flex gap-3">
+                                <button class="btn btn-secondary" onclick="importarProcessos()">
+                                    <i class="fas fa-download mr-2"></i>Importar
+                                </button>
+                                <button class="btn btn-primary" onclick="novoProcesso()">
+                                    <i class="fas fa-plus mr-2"></i>Novo Processo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                <div class="stat-card">
+                                    <div class="stat-value">24</div>
+                                    <div class="stat-label">Em andamento</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">8</div>
+                                    <div class="stat-label">Aguardando</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">156</div>
+                                    <div class="stat-label">Concluídos</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">3</div>
+                                    <div class="stat-label">Urgentes</div>
+                                </div>
+                            </div>
+                            
+                            <div id="processos-list" class="space-y-4">
+                                <!-- Lista será carregada via JS -->
+                            </div>
+                        </div>
+                    </div>
+                `
+            };
+            
+            if (sectionContent[sectionId]) {
+                mainContent.innerHTML = sectionContent[sectionId];
+                // Executar inicialização específica da seção
+                initializeSection(sectionId);
+            }
+        }
+
+        function initializeSection(sectionId) {
+            switch(sectionId) {
+                case 'pareceres':
+                    loadPareceresList();
+                    break;
+                case 'processos':
+                    loadProcessosList();
+                    break;
+            }
+        }
+
+        function loadPareceresList() {
+            // Implementar carregamento de pareceres
+        }
+
+        function loadProcessosList() {
+            // Implementar carregamento de processos
+        }
+
+        function showHierarchy() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-sitemap text-red-400 text-2xl"></i>
+                            <h1 class="text-3xl font-bold text-white">Hierarquia Judicial</h1>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="btn btn-secondary" onclick="exportHierarchy()">
+                                <i class="fas fa-download mr-2"></i>Exportar
+                            </button>
+                            <button class="btn btn-primary" onclick="refreshHierarchy()">
+                                <i class="fas fa-sync mr-2"></i>Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-6">
+                        ${generateHierarchyDisplay()}
+                    </div>
+                </div>
+            `;
+            
+            // Inicializar funcionalidades da hierarquia
+            initializeHierarchyFeatures();
+        }
+
+        function generateHierarchyDisplay() {
+            const hierarchyLevels = [
+                {
+                    level: 10,
+                    title: 'Autoridade Máxima',
+                    icon: 'fas fa-crown',
+                    color: 'text-yellow-400',
+                    bgColor: 'bg-yellow-900/30',
+                    borderColor: 'border-yellow-600/50',
+                    positions: [
+                        { id: 'juiz-federal-1', name: 'Alexandre de Moraes', title: '1º Juiz Federal', status: 'occupied' }
+                    ]
+                },
+                {
+                    level: 9,
+                    title: 'Juízes Federais',
+                    icon: 'fas fa-gavel',
+                    color: 'text-blue-400',
+                    bgColor: 'bg-blue-900/30',
+                    borderColor: 'border-blue-600/50',
+                    positions: [
+                        { id: 'juiz-federal-2', name: null, title: '2º Juiz Federal', status: 'vacant' },
+                        { id: 'juiz-federal-3', name: null, title: '3º Juiz Federal', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 8,
+                    title: 'Desembargadores',
+                    icon: 'fas fa-balance-scale-right',
+                    color: 'text-purple-400',
+                    bgColor: 'bg-purple-900/30',
+                    borderColor: 'border-purple-600/50',
+                    positions: [
+                        { id: 'desembargador-1', name: null, title: '1º Desembargador', status: 'vacant' },
+                        { id: 'desembargador-2', name: null, title: '2º Desembargador', status: 'vacant' },
+                        { id: 'desembargador-3', name: null, title: '3º Desembargador', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 7,
+                    title: 'Procuradores-Gerais',
+                    icon: 'fas fa-user-shield',
+                    color: 'text-red-400',
+                    bgColor: 'bg-red-900/30',
+                    borderColor: 'border-red-600/50',
+                    positions: [
+                        { id: 'procurador-geral-republica', name: null, title: 'Proc. Geral da República', status: 'vacant' },
+                        { id: 'procurador-geral-2', name: null, title: 'Proc. Geral Adjunto', status: 'vacant' },
+                        { id: 'procurador-geral-3', name: null, title: 'Subproc. Geral', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 6,
+                    title: 'Presidente da OAB',
+                    icon: 'fas fa-user-tie',
+                    color: 'text-green-400',
+                    bgColor: 'bg-green-900/30',
+                    borderColor: 'border-green-600/50',
+                    positions: [
+                        { id: 'presidente-oab', name: null, title: 'Presidente da OAB', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 5,
+                    title: 'Juízes Estaduais',
+                    icon: 'fas fa-gavel',
+                    color: 'text-indigo-400',
+                    bgColor: 'bg-indigo-900/30',
+                    borderColor: 'border-indigo-600/50',
+                    positions: [
+                        { id: 'juiz-estadual-1', name: null, title: '1º Juiz Estadual', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 4,
+                    title: 'Promotores de Justiça',
+                    icon: 'fas fa-user-check',
+                    color: 'text-red-400',
+                    bgColor: 'bg-red-900/30',
+                    borderColor: 'border-red-600/50',
+                    positions: [
+                        { id: 'promotor-1', name: 'Dr. Marcos Silva', title: '1º Promotor de Justiça', status: 'occupied' }
+                    ]
+                },
+                {
+                    level: 3,
+                    title: 'Oficiais de Justiça - 2ª Instância',
+                    icon: 'fas fa-certificate',
+                    color: 'text-orange-400',
+                    bgColor: 'bg-orange-900/30',
+                    borderColor: 'border-orange-600/50',
+                    positions: [
+                        { id: 'oficial-2instancia', name: null, title: 'Oficial de Justiça - 2ª Inst.', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 2,
+                    title: 'Oficiais de Justiça - 1ª Instância',
+                    icon: 'fas fa-certificate',
+                    color: 'text-amber-400',
+                    bgColor: 'bg-amber-900/30',
+                    borderColor: 'border-amber-600/50',
+                    positions: [
+                        { id: 'oficial-1instancia', name: null, title: 'Oficial de Justiça - 1ª Inst.', status: 'vacant' }
+                    ]
+                },
+                {
+                    level: 1,
+                    title: 'Funções Essenciais',
+                    icon: 'fas fa-users',
+                    color: 'text-gray-400',
+                    bgColor: 'bg-gray-900/30',
+                    borderColor: 'border-gray-600/50',
+                    positions: [
+                        { id: 'advogados', name: 'Múltiplos', title: 'Advogados', status: 'multiple' },
+                        { id: 'defensores', name: 'Múltiplos', title: 'Defensores Públicos', status: 'multiple' }
+                    ]
+                }
+            ];
+
+            return hierarchyLevels.map(level => `
+                <div class="card p-6 ${level.bgColor} border-2 ${level.borderColor}">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="level-indicator ${level.color}">
+                                Nível ${level.level}
+                            </div>
+                            <i class="${level.icon} ${level.color} text-xl"></i>
+                            <h2 class="text-xl font-bold text-white">${level.title}</h2>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="manageLevelPositions(${level.level})">
+                            <i class="fas fa-cog mr-1"></i>Gerenciar
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${level.positions.map(position => `
+                            <div class="position-card ${position.status === 'occupied' ? 'occupied' : position.status === 'multiple' ? 'multiple' : 'vacant'}">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-white text-sm">${position.title}</h4>
+                                    <div class="status-indicator status-${position.status}">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm ${position.status === 'occupied' ? 'text-green-300' : position.status === 'multiple' ? 'text-blue-300' : 'text-red-300'}">
+                                    ${position.name || 'Vago'}
+                                </p>
+                                <div class="mt-3 flex gap-2">
+                                    ${position.status !== 'multiple' ? `
+                                        <button class="btn btn-primary btn-xs" onclick="editPosition('${position.id}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-xs" onclick="viewPositionDetails('${position.id}')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    ` : `
+                                        <button class="btn btn-primary btn-xs" onclick="viewMultiplePositions('${position.id}')">
+                                            <i class="fas fa-list mr-1"></i>Ver Lista
+                                        </button>
+                                    `}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function initializeHierarchyFeatures() {
+            // Adicionar estilos específicos da hierarquia
+            const style = document.createElement('style');
+            style.textContent = `
+                .level-indicator {
+                    padding: 4px 12px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    background: rgba(255,255,255,0.1);
+                }
+                
+                .position-card {
+                    padding: 16px;
+                    border-radius: 8px;
+                    border: 2px solid;
+                    transition: all 0.3s ease;
+                }
+                
+                .position-card.occupied {
+                    border-color: rgba(34, 197, 94, 0.5);
+                    background: rgba(34, 197, 94, 0.1);
+                }
+                
+                .position-card.vacant {
+                    border-color: rgba(239, 68, 68, 0.5);
+                    background: rgba(239, 68, 68, 0.1);
+                }
+                
+                .position-card.multiple {
+                    border-color: rgba(59, 130, 246, 0.5);
+                    background: rgba(59, 130, 246, 0.1);
+                }
+                
+                .status-indicator {
+                    font-size: 10px;
+                }
+                
+                .status-occupied { color: #22c55e; }
+                .status-vacant { color: #ef4444; }
+                .status-multiple { color: #3b82f6; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function manageLevelPositions(level) {
+            showNotification(`Gerenciando posições do Nível ${level}`, 'info');
+        }
+
+        function editPosition(positionId) {
+            showNotification(`Editando posição: ${positionId}`, 'info');
+        }
+
+        function viewPositionDetails(positionId) {
+            showNotification(`Detalhes da posição: ${positionId}`, 'info');
+        }
+
+        function viewMultiplePositions(positionId) {
+            showNotification(`Visualizando lista de: ${positionId}`, 'info');
+        }
+
+        function exportHierarchy() {
+            showNotification('Hierarquia exportada com sucesso!', 'success');
+        }
+
+        function refreshHierarchy() {
+            showHierarchy();
+            showNotification('Hierarquia atualizada!', 'success');
+        }
+
+        function updateHierarchyDisplay() {
+            if (document.getElementById('main-content').innerHTML.includes('Hierarquia Judicial')) {
+                showHierarchy(); // Recarregar se estiver sendo exibida
+            }
+        }
+
+        function updateActiveNavigation(sectionId) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const activeItem = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+        }
+
+        // === SISTEMA DE NOTIFICAÇÕES ===
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas ${getNotificationIcon(type)}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                'success': 'fa-check-circle',
+                'error': 'fa-times-circle',
+                'warning': 'fa-exclamation-triangle',
+                'info': 'fa-info-circle'
+            };
+            return icons[type] || icons['info'];
+        }
+
+        // === FUNCIONALIDADES DE CASOS ===
+        
+        function analizarCaso(numeroProcesso) {
+            showNotification(`Abrindo análise do processo ${numeroProcesso}...`, 'info');
+            
+            // Aqui seria aberto um modal ou redirecionado para página de análise
+            setTimeout(() => {
+                showNotification(`Processo ${numeroProcesso} assumido para análise`, 'success');
+                // Atualizar estatísticas
+                updateCaseStats();
+            }, 1000);
+        }
+
+        function arquivarCaso(numeroProcesso) {
+            if (confirm('Tem certeza que deseja arquivar este caso?')) {
+                showNotification(`Processo ${numeroProcesso} arquivado`, 'info');
+                // Remover da lista e atualizar estatísticas
+                updateCaseStats();
+            }
+        }
+
+        function updateCaseStats() {
+            // Simular atualização das estatísticas
+            const novos = Math.max(0, parseInt(document.getElementById('stat-novos').textContent) - 1);
+            const andamento = parseInt(document.getElementById('stat-andamento').textContent) + 1;
+            
+            document.getElementById('stat-novos').textContent = novos;
+            document.getElementById('stat-andamento').textContent = andamento;
+            document.getElementById('novos-badge').textContent = novos;
+            document.getElementById('andamento-badge').textContent = andamento;
+        }
+
+        // === SISTEMA FIREBASE (PREPARADO) ===
+        
+        let firebaseInitialized = false;
+
+        function initializeFirebaseIntegration() {
+            if (typeof window.firebaseDB !== 'undefined') {
+                firebaseInitialized = true;
+                setupRealTimeListeners();
+                showNotification('Sistema sincronizado com Firebase', 'success');
+            } else {
+                // Modo offline - usar localStorage
+                setupOfflineMode();
+                showNotification('Modo offline ativo', 'info');
+            }
+        }
+
+        function setupRealTimeListeners() {
+            // Listener para novos casos
+            if (window.firebaseRefs && window.firebaseDB) {
+                const { ref, onValue } = window.firebaseRefs;
+                const casesRef = ref(window.firebaseDB, 'cases');
+                
+                onValue(casesRef, (snapshot) => {
+                    const cases = snapshot.val();
+                    if (cases) {
+                        updateCasesList(cases);
+                        showNotification('Lista de casos atualizada', 'info');
+                    }
+                });
+            }
+        }
+
+        function setupOfflineMode() {
+            // Carregar dados do localStorage
+            const savedData = localStorage.getItem('mp-cases');
+            if (savedData) {
+                const cases = JSON.parse(savedData);
+                updateCasesList(cases);
+            }
+        }
+
+        function updateCasesList(cases) {
+            // Atualizar lista de casos na interface
+            console.log('Casos atualizados:', cases);
+        }
+
+        // === FUNÇÕES DO SISTEMA ===
+        
+        function showProfile() {
+            showNotification('Abrindo perfil do usuário...', 'info');
+        }
+
+        function showHierarchy() {
+            showNotification('Carregando hierarquia do sistema...', 'info');
+        }
+
+        function showSettings() {
+            showNotification('Abrindo configurações...', 'info');
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair do sistema?')) {
+                showNotification('Desconectando...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        }
+
+        // === INICIALIZAÇÃO ===
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setupUserPermissions();
+            initializeFirebaseIntegration();
+            
+            // Simular carregamento de dados
+            setTimeout(() => {
+                showNotification('Sistema do Ministério Público carregado', 'success');
+            }, 1000);
+        });
+
+        // Responsividade mobile - CORREÇÃO COMPLETA
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            }
+        });
+
+        // Toggle sidebar mobile - CORREÇÃO PERFEITA
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        // Fechar sidebar no mobile ao clicar fora - MELHORADO
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !toggle.contains(e.target) && 
+                sidebar.classList.contains('mobile-open')) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
+        // === SISTEMA DE HIERARQUIA INTEGRADO ===
+        
+        // Dados da hierarquia sincronizados com o sistema principal
+        let hierarchyData = {
+            // Cargos únicos (1 por cargo)
+            'juiz-federal-1': { name: 'Alexandre de Moraes', status: 'occupied' },
+            'juiz-federal-2': { name: null, status: 'vacant' },
+            'juiz-federal-3': { name: null, status: 'vacant' },
+            'desembargador-1': { name: null, status: 'vacant' },
+            'desembargador-2': { name: null, status: 'vacant' },
+            'desembargador-3': { name: null, status: 'vacant' },
+            'procurador-geral-republica-1': { name: null, status: 'vacant' },
+            'procurador-geral-2': { name: null, status: 'vacant' },
+            'procurador-geral-3': { name: null, status: 'vacant' },
+            'presidente-oab': { name: null, status: 'vacant' },
+            'juiz-estadual-1': { name: null, status: 'vacant' },
+            'promotor-1': { name: 'Dr. Marcos Silva', status: 'occupied' },
+            'oficial-2instancia': { name: null, status: 'vacant' },
+            'oficial-1instancia': { name: null, status: 'vacant' },
+            
+            // Cargos múltiplos
+            'juizes-estaduais': [],
+            'promotores': [],
+            'advogados': [],
+            'defensores': []
+        };
+
+        // Inicializar sistema completo
+        function initializeCompleteSystem() {
+            initializeHierarchy();
+            loadUserPreferences();
+            setupKeyboardShortcuts();
+            initializeRealTimeSync();
+        }
+
+        function initializeHierarchy() {
+            // Carregar dados salvos
+            const savedHierarchy = localStorage.getItem('brasilandia-hierarchy');
+            if (savedHierarchy) {
+                hierarchyData = { ...hierarchyData, ...JSON.parse(savedHierarchy) };
+            }
+        }
+
+        function loadUserPreferences() {
+            const savedPrefs = localStorage.getItem('mp-preferences');
+            if (savedPrefs) {
+                const prefs = JSON.parse(savedPrefs);
+                applyUserPreferences(prefs);
+            }
+        }
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + Shift + N = Novo caso
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'N') {
+                    e.preventDefault();
+                    showSection('casos-novos');
+                }
+                
+                // Ctrl/Cmd + H = Hierarquia
+                if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+                    e.preventDefault();
+                    showHierarchy();
+                }
+                
+                // ESC = Voltar ao dashboard
+                if (e.key === 'Escape') {
+                    showSection('dashboard');
+                }
+            });
+        }
+
+        function initializeRealTimeSync() {
+            // Sincronização em tempo real com outros portais
+            if (firebaseInitialized) {
+                const { ref, onValue } = window.firebaseRefs;
+                
+                // Listener para hierarquia
+                const hierarchyRef = ref(window.firebaseDB, 'hierarchy');
+                onValue(hierarchyRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        hierarchyData = { ...hierarchyData, ...data };
+                        updateHierarchyDisplay();
+                    }
+                });
+                
+                // Listener para novos casos do portal dos advogados
+                const casesRef = ref(window.firebaseDB, 'newCases');
+                onValue(casesRef, (snapshot) => {
+                    const cases = snapshot.val();
+                    if (cases) {
+                        handleNewCasesFromAdvogados(cases);
+                    }
+                });
+            }
+        }
+
+        function handleNewCasesFromAdvogados(cases) {
+            // Processar novos casos vindos do portal dos advogados
+            Object.values(cases).forEach(caso => {
+                if (caso.status === 'novo' && caso.destinatario === 'mp') {
+                    addNewCaseToQueue(caso);
+                    showNotification(`Novo caso recebido: ${caso.numero}`, 'success');
+                    updateCaseCounters();
+                }
+            });
+        }
+
+        function addNewCaseToQueue(caso) {
+            // Adicionar caso à lista de novos casos
+            const casosNovos = getCasosNovos();
+            casosNovos.push(caso);
+            localStorage.setItem('mp-casos-novos', JSON.stringify(casosNovos));
+            refreshCasosNovosList();
+        }
+
+        function getCasosNovos() {
+            const saved = localStorage.getItem('mp-casos-novos');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function updateCaseCounters() {
+            const novos = getCasosNovos().length;
+            const andamento = getCasosAndamento().length;
+            
+            document.getElementById('stat-novos').textContent = novos;
+            document.getElementById('stat-andamento').textContent = andamento;
+            document.getElementById('novos-badge').textContent = novos;
+            document.getElementById('andamento-badge').textContent = andamento;
+        }
+
+        function getCasosAndamento() {
+            const saved = localStorage.getItem('mp-casos-andamento');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function refreshCasosNovosList() {
+            const container = document.getElementById('casos-novos-list');
+            if (!container) return;
+            
+            const casos = getCasosNovos();
+            container.innerHTML = '';
+            
+            casos.forEach(caso => {
+                const caseElement = createCaseElement(caso);
+                container.appendChild(caseElement);
+            });
+        }
+
+        function createCaseElement(caso) {
+            const div = document.createElement('div');
+            div.className = 'card p-6 fade-in';
+            div.innerHTML = `
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="status-badge status-novo">
+                                <i class="fas fa-circle"></i>Novo
+                            </span>
+                            <span class="text-white font-bold">${caso.numero}</span>
+                        </div>
+                        <h3 class="text-white font-semibold mb-1">${caso.titulo}</h3>
+                        <p class="text-red-300 text-sm mb-2">Origem: ${caso.origem} - ${caso.advogado}</p>
+                        <div class="flex items-center gap-4 text-red-200 text-xs">
+                            <span><i class="fas fa-calendar mr-1"></i>Recebido: ${caso.data}</span>
+                            <span><i class="fas fa-clock mr-1"></i>${caso.hora}</span>
+                            <span><i class="fas fa-user mr-1"></i>${caso.cliente}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary" onclick="analizarCaso('${caso.numero}')">
+                            <i class="fas fa-eye mr-2"></i>Analisar
+                        </button>
+                        <button class="btn btn-secondary" onclick="arquivarCaso('${caso.numero}')">
+                            <i class="fas fa-archive mr-2"></i>Arquivar
+                        </button>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function hasPermission(action) {
+            return currentUser.permissions.includes(action) || currentUser.position === 'procurador';
+        }
+
+        // Funções de ação dos casos
+        function analizarCaso(numero) {
+            showNotification(`Analisando caso ${numero}...`, 'info');
+        }
+
+        function arquivarCaso(numero) {
+            showNotification(`Caso ${numero} arquivado!`, 'success');
+        }
+
+        function novoParecer() {
+            showNotification('Criando novo parecer...', 'info');
+        }
+
+        function novoProcesso() {
+            showNotification('Criando novo processo...', 'info');
+        }
+
+        function importarProcessos() {
+            showNotification('Importando processos...', 'info');
+        }
+
+        // Inicializar sistema quando página carregar
+        window.addEventListener('load', function() {
+            initializeCompleteSystem();
+            showSection('dashboard');
+        });
+
+        // === SISTEMA DE DOCUMENTOS COMPLETO ===
+        
+        function showDocuments() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-file-alt text-red-400 text-2xl"></i>
+                            <h1 class="text-3xl font-bold text-white">Gerador de Documentos</h1>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="btn btn-secondary" onclick="loadTemplate()">
+                                <i class="fas fa-folder-open mr-2"></i>Carregar Modelo
+                            </button>
+                            <button class="btn btn-primary" onclick="newDocument()">
+                                <i class="fas fa-plus mr-2"></i>Novo Documento
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Templates Disponíveis -->
+                        <div class="lg:col-span-2">
+                            <div class="card p-6">
+                                <h2 class="text-xl font-semibold text-white mb-6">Modelos Disponíveis</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    ${generateDocumentTemplates()}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ações Rápidas -->
+                        <div class="space-y-6">
+                            <div class="card p-6">
+                                <h3 class="text-lg font-semibold text-white mb-4">Ações Rápidas</h3>
+                                <div class="space-y-3">
+                                    <button class="btn btn-primary w-full" onclick="quickDenuncia()">
+                                        <i class="fas fa-gavel mr-2"></i>Denúncia Rápida
+                                    </button>
+                                    <button class="btn btn-primary w-full" onclick="quickParecer()">
+                                        <i class="fas fa-file-signature mr-2"></i>Parecer Técnico
+                                    </button>
+                                    <button class="btn btn-primary w-full" onclick="quickDespacho()">
+                                        <i class="fas fa-stamp mr-2"></i>Despacho
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card p-6">
+                                <h3 class="text-lg font-semibold text-white mb-4">Estatísticas</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Hoje:</span>
+                                        <span class="text-white font-semibold">15</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Esta semana:</span>
+                                        <span class="text-white font-semibold">47</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Este mês:</span>
+                                        <span class="text-white font-semibold">156</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateDocumentTemplates() {
+            const templates = [
+                {
+                    name: 'Denúncia Criminal',
+                    icon: 'fas fa-gavel',
+                    description: 'Modelo para denúncias criminais',
+                    type: 'denuncia'
+                },
+                {
+                    name: 'Parecer Técnico',
+                    icon: 'fas fa-file-signature',
+                    description: 'Parecer ministerial padrão',
+                    type: 'parecer'
+                },
+                {
+                    name: 'Despacho Promotorial',
+                    icon: 'fas fa-stamp',
+                    description: 'Despacho oficial do MP',
+                    type: 'despacho'
+                },
+                {
+                    name: 'Recurso de Apelação',
+                    icon: 'fas fa-balance-scale',
+                    description: 'Recurso contra decisão judicial',
+                    type: 'recurso'
+                },
+                {
+                    name: 'Agravo de Instrumento',
+                    icon: 'fas fa-file-contract',
+                    description: 'Agravo contra decisão interlocutória',
+                    type: 'agravo'
+                },
+                {
+                    name: 'Manifestação Final',
+                    icon: 'fas fa-flag-checkered',
+                    description: 'Manifestação final em processo',
+                    type: 'manifestacao'
+                }
+            ];
+
+            return templates.map(template => `
+                <div class="template-card p-4 border border-red-600/30 rounded-lg hover:border-red-500/50 cursor-pointer transition-colors" onclick="useTemplate('${template.type}')">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="${template.icon} text-red-400 text-lg"></i>
+                        <h4 class="text-white font-semibold">${template.name}</h4>
+                    </div>
+                    <p class="text-red-200 text-sm">${template.description}</p>
+                    <div class="mt-3 flex gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); useTemplate('${template.type}')">
+                            <i class="fas fa-plus mr-1"></i>Usar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); previewTemplate('${template.type}')">
+                            <i class="fas fa-eye mr-1"></i>Visualizar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function useTemplate(type) {
+            showNotification(`Usando modelo: ${type}`, 'success');
+        }
+
+        function previewTemplate(type) {
+            showNotification(`Visualizando modelo: ${type}`, 'info');
+        }
+
+        function loadTemplate() {
+            showNotification('Carregando modelo...', 'info');
+        }
+
+        function newDocument() {
+            showNotification('Criando novo documento...', 'info');
+        }
+
+        function quickDenuncia() {
+            showNotification('Criando denúncia rápida...', 'info');
+        }
+
+        function quickParecer() {
+            showNotification('Criando parecer técnico...', 'info');
+        }
+
+        function quickDespacho() {
+            showNotification('Criando despacho...', 'info');
+        }
+
+        function refreshDashboard() {
+            updateCaseCounters();
+        }
+    </script>
+</body>
+</html>
