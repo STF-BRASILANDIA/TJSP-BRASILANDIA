@@ -17,10 +17,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Firebase SDK - Carregado condicionalmente -->
+    <script>
+        // Só carregar Firebase se não estivermos em desenvolvimento local
+        if (window.location.protocol !== 'file:' && 
+            window.location.hostname !== 'localhost' && 
+            window.location.hostname !== '127.0.0.1') {
+            
+            // Carregar Firebase apenas em produção
+            document.write('<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"><\/script>');
+            document.write('<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"><\/script>');
+            document.write('<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"><\/script>');
+        } else {
+            console.log('🔧 Firebase scripts não carregados - modo desenvolvimento');
+        }
+    </script>
     
     <style>
         * {
@@ -581,21 +592,34 @@
         let firebaseAuth = null;
 
         try {
-            // Em ambiente de desenvolvimento, verificar disponibilidade
-            if (window.location.protocol === 'file:') {
-                console.log('⚠️  Modo offline detectado - Firebase desabilitado');
+            // Verificar se estamos em ambiente de desenvolvimento local
+            if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.log('🔧 Modo de desenvolvimento detectado - Firebase desabilitado');
+                console.log('📱 Sistema funcionará com dados locais simulados');
                 firebaseInitialized = false;
-            } else {
+                
+                // Não tentar inicializar Firebase em desenvolvimento
+                firebaseDB = null;
+                firebaseAuth = null;
+            } else if (typeof firebase !== 'undefined') {
+                // Só tentar conectar Firebase se os scripts estiverem carregados
                 firebase.initializeApp(firebaseConfig);
                 firebaseDB = firebase.database();
                 firebaseAuth = firebase.auth();
                 firebaseInitialized = true;
-                console.log('✅ Firebase inicializado com sucesso');
+                console.log('✅ Firebase inicializado com sucesso para produção');
+            } else {
+                console.log('⚠️  Firebase não disponível - scripts não carregados');
+                firebaseInitialized = false;
+                firebaseDB = null;
+                firebaseAuth = null;
             }
         } catch (error) {
-            console.warn('⚠️  Firebase não disponível - modo offline:', error.message);
-            console.log('📱 Sistema funcionará localmente');
+            console.warn('⚠️  Firebase indisponível:', error.message);
+            console.log('📱 Continuando em modo offline');
             firebaseInitialized = false;
+            firebaseDB = null;
+            firebaseAuth = null;
         }
 
         // === DADOS DE USUÁRIOS E PERMISSÕES ===
