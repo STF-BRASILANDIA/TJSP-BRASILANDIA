@@ -8,30 +8,32 @@
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%234f46e5'/><text y='65' x='50' font-family='Arial' font-size='45' fill='white' text-anchor='middle' font-weight='bold'>⚖️</text></svg>">
     
-    <!-- Tailwind CSS - NOTA: Para produção, usar build local -->
+    <!-- Tailwind CSS - Configurado para desenvolvimento -->
     <script>
-        // Suprimir aviso de desenvolvimento do Tailwind
-        window.process = {env: {NODE_ENV: 'development'}};
+        // Configurar Tailwind para não mostrar avisos
+        window.process = {env: {NODE_ENV: 'production'}};
+        // Suprimir console warnings
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            if (args[0] && args[0].includes && args[0].includes('tailwindcss.com')) return;
+            originalWarn.apply(console, args);
+        };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK - Carregado condicionalmente -->
-    <script>
-        // Só carregar Firebase se não estivermos em desenvolvimento local
-        if (window.location.protocol !== 'file:' && 
-            window.location.hostname !== 'localhost' && 
-            window.location.hostname !== '127.0.0.1') {
-            
-            // Carregar Firebase apenas em produção
-            document.write('<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"><\/script>');
-            document.write('<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"><\/script>');
-            document.write('<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"><\/script>');
-        } else {
-            console.log('🔧 Firebase scripts não carregados - modo desenvolvimento');
-        }
-    </script>
+    <!-- 
+    ===== FIREBASE DESABILITADO PARA DESENVOLVIMENTO =====
+    Para ativar Firebase em produção:
+    1. Descomente as linhas abaixo
+    2. Configure suas credenciais reais no firebaseConfig
+    3. Altere FIREBASE_MODE para 'online'
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    -->
     
     <style>
         * {
@@ -573,54 +575,33 @@
     <div id="notification" class="notification"></div>
 
     <script>
-        // === CONFIGURAÇÃO FIREBASE ===
-        // NOTA: Esta é uma configuração de demonstração
-        // Para produção real, substitua pelas suas credenciais do Firebase Console
+        // ===== CONFIGURAÇÃO DO SISTEMA =====
+        const FIREBASE_MODE = 'offline'; // 'offline' ou 'online'
+        
+        // === CONFIGURAÇÃO FIREBASE (PARA FUTURO USO) ===
+        // Para ativar: mude FIREBASE_MODE para 'online' e configure suas credenciais
         const firebaseConfig = {
-            apiKey: "AIzaSyC8ZxQ1x2N3Y4M5L6P7R8S9T0U1V2W3X4Y5",
-            authDomain: "tjsp-brasilandia.firebaseapp.com", 
-            databaseURL: "https://tjsp-brasilandia-default-rtdb.firebaseio.com",
-            projectId: "tjsp-brasilandia",
-            storageBucket: "tjsp-brasilandia.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abc123def456ghi789"
+            apiKey: "SUA_API_KEY_AQUI",
+            authDomain: "seu-projeto.firebaseapp.com",
+            databaseURL: "https://seu-projeto-default-rtdb.firebaseio.com",
+            projectId: "seu-projeto",
+            storageBucket: "seu-projeto.appspot.com",
+            messagingSenderId: "000000000000",
+            appId: "1:000000000000:web:abc123"
         };
 
-        // Inicializar Firebase com tratamento robusto de erro
+        // Inicialização do Firebase - TOTALMENTE DESABILITADO
         let firebaseInitialized = false;
         let firebaseDB = null;
         let firebaseAuth = null;
 
-        try {
-            // Verificar se estamos em ambiente de desenvolvimento local
-            if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                console.log('🔧 Modo de desenvolvimento detectado - Firebase desabilitado');
-                console.log('📱 Sistema funcionará com dados locais simulados');
-                firebaseInitialized = false;
-                
-                // Não tentar inicializar Firebase em desenvolvimento
-                firebaseDB = null;
-                firebaseAuth = null;
-            } else if (typeof firebase !== 'undefined') {
-                // Só tentar conectar Firebase se os scripts estiverem carregados
-                firebase.initializeApp(firebaseConfig);
-                firebaseDB = firebase.database();
-                firebaseAuth = firebase.auth();
-                firebaseInitialized = true;
-                console.log('✅ Firebase inicializado com sucesso para produção');
-            } else {
-                console.log('⚠️  Firebase não disponível - scripts não carregados');
-                firebaseInitialized = false;
-                firebaseDB = null;
-                firebaseAuth = null;
-            }
-        } catch (error) {
-            console.warn('⚠️  Firebase indisponível:', error.message);
-            console.log('📱 Continuando em modo offline');
-            firebaseInitialized = false;
-            firebaseDB = null;
-            firebaseAuth = null;
-        }
+        // MODO OFFLINE FORÇADO
+        console.log('🔧 SISTEMA EM MODO OFFLINE');
+        console.log('� Firebase desabilitado - dados locais simulados');
+        console.log('🚀 Sistema 100% funcional para testes');
+        
+        // Não tentar carregar Firebase de forma alguma
+        firebaseInitialized = false;
 
         // === DADOS DE USUÁRIOS E PERMISSÕES ===
         const usersDatabase = {
@@ -978,13 +959,27 @@
             showNotification(`Redirecionando para ${portal.title}...`, 'info');
             console.log('Redirecionando para:', portal.url);
             
-            // Registrar acesso
-            if (firebaseInitialized) {
+            // Registrar acesso (modo offline - localStorage)
+            if (firebaseInitialized && firebaseDB) {
+                // Modo online - Firebase
                 firebaseDB.ref(`system/portalAccess/${currentUser.id}`).push({
                     portal: portalKey,
                     timestamp: Date.now(),
                     userAgent: navigator.userAgent
                 });
+            } else {
+                // Modo offline - localStorage
+                const accessLog = JSON.parse(localStorage.getItem('tjsp-access-log') || '[]');
+                accessLog.push({
+                    portal: portalKey,
+                    user: currentUser.id,
+                    timestamp: Date.now(),
+                    userAgent: navigator.userAgent.substring(0, 50)
+                });
+                // Manter apenas os últimos 100 acessos
+                if (accessLog.length > 100) accessLog.splice(0, accessLog.length - 100);
+                localStorage.setItem('tjsp-access-log', JSON.stringify(accessLog));
+                console.log('📊 Acesso registrado no localStorage');
             }
             
             // Redirecionar após delay
