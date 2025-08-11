@@ -2602,6 +2602,426 @@
                 </div>
             </div>
         </section>
+
+        <!-- Seção Novo Caso -->
+        <section id="novo-caso" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-plus-circle text-blue-400 mr-3"></i>
+                            Novo Caso
+                        </h2>
+                        <p class="text-blue-200 mt-2">Cadastrar novo caso ou processo</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <form class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-white font-medium mb-2">Número do Processo</label>
+                            <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="0000000-00.0000.0.00.0000">
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Cliente</label>
+                            <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Nome do cliente">
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-white font-medium mb-2">Área do Direito</label>
+                            <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                <option>Criminal</option>
+                                <option>Civil</option>
+                                <option>Trabalhista</option>
+                                <option>Família</option>
+                                <option>Empresarial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Status</label>
+                            <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                <option>Ativo</option>
+                                <option>Pausado</option>
+                                <option>Finalizado</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white font-medium mb-2">Descrição do Caso</label>
+                        <textarea rows="4" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Descrição detalhada do caso..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-2"></i>Salvar Caso
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Seção Modelos -->
+        <section id="modelos" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-copy text-blue-400 mr-3"></i>
+                            Modelos de Documentos
+                        </h2>
+                        <p class="text-blue-200 mt-2">Templates prontos para petições e documentos</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-file-contract text-blue-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Contrato de Prestação</h3>
+                            <p class="text-blue-200 text-sm mb-4">Template de contrato de serviços advocatícios</p>
+                            <button class="btn btn-primary w-full text-sm">Usar Modelo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-balance-scale text-blue-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Petição Padrão</h3>
+                            <p class="text-blue-200 text-sm mb-4">Modelo básico de petição inicial</p>
+                            <button class="btn btn-primary w-full text-sm">Usar Modelo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-handshake text-blue-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Acordo Extrajudicial</h3>
+                            <p class="text-blue-200 text-sm mb-4">Template para acordos entre partes</p>
+                            <button class="btn btn-primary w-full text-sm">Usar Modelo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Prazos -->
+        <section id="prazos" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-clock text-blue-400 mr-3"></i>
+                            Controle de Prazos
+                        </h2>
+                        <p class="text-blue-200 mt-2">Gerencie prazos processuais e compromissos</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <!-- Calendário de Prazos -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Próximos Vencimentos</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                                <div>
+                                    <div class="text-white font-medium">Contestação - Proc. 001/2024</div>
+                                    <div class="text-red-300 text-sm">Vence em 2 dias</div>
+                                </div>
+                                <div class="text-red-400 text-2xl">⚠️</div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                                <div>
+                                    <div class="text-white font-medium">Recurso - Proc. 002/2024</div>
+                                    <div class="text-yellow-300 text-sm">Vence em 7 dias</div>
+                                </div>
+                                <div class="text-yellow-400 text-2xl">⏰</div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                                <div>
+                                    <div class="text-white font-medium">Perícia - Proc. 003/2024</div>
+                                    <div class="text-green-300 text-sm">Vence em 15 dias</div>
+                                </div>
+                                <div class="text-green-400 text-2xl">✅</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Adicionar Novo Prazo</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Descrição</label>
+                                <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Ex: Contestação">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Data de Vencimento</label>
+                                <input type="date" class="form-input w-full bg-gray-800 text-white border-gray-600">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Processo</label>
+                                <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Número do processo">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-plus mr-2"></i>Adicionar Prazo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Assinaturas -->
+        <section id="assinaturas" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-signature text-blue-400 mr-3"></i>
+                            Assinaturas Digitais
+                        </h2>
+                        <p class="text-blue-200 mt-2">Gerencie certificados digitais e assinaturas</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Certificados Digitais</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="text-white font-medium">A1 - Roberto Silva</div>
+                                        <div class="text-green-300 text-sm">Válido até: 15/08/2025</div>
+                                    </div>
+                                    <div class="text-green-400">✅</div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-3 bg-gray-500/20 border border-gray-500/30 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="text-white font-medium">A3 - Escritório</div>
+                                        <div class="text-gray-300 text-sm">Não configurado</div>
+                                    </div>
+                                    <div class="text-gray-400">⚙️</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary w-full mt-4">
+                            <i class="fas fa-plus mr-2"></i>Adicionar Certificado
+                        </button>
+                    </div>
+                    
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Documentos para Assinar</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                                <div class="text-white font-medium">Petição - Caso Silva vs Estado</div>
+                                <div class="text-blue-300 text-sm">Aguardando assinatura</div>
+                                <button class="btn btn-primary text-xs mt-2">Assinar</button>
+                            </div>
+                            
+                            <div class="p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                                <div class="text-white font-medium">Contrato de Serviços</div>
+                                <div class="text-blue-300 text-sm">Aguardando assinatura</div>
+                                <button class="btn btn-primary text-xs mt-2">Assinar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Hierarquia -->
+        <section id="hierarquia" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-sitemap text-blue-400 mr-3"></i>
+                            Hierarquia Judicial
+                        </h2>
+                        <p class="text-blue-200 mt-2">Estrutura do sistema judicial brasileiro</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="hierarchy-tree space-y-4">
+                    <div class="level-item bg-gradient-to-r from-red-500/20 to-red-600/20 border border-red-500/30 p-4 rounded-lg">
+                        <h3 class="text-red-400 font-bold text-lg">Supremo Tribunal Federal (STF)</h3>
+                        <p class="text-white text-sm">Nível 10 - Guardião da Constituição Federal</p>
+                    </div>
+                    
+                    <div class="level-item bg-gradient-to-r from-orange-500/20 to-orange-600/20 border border-orange-500/30 p-4 rounded-lg ml-8">
+                        <h3 class="text-orange-400 font-bold text-lg">Superior Tribunal de Justiça (STJ)</h3>
+                        <p class="text-white text-sm">Nível 9 - Uniformização da legislação federal</p>
+                    </div>
+                    
+                    <div class="level-item bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 p-4 rounded-lg ml-16">
+                        <h3 class="text-yellow-400 font-bold text-lg">Tribunais Regionais Federais (TRF)</h3>
+                        <p class="text-white text-sm">Nível 8 - Segunda instância da Justiça Federal</p>
+                    </div>
+                    
+                    <div class="level-item bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 p-4 rounded-lg ml-24">
+                        <h3 class="text-green-400 font-bold text-lg">Tribunais de Justiça (TJ)</h3>
+                        <p class="text-white text-sm">Nível 7 - Segunda instância da Justiça Estadual</p>
+                    </div>
+                    
+                    <div class="level-item bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/30 p-4 rounded-lg ml-32">
+                        <h3 class="text-blue-400 font-bold text-lg">Juízes de Direito</h3>
+                        <p class="text-white text-sm">Nível 6 - Primeira instância</p>
+                    </div>
+                    
+                    <div class="level-item bg-gradient-to-r from-purple-500/20 to-purple-600/20 border border-purple-500/30 p-4 rounded-lg ml-40">
+                        <h3 class="text-purple-400 font-bold text-lg">Ministério Público</h3>
+                        <p class="text-white text-sm">Nível 5 - Promotores e Procuradores</p>
+                    </div>
+                    
+                    <div class="level-item bg-gradient-to-r from-indigo-500/20 to-indigo-600/20 border border-indigo-500/30 p-4 rounded-lg ml-48">
+                        <h3 class="text-indigo-400 font-bold text-lg">Advogados</h3>
+                        <p class="text-white text-sm">Nível 1 - Defensores dos direitos dos cidadãos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Configurações -->
+        <section id="configuracoes" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-cog text-blue-400 mr-3"></i>
+                            Configurações
+                        </h2>
+                        <p class="text-blue-200 mt-2">Configurações pessoais e do sistema</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Preferências</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <label class="text-white">Tema Escuro</label>
+                                <input type="checkbox" checked class="toggle">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <label class="text-white">Notificações</label>
+                                <input type="checkbox" checked class="toggle">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <label class="text-white">Auto-save</label>
+                                <input type="checkbox" checked class="toggle">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Sistema</h3>
+                        <div class="space-y-3">
+                            <button class="btn btn-secondary w-full text-left">
+                                <i class="fas fa-download mr-2"></i>Backup de Dados
+                            </button>
+                            <button class="btn btn-secondary w-full text-left">
+                                <i class="fas fa-key mr-2"></i>Alterar Senha
+                            </button>
+                            <button class="btn btn-danger w-full text-left">
+                                <i class="fas fa-trash mr-2"></i>Limpar Cache
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Ajuda -->
+        <section id="ajuda" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-question-circle text-blue-400 mr-3"></i>
+                            Ajuda e Suporte
+                        </h2>
+                        <p class="text-blue-200 mt-2">Guias, tutoriais e suporte técnico</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-book text-blue-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Guia do Usuário</h3>
+                            <p class="text-blue-200 text-sm">Manual completo de utilização</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-video text-blue-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Tutoriais</h3>
+                            <p class="text-blue-200 text-sm">Vídeos explicativos passo a passo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-headset text-blue-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Suporte Técnico</h3>
+                            <p class="text-blue-200 text-sm">Atendimento especializado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 card p-4">
+                    <h3 class="text-white font-bold mb-4">Perguntas Frequentes</h3>
+                    <div class="space-y-3">
+                        <details class="text-white">
+                            <summary class="cursor-pointer font-medium">Como gerar um documento?</summary>
+                            <p class="mt-2 text-blue-200 text-sm pl-4">Acesse a seção "Documentos" e escolha o tipo de documento desejado...</p>
+                        </details>
+                        <details class="text-white">
+                            <summary class="cursor-pointer font-medium">Como calcular uma pena?</summary>
+                            <p class="mt-2 text-blue-200 text-sm pl-4">Use a "Calculadora" para inserir os dados do crime e obter o cálculo...</p>
+                        </details>
+                        <details class="text-white">
+                            <summary class="cursor-pointer font-medium">Como gerenciar prazos?</summary>
+                            <p class="mt-2 text-blue-200 text-sm pl-4">A seção "Prazos" permite adicionar e monitorar vencimentos...</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- JavaScript -->
@@ -13498,6 +13918,104 @@ OAB/${formData.advogadoEstado || 'UF'} nº ${formData.advogadoOAB || '000.000'}`
             document.getElementById('filtro-caso-agenda').value = '';
             showNotification('🧹 Filtros limpos!', 'success');
         }
+        
+        // ===== VERIFICAÇÃO DE ACESSO ADMINISTRATIVO =====
+        
+        function checkAdminAccess() {
+            const user = JSON.parse(localStorage.getItem('tjspUser') || '{}');
+            const adminSelection = JSON.parse(localStorage.getItem('adminSelectedCargo') || '{}');
+            
+            if (user.role === 'presidente-stf' && adminSelection.portal === 'advogado' && adminSelection.cargo) {
+                // Admin acessando como um cargo específico
+                const cargoInfo = {
+                    'advogado': {
+                        name: 'Dr. Roberto Silva (Admin como Advogado)',
+                        position: 'Advogado - Acesso Administrativo',
+                        oab: 'ADMIN-123456/SP',
+                        level: 3
+                    },
+                    'defensor': {
+                        name: 'Dra. Ana Costa (Admin como Defensora)',
+                        position: 'Defensora Pública - Acesso Administrativo', 
+                        oab: 'DP-ADMIN-789/SP',
+                        level: 4
+                    }
+                };
+                
+                const selectedCargo = cargoInfo[adminSelection.cargo];
+                if (selectedCargo) {
+                    updateAdvogadoInterface(selectedCargo, adminSelection.cargo);
+                    showAdvogadoAdminBanner(adminSelection.cargo);
+                    adaptAdvogadoInterfaceForCargo(adminSelection.cargo);
+                }
+            }
+        }
+
+        function updateAdvogadoInterface(cargoInfo, cargo) {
+            // Atualizar informações do usuário na interface
+            setTimeout(() => {
+                const userNameEl = document.querySelector('#user-name, .user-name');
+                const userPositionEl = document.querySelector('#user-position, .user-position');
+                const userOabEl = document.querySelector('#user-oab, .user-oab');
+                const userInitialsEl = document.querySelector('#user-initials, .user-initials');
+                
+                if (userNameEl) userNameEl.textContent = cargoInfo.name;
+                if (userPositionEl) userPositionEl.textContent = cargoInfo.position;
+                if (userOabEl) userOabEl.textContent = cargoInfo.oab;
+                if (userInitialsEl) {
+                    userInitialsEl.textContent = cargo === 'defensor' ? 'DP' : 'ADV';
+                }
+            }, 200);
+        }
+
+        function showAdvogadoAdminBanner(cargo) {
+            // Mostrar banner indicando acesso administrativo
+            const banner = document.createElement('div');
+            banner.className = 'fixed top-0 left-0 right-0 z-50 bg-yellow-600 text-black p-2 text-center text-sm font-bold';
+            banner.innerHTML = `
+                <i class="fas fa-crown mr-2"></i>
+                MODO ADMINISTRATIVO - Visualizando como ${cargo.toUpperCase()}
+                <button onclick="returnToAdminPanel()" class="ml-4 bg-black text-yellow-400 px-2 py-1 rounded text-xs">
+                    <i class="fas fa-arrow-left mr-1"></i>Voltar ao STF
+                </button>
+            `;
+            document.body.prepend(banner);
+            
+            // Ajustar margem do conteúdo
+            setTimeout(() => {
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                if (sidebar) sidebar.style.marginTop = '48px';
+                if (mainContent) mainContent.style.marginTop = '48px';
+            }, 100);
+        }
+
+        function adaptAdvogadoInterfaceForCargo(cargo) {
+            // Adaptar interface baseado no cargo
+            setTimeout(() => {
+                if (cargo === 'defensor') {
+                    // Adaptar interface para Defensor Público
+                    const titleEl = document.querySelector('h1, .portal-title');
+                    if (titleEl && titleEl.textContent.includes('Advogados')) {
+                        titleEl.textContent = titleEl.textContent.replace('Advogados', 'Defensores Públicos');
+                    }
+                    
+                    // Mudar cor do tema para verde (Defensoria)
+                    document.documentElement.style.setProperty('--primary-blue', '#059669');
+                    document.documentElement.style.setProperty('--secondary-blue', '#10b981');
+                }
+            }, 200);
+        }
+
+        function returnToAdminPanel() {
+            localStorage.removeItem('adminSelectedCargo');
+            window.location.href = 'portal-stf.html';
+        }
+
+        // Verificar acesso admin na inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+        });
         
         
         

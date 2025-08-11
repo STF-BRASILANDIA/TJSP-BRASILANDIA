@@ -9,27 +9,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Firebase SDK -->
+    <!-- 
+    ===== FIREBASE DESABILITADO PARA DESENVOLVIMENTO =====
+    Para ativar Firebase em produção, descomente este script:
+    
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getDatabase, ref, set, onValue, push, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
         import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         
-        // Configuração Firebase (será conectada posteriormente)
         const firebaseConfig = {
-            // Configuração será adicionada quando conectar ao Firebase real
-            databaseURL: 'https://brasilandia-juridico-default-rtdb.firebaseio.com/'
+            // Suas credenciais reais aqui
         };
         
-        // Inicialização Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         const auth = getAuth(app);
         
-        // Disponibilizar globalmente
         window.firebaseDB = database;
         window.firebaseAuth = auth;
         window.firebaseRefs = { ref, set, onValue, push, remove };
+    </script>
+    -->
+    
+    <script>
+        // MODO OFFLINE - Firebase simulado
+        console.log('🔧 Portal Ministério Público - Modo Offline');
+        console.log('📱 Dados armazenados localmente para testes');
+        
+        // Simular Firebase para compatibilidade
+        window.firebaseDB = null;
+        window.firebaseAuth = null;
+        window.firebaseRefs = {
+            ref: () => ({}),
+            set: () => Promise.resolve(),
+            onValue: () => {},
+            push: () => ({ key: Date.now().toString() }),
+            remove: () => Promise.resolve()
+        };
     </script>
     
     <style>
@@ -584,35 +601,40 @@
     <!-- Main Content -->
     <main class="main-content">
         <!-- Dashboard Section -->
-        <section id="dashboard" class="section active">
-            <!-- User Profile Card -->
-            <div class="user-profile">
+        <section id="dashboard" class="section active fade-in">
+            <!-- Perfil do Usuário Logado -->
+            <div class="card p-6 mb-8 bg-gradient-to-r from-red-900/40 to-red-800/40">
                 <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-                    <!-- Avatar e Info Básica -->
+                    <!-- Avatar e Informações Básicas -->
                     <div class="flex items-center gap-4">
-                        <div class="w-20 h-20 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                        <div class="w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                             <span id="user-initials">MP</span>
                         </div>
                         <div>
                             <h3 class="text-white font-bold text-xl mb-1" id="user-name">Dr. Marcos Silva</h3>
-                            <p class="text-red-200 text-sm mb-1" id="user-position">1º Promotor</p>
+                            <p class="text-red-200 text-sm mb-1" id="user-position">1º Promotor de Justiça</p>
                             <p class="text-red-300 text-xs flex items-center gap-2">
                                 <i class="fas fa-id-card"></i>
-                                <span>Registro <span id="user-registro">MP-001</span></span>
+                                <span>Registro MP <span id="user-registro">001/2024</span></span>
                             </p>
                         </div>
                     </div>
                     
-                    <!-- Status e Informações -->
+                    <!-- Informações Adicionais -->
                     <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Status Online -->
                         <div class="flex items-center gap-2 text-green-400">
                             <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                             <span class="text-sm">Online</span>
                         </div>
+                        
+                        <!-- Casos Ativos -->
                         <div class="flex items-center gap-2 text-red-200">
                             <i class="fas fa-folder-open text-red-400"></i>
                             <span class="text-sm"><span id="active-cases">8</span> casos ativos</span>
                         </div>
+                        
+                        <!-- Último Acesso -->
                         <div class="flex items-center gap-2 text-red-200">
                             <i class="fas fa-clock text-yellow-400"></i>
                             <span class="text-sm">Último acesso: <span id="last-access">Hoje</span></span>
@@ -621,116 +643,105 @@
                     
                     <!-- Botões de Ação -->
                     <div class="flex flex-wrap gap-3">
-                        <button onclick="showProfile()" class="btn btn-secondary text-sm px-4 py-2">
+                        <!-- Perfil Completo -->
+                        <button onclick="showUserProfile()" class="btn bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2">
                             <i class="fas fa-user mr-2"></i>Perfil
                         </button>
-                        <button onclick="showHierarchy()" class="btn btn-secondary text-sm px-4 py-2">
+                        
+                        <!-- Hierarquia Jurídica -->
+                        <button onclick="showSection('hierarquia')" class="btn bg-slate-600 hover:bg-slate-700 text-white text-sm px-4 py-2">
                             <i class="fas fa-sitemap mr-2"></i>Hierarquia
                         </button>
-                        <button onclick="showSettings()" class="btn btn-secondary text-sm px-4 py-2">
+                        
+                        <!-- Configurações -->
+                        <button onclick="showSettings()" class="btn bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2">
                             <i class="fas fa-cog mr-2"></i>Config
                         </button>
-                        <button onclick="logout()" class="btn btn-danger text-sm px-4 py-2">
+                        
+                        <!-- Logout -->
+                        <button onclick="logout()" class="btn bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2">
                             <i class="fas fa-sign-out-alt mr-2"></i>Sair
                         </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Welcome Section -->
+            
             <div class="mb-8">
-                <h1 class="text-white text-3xl font-bold mb-2">Bem-vindo ao Ministério Público</h1>
-                <p class="text-red-200">Sistema integrado para promotores, procuradores e oficiais de justiça</p>
+                <h2 class="text-white text-3xl font-bold mb-2">Bem-vindo ao Ministério Público</h2>
+                <p class="text-red-200">Gerencie denúncias, investigações e procedimentos ministeriais</p>
             </div>
-
-            <!-- Quick Stats -->
-            <div class="grid-responsive grid-stats mb-8">
+            
+            <!-- Cards Dashboard -->
+            <div class="grid-responsive grid-cards mb-8">
+                <!-- Card Documentos -->
                 <div class="card p-6 text-center">
-                    <div class="text-3xl font-bold text-red-400 mb-2" id="stat-novos">12</div>
-                    <div class="text-red-200 text-sm">Casos Novos</div>
-                </div>
-                <div class="card p-6 text-center">
-                    <div class="text-3xl font-bold text-yellow-400 mb-2" id="stat-andamento">8</div>
-                    <div class="text-red-200 text-sm">Em Andamento</div>
-                </div>
-                <div class="card p-6 text-center">
-                    <div class="text-3xl font-bold text-green-400 mb-2" id="stat-concluidos">24</div>
-                    <div class="text-red-200 text-sm">Concluídos</div>
-                </div>
-                <div class="card p-6 text-center">
-                    <div class="text-3xl font-bold text-blue-400 mb-2" id="stat-investigacoes">5</div>
-                    <div class="text-red-200 text-sm">Investigações</div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="grid-responsive grid-cards">
-                <!-- Casos Novos -->
-                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('casos-novos')">
-                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-inbox text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white font-bold text-lg mb-2">Casos Novos</h3>
-                    <p class="text-red-200 text-sm mb-4">Processos aguardando análise</p>
-                    <div class="btn btn-primary w-full">
-                        Acessar <span class="ml-2 bg-red-800 px-2 py-1 rounded-full text-xs">12</span>
-                    </div>
-                </div>
-
-                <!-- Investigações -->
-                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('investigacoes')">
-                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-search text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white font-bold text-lg mb-2">Investigações</h3>
-                    <p class="text-red-200 text-sm mb-4">Inquéritos em andamento</p>
-                    <div class="btn btn-primary w-full">
-                        Acessar
-                    </div>
-                </div>
-
-                <!-- Documentos -->
-                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('documentos')">
                     <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
                         <i class="fas fa-file-alt text-white text-2xl"></i>
                     </div>
                     <h3 class="text-white font-bold text-lg mb-2">Documentos</h3>
-                    <p class="text-red-200 text-sm mb-4">Gerador de peças jurídicas</p>
-                    <div class="btn btn-primary w-full">
+                    <p class="text-red-200 text-sm mb-4">Gerencie denúncias e pareceres</p>
+                    <button onclick="showSection('documentos')" class="btn btn-primary w-full">
                         Acessar
-                    </div>
+                    </button>
                 </div>
-
-                <!-- Calculadora -->
-                <div class="card p-6 text-center cursor-pointer hover:scale-105" onclick="showSection('calculadora')">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                
+                <!-- Card Calculadora -->
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
                         <i class="fas fa-calculator text-white text-2xl"></i>
                     </div>
                     <h3 class="text-white font-bold text-lg mb-2">Calculadora</h3>
-                    <p class="text-red-200 text-sm mb-4">Cálculo de penas e multas</p>
-                    <div class="btn btn-primary w-full">
+                    <p class="text-red-200 text-sm mb-4">Calcule penas e multas</p>
+                    <button onclick="showSection('calculadora')" class="btn btn-primary w-full">
                         Acessar
+                    </button>
+                </div>
+                
+                <!-- Card Investigações -->
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-search text-white text-2xl"></i>
                     </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Investigações</h3>
+                    <p class="text-red-200 text-sm mb-4">Gerencie inquéritos e apurações</p>
+                    <button onclick="showSection('investigacoes')" class="btn btn-primary w-full">
+                        Acessar
+                    </button>
+                </div>
+                
+                <!-- Card Casos Novos -->
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-inbox text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Casos Novos</h3>
+                    <p class="text-red-200 text-sm mb-4">Processos aguardando análise</p>
+                    <button onclick="showSection('casos-novos')" class="btn btn-primary w-full">
+                        Acessar
+                    </button>
                 </div>
             </div>
-
-            <!-- Recent Activity -->
-            <div class="mt-8">
-                <h2 class="text-white text-xl font-bold mb-4">Atividade Recente</h2>
-                <div class="card p-6">
-                    <div class="space-y-4" id="recent-activity">
-                        <!-- Activity items will be loaded here -->
-                        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                            <i class="fas fa-plus-circle text-green-400"></i>
-                            <div>
-                                <div class="text-white font-medium">Novo caso recebido</div>
-                                <div class="text-red-300 text-sm">Processo #2024-001234 - Há 2 minutos</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                            <i class="fas fa-file-alt text-blue-400"></i>
-                            <div>
-                                <div class="text-white font-medium">Denúncia enviada</div>
+            
+            <!-- Estatísticas Rápidas -->
+            <div class="grid-responsive" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div class="card p-4 text-center">
+                    <div class="text-3xl font-bold text-green-400 mb-1">12</div>
+                    <div class="text-red-200 text-sm">Casos Novos</div>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-3xl font-bold text-purple-400 mb-1">8</div>
+                    <div class="text-red-200 text-sm">Em Andamento</div>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-3xl font-bold text-red-400 mb-1">5</div>
+                    <div class="text-red-200 text-sm">Investigações</div>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-3xl font-bold text-yellow-400 mb-1">24</div>
+                    <div class="text-red-200 text-sm">Concluídos</div>
+                </div>
+            </div>
+        </section>
                                 <div class="text-red-300 text-sm">Processo #2024-001230 - Há 1 hora</div>
                             </div>
                         </div>
@@ -862,6 +873,410 @@
         <section id="calculadora" class="section">
             <h2 class="text-white text-2xl font-bold mb-4">Em Desenvolvimento</h2>
             <p class="text-red-200">Esta seção está sendo implementada...</p>
+        </section>
+
+        <!-- Seção Casos em Andamento -->
+        <section id="casos-andamento" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-tasks text-red-400 mr-3"></i>
+                            Casos em Andamento
+                        </h2>
+                        <p class="text-red-200 mt-2">Processos em tramitação e acompanhamento</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid gap-4">
+                    <div class="card p-4 border-l-4 border-yellow-400">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-bold">Proc. 001/2024 - Investigação de Corrupção</h3>
+                                <p class="text-red-200 text-sm">Aguardando diligências da Polícia Civil</p>
+                            </div>
+                            <span class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-sm">Em Andamento</span>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button class="btn btn-primary text-sm">Ver Detalhes</button>
+                            <button class="btn btn-secondary text-sm">Adicionar Despacho</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Modelos -->
+        <section id="modelos" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-copy text-red-400 mr-3"></i>
+                            Modelos de Peças
+                        </h2>
+                        <p class="text-red-200 mt-2">Templates para denúncias, pareceres e outros documentos</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-file-alt text-red-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Denúncia Criminal</h3>
+                            <p class="text-red-200 text-sm mb-4">Template padrão para denúncias</p>
+                            <button class="btn btn-primary w-full text-sm">Usar Modelo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-balance-scale text-red-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Parecer Jurídico</h3>
+                            <p class="text-red-200 text-sm mb-4">Modelo para pareceres técnicos</p>
+                            <button class="btn btn-primary w-full text-sm">Usar Modelo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-4 hover:scale-105 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-search text-red-400 text-3xl mb-4"></i>
+                            <h3 class="text-white font-bold mb-2">Requisição de Diligência</h3>
+                            <p class="text-red-200 text-sm mb-4">Template para solicitações investigativas</p>
+                            <button class="btn btn-primary w-full text-sm">Usar Modelo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Denúncias -->
+        <section id="denuncias" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
+                            Denúncias e Representações
+                        </h2>
+                        <p class="text-red-200 mt-2">Gerencie denúncias recebidas e em análise</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid gap-4">
+                    <div class="card p-4 border-l-4 border-red-400">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-bold">Denúncia Anônima - Corrupção</h3>
+                                <p class="text-red-200 text-sm">Recebida em: 10/08/2025</p>
+                                <p class="text-red-200 text-sm">Sobre: Irregularidades na licitação municipal</p>
+                            </div>
+                            <span class="bg-red-500/20 text-red-300 px-3 py-1 rounded-full text-sm">Urgente</span>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button class="btn btn-primary text-sm">Analisar</button>
+                            <button class="btn btn-secondary text-sm">Arquivar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Pareceres -->
+        <section id="pareceres" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-file-signature text-red-400 mr-3"></i>
+                            Pareceres Jurídicos
+                        </h2>
+                        <p class="text-red-200 mt-2">Emitir pareceres e manifestações técnicas</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Novo Parecer</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Assunto</label>
+                                <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Tema do parecer">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Tipo</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                    <option>Parecer Técnico</option>
+                                    <option>Manifestação</option>
+                                    <option>Análise Jurídica</option>
+                                    <option>Recomendação</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-plus mr-2"></i>Criar Parecer
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Pareceres Recentes</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                                <div class="text-white font-medium">Parecer nº 001/2024</div>
+                                <div class="text-green-300 text-sm">Legalidade do processo licitatório</div>
+                                <div class="text-green-300 text-xs">Finalizado em 09/08/2025</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Processos -->
+        <section id="processos" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-folder-open text-red-400 mr-3"></i>
+                            Processos Judiciais
+                        </h2>
+                        <p class="text-red-200 mt-2">Acompanhe processos em tramitação</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="card p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-bold">0001234-56.2024.8.26.0001</h3>
+                                <p class="text-red-200 text-sm">Ação Penal - Estelionato</p>
+                                <p class="text-red-200 text-xs">Comarca: Brasilândia</p>
+                            </div>
+                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">Em Trâmite</span>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button class="btn btn-primary text-sm">Acompanhar</button>
+                            <button class="btn btn-secondary text-sm">Ver Histórico</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Recursos -->
+        <section id="recursos" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-arrow-up text-red-400 mr-3"></i>
+                            Recursos e Apelações
+                        </h2>
+                        <p class="text-red-200 mt-2">Recursos interpostos e em análise</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="text-center py-12">
+                    <i class="fas fa-file-upload text-6xl text-red-400/50 mb-4"></i>
+                    <h3 class="text-white text-xl font-bold mb-2">Nenhum recurso pendente</h3>
+                    <p class="text-red-200">Recursos aparecerão aqui conforme forem protocolados</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Relatórios -->
+        <section id="relatorios" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-chart-bar text-red-400 mr-3"></i>
+                            Relatórios e Estatísticas
+                        </h2>
+                        <p class="text-red-200 mt-2">Dados e métricas do Ministério Público</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card p-4 text-center hover:scale-105 cursor-pointer">
+                        <i class="fas fa-chart-pie text-red-400 text-3xl mb-4"></i>
+                        <h3 class="text-white font-bold mb-2">Relatório Mensal</h3>
+                        <p class="text-red-200 text-sm mb-4">Estatísticas do mês corrente</p>
+                        <button class="btn btn-primary w-full text-sm">Gerar</button>
+                    </div>
+                    
+                    <div class="card p-4 text-center hover:scale-105 cursor-pointer">
+                        <i class="fas fa-chart-line text-red-400 text-3xl mb-4"></i>
+                        <h3 class="text-white font-bold mb-2">Produtividade</h3>
+                        <p class="text-red-200 text-sm mb-4">Análise de casos resolvidos</p>
+                        <button class="btn btn-primary w-full text-sm">Visualizar</button>
+                    </div>
+                    
+                    <div class="card p-4 text-center hover:scale-105 cursor-pointer">
+                        <i class="fas fa-file-export text-red-400 text-3xl mb-4"></i>
+                        <h3 class="text-white font-bold mb-2">Exportar Dados</h3>
+                        <p class="text-red-200 text-sm mb-4">Baixar relatórios em PDF/Excel</p>
+                        <button class="btn btn-primary w-full text-sm">Exportar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Mandados -->
+        <section id="mandados" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-stamp text-red-400 mr-3"></i>
+                            Mandados e Ofícios
+                        </h2>
+                        <p class="text-red-200 mt-2">Expedir e acompanhar mandados judiciais</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Novo Mandado</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Tipo</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                    <option>Mandado de Busca e Apreensão</option>
+                                    <option>Mandado de Prisão</option>
+                                    <option>Mandado de Citação</option>
+                                    <option>Ofício Requisitório</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Destinatário</label>
+                                <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Pessoa ou órgão">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-plus mr-2"></i>Expedir Mandado
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4">Mandados Expedidos</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                                <div class="text-white font-medium">Mandado nº 001/2024</div>
+                                <div class="text-yellow-300 text-sm">Busca e Apreensão</div>
+                                <div class="text-yellow-300 text-xs">Expedido em 08/08/2025</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Diligências -->
+        <section id="diligencias" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-search-plus text-red-400 mr-3"></i>
+                            Diligências e Investigações
+                        </h2>
+                        <p class="text-red-200 mt-2">Acompanhe diligências em andamento</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid gap-4">
+                    <div class="card p-4 border-l-4 border-blue-400">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-white font-bold">Diligência 001/2024</h3>
+                                <p class="text-red-200 text-sm">Oitiva de testemunhas - Caso João Silva</p>
+                                <p class="text-red-200 text-xs">Solicitada em: 07/08/2025</p>
+                            </div>
+                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">Em Andamento</span>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button class="btn btn-primary text-sm">Ver Resultado</button>
+                            <button class="btn btn-secondary text-sm">Solicitar Nova</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Hierarquia -->
+        <section id="hierarquia" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-users text-red-400 mr-3"></i>
+                            Hierarquia Institucional
+                        </h2>
+                        <p class="text-red-200 mt-2">Estrutura hierárquica do Ministério Público</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="card p-4 border-l-4 border-yellow-400">
+                        <h3 class="text-white font-bold flex items-center">
+                            <i class="fas fa-crown text-yellow-400 mr-2"></i>
+                            Procurador-Geral de Justiça
+                        </h3>
+                        <p class="text-red-200 text-sm">Dr. José Silva Santos</p>
+                        <p class="text-red-200 text-xs">Nível 10 - Máxima autoridade do MP</p>
+                    </div>
+
+                    <div class="card p-4 border-l-4 border-orange-400">
+                        <h3 class="text-white font-bold flex items-center">
+                            <i class="fas fa-star text-orange-400 mr-2"></i>
+                            Promotor de Justiça
+                        </h3>
+                        <p class="text-red-200 text-sm">Dr. Maria Oliveira (Seu nível atual)</p>
+                        <p class="text-red-200 text-xs">Nível 7 - Atuação nas comarcas</p>
+                    </div>
+
+                    <div class="card p-4 border-l-4 border-blue-400">
+                        <h3 class="text-white font-bold flex items-center">
+                            <i class="fas fa-user-tie text-blue-400 mr-2"></i>
+                            Servidor Público
+                        </h3>
+                        <p class="text-red-200 text-sm">Apoio administrativo</p>
+                        <p class="text-red-200 text-xs">Níveis 1-5 - Funções de suporte</p>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -1097,6 +1512,119 @@
 
         function loadProcessosList() {
             // Implementar carregamento de processos
+        }
+
+        // === CALCULADORA DE PENAS ===
+        function showSentenceCalculator() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-calculator text-red-400 text-2xl"></i>
+                            <h1 class="text-3xl font-bold text-white">Calculadora de Penas</h1>
+                        </div>
+                        <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Voltar
+                        </button>
+                    </div>
+
+                    <!-- Calculadora de Penas -->
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <!-- Formulário de Cálculo -->
+                        <div class="card p-6">
+                            <h2 class="text-2xl font-bold text-white mb-6">
+                                <i class="fas fa-gavel text-red-400 mr-3"></i>
+                                Cálculo de Pena
+                            </h2>
+                            
+                            <form id="sentenceForm" class="space-y-6">
+                                <div>
+                                    <label class="block text-white font-medium mb-2">Tipo de Crime</label>
+                                    <select id="crimeType" class="form-input" onchange="updatePenalty()">
+                                        <option value="">Selecione o crime</option>
+                                        <option value="furto">Furto (Art. 155)</option>
+                                        <option value="roubo">Roubo (Art. 157)</option>
+                                        <option value="homicidio_simples">Homicídio Simples (Art. 121)</option>
+                                        <option value="homicidio_qualificado">Homicídio Qualificado (Art. 121, §2º)</option>
+                                        <option value="lesao_corporal">Lesão Corporal (Art. 129)</option>
+                                        <option value="trafico">Tráfico de Drogas (Art. 33)</option>
+                                        <option value="corrupcao">Corrupção Passiva (Art. 317)</option>
+                                        <option value="peculato">Peculato (Art. 312)</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-white font-medium mb-2">Pena Mínima (anos)</label>
+                                        <input type="number" id="minPenalty" class="form-input" step="0.1" readonly>
+                                    </div>
+                                    <div>
+                                        <label class="block text-white font-medium mb-2">Pena Máxima (anos)</label>
+                                        <input type="number" id="maxPenalty" class="form-input" step="0.1" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Circunstâncias Agravantes -->
+                                <div>
+                                    <label class="block text-white font-medium mb-3">Circunstâncias Agravantes</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center text-gray-300">
+                                            <input type="checkbox" class="form-checkbox mr-3" value="reincidencia" onchange="calculateSentence()">
+                                            Reincidência (+1/3)
+                                        </label>
+                                        <label class="flex items-center text-gray-300">
+                                            <input type="checkbox" class="form-checkbox mr-3" value="violencia" onchange="calculateSentence()">
+                                            Com violência ou grave ameaça (+1/4)
+                                        </label>
+                                        <label class="flex items-center text-gray-300">
+                                            <input type="checkbox" class="form-checkbox mr-3" value="concurso" onchange="calculateSentence()">
+                                            Concurso de pessoas (+1/6)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Circunstâncias Atenuantes -->
+                                <div>
+                                    <label class="block text-white font-medium mb-3">Circunstâncias Atenuantes</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center text-gray-300">
+                                            <input type="checkbox" class="form-checkbox mr-3" value="primario" onchange="calculateSentence()">
+                                            Réu primário (-1/6)
+                                        </label>
+                                        <label class="flex items-center text-gray-300">
+                                            <input type="checkbox" class="form-checkbox mr-3" value="confissao" onchange="calculateSentence()">
+                                            Confissão espontânea (-1/8)
+                                        </label>
+                                        <label class="flex items-center text-gray-300">
+                                            <input type="checkbox" class="form-checkbox mr-3" value="colaboracao" onchange="calculateSentence()">
+                                            Colaboração com justiça (-1/4)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="button" onclick="calculateSentence()" class="btn btn-primary w-full">
+                                    <i class="fas fa-calculator mr-2"></i>
+                                    Calcular Pena
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Resultado -->
+                        <div class="card p-6">
+                            <h2 class="text-2xl font-bold text-white mb-6">
+                                <i class="fas fa-clipboard-check text-green-400 mr-3"></i>
+                                Resultado do Cálculo
+                            </h2>
+                            
+                            <div id="sentenceResult" class="text-center py-12 text-gray-400">
+                                <i class="fas fa-info-circle text-6xl mb-4 opacity-50"></i>
+                                <p>Selecione um crime e configure os parâmetros para calcular a pena.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function showHierarchy() {
@@ -1382,6 +1910,170 @@
             }
         }
 
+        // === FUNÇÕES DA CALCULADORA DE PENAS ===
+        
+        // Definição das penas por tipo de crime
+        const crimePenalties = {
+            'furto': { min: 1, max: 4, description: 'Furto - Art. 155 CP' },
+            'roubo': { min: 4, max: 10, description: 'Roubo - Art. 157 CP' },
+            'homicidio_simples': { min: 6, max: 20, description: 'Homicídio Simples - Art. 121 CP' },
+            'homicidio_qualificado': { min: 12, max: 30, description: 'Homicídio Qualificado - Art. 121, §2º CP' },
+            'lesao_corporal': { min: 0.25, max: 1, description: 'Lesão Corporal - Art. 129 CP' },
+            'trafico': { min: 5, max: 15, description: 'Tráfico de Drogas - Art. 33 Lei 11.343/06' },
+            'corrupcao': { min: 2, max: 12, description: 'Corrupção Passiva - Art. 317 CP' },
+            'peculato': { min: 2, max: 12, description: 'Peculato - Art. 312 CP' }
+        };
+
+        function updatePenalty() {
+            const crimeType = document.getElementById('crimeType').value;
+            const minPenalty = document.getElementById('minPenalty');
+            const maxPenalty = document.getElementById('maxPenalty');
+            
+            if (crimeType && crimePenalties[crimeType]) {
+                minPenalty.value = crimePenalties[crimeType].min;
+                maxPenalty.value = crimePenalties[crimeType].max;
+                calculateSentence();
+            } else {
+                minPenalty.value = '';
+                maxPenalty.value = '';
+                document.getElementById('sentenceResult').innerHTML = `
+                    <div class="text-center py-12 text-gray-400">
+                        <i class="fas fa-info-circle text-6xl mb-4 opacity-50"></i>
+                        <p>Selecione um crime para iniciar o cálculo.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function calculateSentence() {
+            const crimeType = document.getElementById('crimeType').value;
+            
+            if (!crimeType || !crimePenalties[crimeType]) {
+                return;
+            }
+
+            const basePenalty = crimePenalties[crimeType];
+            let minSentence = basePenalty.min;
+            let maxSentence = basePenalty.max;
+
+            // Calcular pena base (média entre min e max)
+            let baseSentence = (minSentence + maxSentence) / 2;
+
+            // Aplicar agravantes
+            const agravantes = document.querySelectorAll('input[type="checkbox"][value="reincidencia"], input[type="checkbox"][value="violencia"], input[type="checkbox"][value="concurso"]');
+            let agravantesFactor = 1;
+            let agravantesText = [];
+
+            agravantes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    switch (checkbox.value) {
+                        case 'reincidencia':
+                            agravantesFactor *= 1.33; // +1/3
+                            agravantesText.push('Reincidência (+1/3)');
+                            break;
+                        case 'violencia':
+                            agravantesFactor *= 1.25; // +1/4
+                            agravantesText.push('Violência (+1/4)');
+                            break;
+                        case 'concurso':
+                            agravantesFactor *= 1.17; // +1/6
+                            agravantesText.push('Concurso (+1/6)');
+                            break;
+                    }
+                }
+            });
+
+            // Aplicar atenuantes
+            const atenuantes = document.querySelectorAll('input[type="checkbox"][value="primario"], input[type="checkbox"][value="confissao"], input[type="checkbox"][value="colaboracao"]');
+            let atenuantesFactor = 1;
+            let atenuantesText = [];
+
+            atenuantes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    switch (checkbox.value) {
+                        case 'primario':
+                            atenuantesFactor *= 0.83; // -1/6
+                            atenuantesText.push('Réu primário (-1/6)');
+                            break;
+                        case 'confissao':
+                            atenuantesFactor *= 0.875; // -1/8
+                            atenuantesText.push('Confissão (-1/8)');
+                            break;
+                        case 'colaboracao':
+                            atenuantesFactor *= 0.75; // -1/4
+                            atenuantesText.push('Colaboração (-1/4)');
+                            break;
+                    }
+                }
+            });
+
+            // Calcular pena final
+            const finalSentence = baseSentence * agravantesFactor * atenuantesFactor;
+            const years = Math.floor(finalSentence);
+            const months = Math.round((finalSentence - years) * 12);
+
+            // Exibir resultado
+            document.getElementById('sentenceResult').innerHTML = `
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-red-500/20 to-red-700/20 border border-red-500/50 rounded-xl p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-white mb-2">Pena Calculada</h3>
+                        <div class="text-4xl font-bold text-red-400 mb-2">
+                            ${years} anos${months > 0 ? ` e ${months} meses` : ''}
+                        </div>
+                        <p class="text-gray-300">${basePenalty.description}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-gray-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-white mb-2">
+                                <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                                Pena Base
+                            </h4>
+                            <p class="text-gray-300">${baseSentence.toFixed(1)} anos</p>
+                            <p class="text-xs text-gray-400">Média entre ${basePenalty.min} e ${basePenalty.max} anos</p>
+                        </div>
+
+                        <div class="bg-gray-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-white mb-2">
+                                <i class="fas fa-calculator text-green-400 mr-2"></i>
+                                Multiplicadores
+                            </h4>
+                            <p class="text-gray-300">Agravantes: ${(agravantesFactor * 100).toFixed(0)}%</p>
+                            <p class="text-gray-300">Atenuantes: ${(atenuantesFactor * 100).toFixed(0)}%</p>
+                        </div>
+                    </div>
+
+                    ${agravantesText.length > 0 ? `
+                    <div class="mt-4 p-4 bg-red-900/30 border border-red-500/30 rounded-lg">
+                        <h5 class="font-semibold text-red-400 mb-2">Circunstâncias Agravantes:</h5>
+                        <ul class="text-sm text-gray-300 list-disc list-inside">
+                            ${agravantesText.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    ${atenuantesText.length > 0 ? `
+                    <div class="mt-4 p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
+                        <h5 class="font-semibold text-green-400 mb-2">Circunstâncias Atenuantes:</h5>
+                        <ul class="text-sm text-gray-300 list-disc list-inside">
+                            ${atenuantesText.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    <div class="mt-6 p-4 bg-yellow-900/30 border border-yellow-500/30 rounded-lg">
+                        <h5 class="font-semibold text-yellow-400 mb-2">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Observação Legal
+                        </h5>
+                        <p class="text-sm text-gray-300">
+                            Este cálculo é uma estimativa baseada nos parâmetros legais. A pena definitiva deve considerar todas as circunstâncias do caso e a jurisprudência aplicável.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
         // === SISTEMA DE NOTIFICAÇÕES ===
         
         function showNotification(message, type = 'info') {
@@ -1506,6 +2198,102 @@
             showNotification('Carregando hierarquia do sistema...', 'info');
         }
 
+        function showUserProfile() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-user text-red-400 text-2xl"></i>
+                            <h1 class="text-3xl font-bold text-white">Perfil do Usuário</h1>
+                        </div>
+                        <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Voltar
+                        </button>
+                    </div>
+
+                    <div class="card p-8">
+                        <div class="text-center mb-8">
+                            <div class="w-32 h-32 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg mx-auto mb-4">
+                                <span id="profile-initials">MP</span>
+                            </div>
+                            <h2 class="text-white text-2xl font-bold mb-2" id="profile-name">Dr. Marcos Silva</h2>
+                            <p class="text-red-300 text-lg" id="profile-position">1º Promotor de Justiça</p>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-white font-bold mb-4">Informações Profissionais</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Registro MP:</span>
+                                        <span class="text-white font-medium">001/2024</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Nível Hierárquico:</span>
+                                        <span class="text-white font-medium">Nível 5</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Comarca:</span>
+                                        <span class="text-white font-medium">Brasilândia</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Status:</span>
+                                        <span class="text-green-400 font-medium">Ativo</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-white font-bold mb-4">Estatísticas</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Casos Ativos:</span>
+                                        <span class="text-white font-medium">8</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Casos Concluídos:</span>
+                                        <span class="text-white font-medium">24</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Investigações:</span>
+                                        <span class="text-white font-medium">5</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-red-200">Último Login:</span>
+                                        <span class="text-white font-medium">Hoje</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex flex-wrap gap-4 justify-center">
+                            <button onclick="editProfile()" class="btn btn-primary">
+                                <i class="fas fa-edit mr-2"></i>
+                                Editar Perfil
+                            </button>
+                            <button onclick="changePassword()" class="btn btn-secondary">
+                                <i class="fas fa-key mr-2"></i>
+                                Alterar Senha
+                            </button>
+                            <button onclick="showSettings()" class="btn btn-secondary">
+                                <i class="fas fa-cog mr-2"></i>
+                                Configurações
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function editProfile() {
+            showNotification('Recurso em desenvolvimento', 'info');
+        }
+
+        function changePassword() {
+            showNotification('Recurso em desenvolvimento', 'info');
+        }
+
         function showSettings() {
             showNotification('Abrindo configurações...', 'info');
         }
@@ -1522,6 +2310,9 @@
         // === INICIALIZAÇÃO ===
         
         document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se foi acessado via admin
+            checkAdminAccess();
+            
             setupUserPermissions();
             initializeFirebaseIntegration();
             
@@ -1530,6 +2321,113 @@
                 showNotification('Sistema do Ministério Público carregado', 'success');
             }, 1000);
         });
+
+        function checkAdminAccess() {
+            const user = JSON.parse(localStorage.getItem('tjspUser') || '{}');
+            const adminSelection = JSON.parse(localStorage.getItem('adminSelectedCargo') || '{}');
+            
+            if (user.role === 'presidente-stf' && adminSelection.cargo) {
+                // Admin acessando como um cargo específico
+                const cargoInfo = {
+                    'promotor': {
+                        name: 'Dr. João Silva (Admin como Promotor)',
+                        position: 'Promotor de Justiça - Acesso Administrativo',
+                        registro: 'ADMIN-001/2024',
+                        level: 7
+                    },
+                    'procurador': {
+                        name: 'Dr. Maria Santos (Admin como Procurador)',
+                        position: 'Procurador de Justiça - Acesso Administrativo', 
+                        registro: 'ADMIN-002/2024',
+                        level: 8
+                    },
+                    'oficial': {
+                        name: 'Sr. Carlos Oliveira (Admin como Oficial)',
+                        position: 'Oficial de Justiça - Acesso Administrativo',
+                        registro: 'ADMIN-003/2024',
+                        level: 6
+                    }
+                };
+                
+                const selectedCargo = cargoInfo[adminSelection.cargo];
+                if (selectedCargo) {
+                    updateUserInterface(selectedCargo, adminSelection.cargo);
+                    showAdminBanner(adminSelection.cargo);
+                    adaptInterfaceForCargo(adminSelection.cargo);
+                }
+            }
+        }
+
+        function updateUserInterface(cargoInfo, cargo) {
+            // Atualizar informações do usuário na interface
+            const userNameEl = document.getElementById('user-name');
+            const userPositionEl = document.getElementById('user-position');
+            const userRegistroEl = document.getElementById('user-registro');
+            const userInitialsEl = document.getElementById('user-initials');
+            
+            if (userNameEl) userNameEl.textContent = cargoInfo.name;
+            if (userPositionEl) userPositionEl.textContent = cargoInfo.position;
+            if (userRegistroEl) userRegistroEl.textContent = cargoInfo.registro;
+            if (userInitialsEl) {
+                userInitialsEl.textContent = cargo === 'oficial' ? 'OJ' : 'MP';
+            }
+        }
+
+        function showAdminBanner(cargo) {
+            // Mostrar banner indicando acesso administrativo
+            const banner = document.createElement('div');
+            banner.className = 'fixed top-0 left-0 right-0 z-50 bg-yellow-600 text-black p-2 text-center text-sm font-bold';
+            banner.innerHTML = `
+                <i class="fas fa-crown mr-2"></i>
+                MODO ADMINISTRATIVO - Visualizando como ${cargo.toUpperCase()}
+                <button onclick="returnToAdminPanel()" class="ml-4 bg-black text-yellow-400 px-2 py-1 rounded text-xs">
+                    <i class="fas fa-arrow-left mr-1"></i>Voltar ao STF
+                </button>
+            `;
+            document.body.prepend(banner);
+            
+            // Ajustar margem do conteúdo
+            setTimeout(() => {
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                if (sidebar) sidebar.style.marginTop = '48px';
+                if (mainContent) mainContent.style.marginTop = '48px';
+            }, 100);
+        }
+
+        function adaptInterfaceForCargo(cargo) {
+            // Mostrar/ocultar seções baseado no cargo
+            setTimeout(() => {
+                const promoteorTools = document.getElementById('promotor-tools');
+                const procuradorTools = document.getElementById('procurador-tools');
+                const oficialTools = document.getElementById('oficial-tools');
+                
+                // Resetar visibilidade
+                if (promoteorTools) promoteorTools.style.display = 'block';
+                if (procuradorTools) procuradorTools.style.display = 'none';
+                if (oficialTools) oficialTools.style.display = 'none';
+                
+                switch(cargo) {
+                    case 'promotor':
+                        // Promotor vê apenas suas ferramentas
+                        break;
+                    case 'procurador':
+                        // Procurador vê suas ferramentas + supervisão
+                        if (procuradorTools) procuradorTools.style.display = 'block';
+                        break;
+                    case 'oficial':
+                        // Oficial vê apenas ferramentas operacionais
+                        if (promoteorTools) promoteorTools.style.display = 'none';
+                        if (oficialTools) oficialTools.style.display = 'block';
+                        break;
+                }
+            }, 200);
+        }
+
+        function returnToAdminPanel() {
+            localStorage.removeItem('adminSelectedCargo');
+            window.location.href = 'portal-stf.html';
+        }
 
         // Responsividade mobile - CORREÇÃO COMPLETA
         window.addEventListener('resize', function() {

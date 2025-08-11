@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do STF - Supremo Tribunal Federal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fbbf24;
+            --secondary-color: #f59e0b;
+            --accent-color: #92400e;
+            --background-dark: #0f172a;
+            --surface-dark: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(251, 191, 36, 0.4);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.1);
+        }
+
+        .btn {
+            @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-secondary {
+            @apply bg-gray-600 hover:bg-gray-700 text-white;
+        }
+
+        .portal-selector {
+            background: rgba(251, 191, 36, 0.1);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+        }
+
+        .portal-selector:hover {
+            border-color: rgba(251, 191, 36, 0.5);
+            background: rgba(251, 191, 36, 0.15);
+        }
+
+        .cargo-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .level-indicator {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-responsive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-yellow-900/40 to-yellow-800/40 border-b border-yellow-500/20 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-crown text-yellow-900 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Portal do STF</h1>
+                        <p class="text-yellow-200 text-sm">Supremo Tribunal Federal - Administração Central</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <div class="text-white font-semibold" id="user-name">Ministro Alexandre de Moraes</div>
+                        <div class="text-yellow-200 text-sm">Presidente do STF</div>
+                    </div>
+                    <button onclick="logout()" class="btn btn-secondary">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        
+        <!-- Welcome Section -->
+        <section class="mb-8 fade-in">
+            <div class="card p-8 text-center bg-gradient-to-r from-yellow-900/40 to-yellow-800/40">
+                <h2 class="text-4xl font-bold text-white mb-4">
+                    <i class="fas fa-crown text-yellow-400 mr-3"></i>
+                    Bem-vindo ao Portal do STF
+                </h2>
+                <p class="text-yellow-200 text-lg">
+                    Como Presidente do STF, você tem acesso total a todos os portais do sistema judiciário.
+                </p>
+                <p class="text-yellow-200 mt-2">
+                    Selecione um portal abaixo e escolha o cargo específico para acessá-lo.
+                </p>
+            </div>
+        </section>
+
+        <!-- Portal Selection -->
+        <section class="mb-8">
+            <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-building text-yellow-400 mr-3"></i>
+                Acesso aos Portais
+            </h3>
+            
+            <div class="grid-responsive">
+                
+                <!-- Portal dos Advogados -->
+                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('advogado')">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-user-tie text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Portal dos Advogados</h4>
+                        <p class="text-gray-300 text-sm mb-4">Gestão de processos e documentos para advogados</p>
+                        
+                        <!-- Cargos Disponíveis -->
+                        <div class="mb-4">
+                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                <span class="cargo-badge">Advogado 1ª & 2ª Instância</span>
+                                <span class="cargo-badge">Defensor Público</span>
+                                <span class="cargo-badge">Advogado Licenciado</span>
+                                <span class="cargo-badge">Presidente da OAB</span>
+                            </div>
+                        </div>
+                        
+                        <div class="level-indicator text-sm">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            Níveis 1-6
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portal do Ministério Público -->
+                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('mp')">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-user-shield text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Portal do Ministério Público</h4>
+                        <p class="text-gray-300 text-sm mb-4">Investigações, denúncias e procedimentos ministeriais</p>
+                        
+                        <!-- Cargos Disponíveis -->
+                        <div class="mb-4">
+                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                <span class="cargo-badge">2º ao 6º Promotor</span>
+                                <span class="cargo-badge">1º Promotor</span>
+                                <span class="cargo-badge">Procurador Geral</span>
+                                <span class="cargo-badge">Procurador da República</span>
+                            </div>
+                        </div>
+                        
+                        <div class="level-indicator text-sm">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            Níveis 3-7
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portal Judicial -->
+                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('judicial')">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-gavel text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Portal Judicial</h4>
+                        <p class="text-gray-300 text-sm mb-4">Área restrita para magistrados e julgamentos</p>
+                        
+                        <!-- Cargos Disponíveis -->
+                        <div class="mb-4">
+                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                <span class="cargo-badge">2º ao 4º Juiz Estadual</span>
+                                <span class="cargo-badge">1º Juiz Estadual</span>
+                                <span class="cargo-badge">Desembargador</span>
+                                <span class="cargo-badge">Juiz Federal</span>
+                            </div>
+                        </div>
+                        
+                        <div class="level-indicator text-sm">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            Níveis 5-10
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portal dos Oficiais de Justiça -->
+                <div class="portal-selector p-6 cursor-pointer" onclick="selectPortal('oficiais')">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-file-signature text-white text-2xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Portal dos Oficiais de Justiça</h4>
+                        <p class="text-gray-300 text-sm mb-4">Cumprimento de mandados e diligências judiciais</p>
+                        
+                        <!-- Cargos Disponíveis -->
+                        <div class="mb-4">
+                            <p class="text-yellow-200 text-xs mb-2">Cargos disponíveis:</p>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                <span class="cargo-badge">1º Oficial - 1ª Instância</span>
+                                <span class="cargo-badge">1º Oficial - 2ª Instância</span>
+                            </div>
+                        </div>
+                        
+                        <div class="level-indicator text-sm">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            Níveis 2-3
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Administrative Tools -->
+        <section class="mb-8">
+            <h3 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-tools text-yellow-400 mr-3"></i>
+                Ferramentas Administrativas
+            </h3>
+            
+            <div class="grid-responsive">
+                
+                <!-- Sistema de Usuários -->
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-white font-bold text-lg mb-2">Gerenciar Usuários</h4>
+                    <p class="text-gray-300 text-sm mb-4">Adicionar, remover e modificar permissões de usuários</p>
+                    <button onclick="showSection('usuarios')" class="btn btn-primary w-full">
+                        Gerenciar
+                    </button>
+                </div>
+
+                <!-- Relatórios Gerais -->
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-white font-bold text-lg mb-2">Relatórios Gerais</h4>
+                    <p class="text-gray-300 text-sm mb-4">Estatísticas e métricas de todos os portais</p>
+                    <button onclick="showSection('relatorios')" class="btn btn-primary w-full">
+                        Visualizar
+                    </button>
+                </div>
+
+                <!-- Configurações do Sistema -->
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-cog text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-white font-bold text-lg mb-2">Configurações</h4>
+                    <p class="text-gray-300 text-sm mb-4">Ajustes gerais do sistema judiciário</p>
+                    <button onclick="showSection('configuracoes')" class="btn btn-primary w-full">
+                        Configurar
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de Seleção de Cargo -->
+    <div id="cargoModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="card p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-white mb-2">Selecionar Cargo</h3>
+                <p class="text-gray-300 text-sm">Escolha o cargo específico para acessar o portal</p>
+            </div>
+            
+            <div id="cargoOptions" class="space-y-3 mb-6">
+                <!-- Options will be populated by JavaScript -->
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="closeCargoModal()" class="btn btn-secondary flex-1">Cancelar</button>
+                <button id="accessPortalBtn" onclick="accessSelectedPortal()" class="btn btn-primary flex-1">Acessar Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedPortal = null;
+        let selectedCargo = null;
+
+        const portalCargos = {
+            'advogado': {
+                url: 'portal-advogado.html',
+                cargos: [
+                    { id: 'advogado-licenciado', name: 'Advogado Licenciado', description: 'Nível 1 - Funções essenciais à justiça' },
+                    { id: 'advogado-instancia', name: 'Advogado 1ª & 2ª Instância', description: 'Nível 1 - Atuação em todas as instâncias' },
+                    { id: 'defensor', name: 'Defensor Público 1ª & 2ª Instância', description: 'Nível 1 - Defesa dos necessitados' },
+                    { id: 'presidente-oab', name: 'Presidente da OAB', description: 'Nível 6 - Liderança da advocacia' }
+                ]
+            },
+            'mp': {
+                url: 'portal-ministerio-publico.html',
+                cargos: [
+                    { id: '2-6-promotor', name: '2º ao 6º Promotor - 1ª Instância', description: 'Nível 3 - Promotores auxiliares' },
+                    { id: '1-promotor', name: '1º Promotor - Líder da Promotoria Geral', description: 'Nível 4 - Líder dos promotores' },
+                    { id: '3-procurador', name: '3º Procurador Geral de Justiça - 1ª Instância', description: 'Nível 5 - Procurador de primeira instância' },
+                    { id: '2-procurador', name: '2º Procurador Geral de Justiça - 2ª Instância', description: 'Nível 6 - Procurador de segunda instância' },
+                    { id: '1-procurador', name: '1º Procurador Geral da República', description: 'Nível 7 - Liderança do MP Federal' }
+                ]
+            },
+            'judicial': {
+                url: 'portal-judicial.html',
+                cargos: [
+                    { id: '2-4-juiz-estadual', name: '2º ao 4º Juiz Estadual - 1ª Instância', description: 'Nível 4 - Juízes de base' },
+                    { id: '1-juiz-estadual', name: '1º Juiz Estadual - 1ª Instância', description: 'Nível 5 - Juiz principal de primeira instância' },
+                    { id: '3-desembargador', name: '3º Desembargador', description: 'Nível 6 - Desembargador júnior' },
+                    { id: '2-desembargador', name: '2º Desembargador', description: 'Nível 6 - Desembargador intermediário' },
+                    { id: '1-desembargador', name: '1º Desembargador', description: 'Nível 7 - Liderança dos desembargadores' },
+                    { id: '3-juiz-federal', name: '3º Juiz Federal', description: 'Nível 8 - Alta cúpula federal' },
+                    { id: '2-juiz-federal', name: '2º Juiz Federal', description: 'Nível 9 - Cúpula da Justiça Federal' },
+                    { id: '1-juiz-federal', name: '1º Juiz Federal - Presidente STF/STJ/STB', description: 'Nível 10 - Autoridade máxima' }
+                ]
+            },
+            'oficiais': {
+                url: 'portal-oficiais-justica.html',
+                cargos: [
+                    { id: '1-oficial-1-instancia', name: '1º Oficial de Justiça - 1ª Instância', description: 'Nível 2 - Cumprimento de mandados' },
+                    { id: '1-oficial-2-instancia', name: '1º Oficial de Justiça - 2ª Instância', description: 'Nível 3 - Oficial sênior' }
+                ]
+            }
+        };
+
+        function selectPortal(portal) {
+            selectedPortal = portal;
+            showCargoModal(portal);
+        }
+
+        function showCargoModal(portal) {
+            const modal = document.getElementById('cargoModal');
+            const cargoOptions = document.getElementById('cargoOptions');
+            
+            cargoOptions.innerHTML = '';
+            
+            portalCargos[portal].cargos.forEach(cargo => {
+                const option = document.createElement('div');
+                option.className = 'cursor-pointer p-3 rounded-lg border-2 border-transparent hover:border-yellow-400 transition-all';
+                option.onclick = () => selectCargo(cargo.id);
+                
+                option.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <input type="radio" name="cargo" value="${cargo.id}" class="text-yellow-500">
+                        <div>
+                            <div class="text-white font-semibold">${cargo.name}</div>
+                            <div class="text-gray-400 text-sm">${cargo.description}</div>
+                        </div>
+                    </div>
+                `;
+                
+                cargoOptions.appendChild(option);
+            });
+            
+            modal.classList.remove('hidden');
+        }
+
+        function selectCargo(cargoId) {
+            selectedCargo = cargoId;
+            // Update radio buttons
+            const radios = document.querySelectorAll('input[name="cargo"]');
+            radios.forEach(radio => {
+                radio.checked = radio.value === cargoId;
+            });
+            // Update visual selection
+            const options = document.querySelectorAll('#cargoOptions > div');
+            options.forEach(option => {
+                option.classList.remove('border-yellow-400', 'bg-yellow-400/10');
+                if (option.onclick.toString().includes(cargoId)) {
+                    option.classList.add('border-yellow-400', 'bg-yellow-400/10');
+                }
+            });
+        }
+
+        function closeCargoModal() {
+            document.getElementById('cargoModal').classList.add('hidden');
+            selectedPortal = null;
+            selectedCargo = null;
+        }
+
+        function accessSelectedPortal() {
+            if (!selectedPortal || !selectedCargo) {
+                alert('Por favor, selecione um cargo antes de prosseguir.');
+                return;
+            }
+
+            const portal = portalCargos[selectedPortal];
+            
+            // Store selected cargo in localStorage for the target portal
+            localStorage.setItem('adminSelectedCargo', JSON.stringify({
+                portal: selectedPortal,
+                cargo: selectedCargo,
+                timestamp: Date.now()
+            }));
+
+            // Redirect to the selected portal
+            window.location.href = portal.url;
+        }
+
+        function logout() {
+            localStorage.removeItem('tjspUser');
+            localStorage.removeItem('adminSelectedCargo');
+            window.location.href = 'index.html';
+        }
+
+        function showSection(section) {
+            alert(`Seção "${section}" em desenvolvimento. Será implementada na próxima versão.`);
+        }
+
+        // Check if user has admin access
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('tjspUser') || '{}');
+            
+            if (!user.role || user.level < 10) {
+                alert('Acesso negado. Apenas o Presidente do STF pode acessar este portal.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Update user info in header
+            document.getElementById('user-name').textContent = user.name || 'Ministro Alexandre de Moraes';
+        });
+    </script>
+</body>
+</html>

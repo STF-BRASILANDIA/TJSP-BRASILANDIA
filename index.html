@@ -527,26 +527,6 @@
                         </div>
                     </form>
 
-                    <!-- Login Rápido para Testes -->
-                    <div class="mt-8 p-4 bg-black/20 rounded-xl border border-white/10">
-                        <h3 class="text-white font-semibold mb-4 text-center">
-                            <i class="fas fa-rocket mr-2"></i>Acesso Rápido para Testes
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <button onclick="quickLogin('advogado')" class="btn btn-success w-full text-sm">
-                                <i class="fas fa-user-tie mr-1"></i>Advogado
-                            </button>
-                            <button onclick="quickLogin('promotor')" class="btn btn-danger w-full text-sm">
-                                <i class="fas fa-user-shield mr-1"></i>Promotor
-                            </button>
-                            <button onclick="quickLogin('juiz')" class="btn w-full text-sm">
-                                <i class="fas fa-gavel mr-1"></i>Juiz
-                            </button>
-                            <button onclick="quickLogin('admin')" class="btn btn-warning w-full text-sm">
-                                <i class="fas fa-crown mr-1"></i>Administrador
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -609,7 +589,7 @@
                 id: 'adv001',
                 name: 'Dr. Carlos Silva',
                 email: 'carlos@advogado.com',
-                role: 'advogado',
+                role: 'advogado-instancia',
                 oab: '123456/SP',
                 permissions: ['portal-advogado'],
                 level: 1
@@ -618,7 +598,7 @@
                 id: 'prom001', 
                 name: 'Dr. Marcos Silva',
                 email: 'marcos@mp.sp.gov.br',
-                role: 'promotor',
+                role: '1-promotor',
                 permissions: ['portal-ministerio-publico'],
                 level: 4
             },
@@ -626,16 +606,16 @@
                 id: 'juiz001',
                 name: 'Dr. Ana Santos',
                 email: 'ana@tjsp.jus.br',
-                role: 'juiz',
+                role: '1-juiz-estadual',
                 permissions: ['portal-judicial'],
                 level: 5
             },
             'admin': {
                 id: 'admin001',
-                name: 'Alexandre de Moraes',
-                email: 'alexandre@stf.jus.br',
-                role: 'juiz-federal',
-                permissions: ['portal-autoridade-maxima', 'portal-judicial', 'portal-ministerio-publico', 'portal-advogado'],
+                name: '1º Juiz Federal Alexandre de Moraes',
+                email: 'presidente@stf.jus.br',
+                role: '1-juiz-federal',
+                permissions: ['portal-stf', 'portal-judicial', 'portal-ministerio-publico', 'portal-advogado', 'portal-oficiais-justica'],
                 level: 10
             }
         };
@@ -675,16 +655,16 @@
                 requiredLevel: 5,
                 status: 'development'
             },
-            'portal-autoridade-maxima': {
-                title: 'Portal da Autoridade Máxima',
-                description: 'Controle administrativo e supervisão geral',
+            'portal-stf': {
+                title: 'Portal do STF',
+                description: 'Supremo Tribunal Federal - Administração e controle total dos portais',
                 icon: 'fas fa-crown',
                 color: 'text-yellow-400',
                 bgGradient: 'from-yellow-500/20 to-yellow-700/20',
                 borderColor: 'border-yellow-500/50',
-                url: 'portal-autoridade-maxima.html',
+                url: 'portal-stf.html',
                 requiredLevel: 10,
-                status: 'development'
+                status: 'online'
             }
         };
 
@@ -836,9 +816,53 @@
 
         function quickLogin(userType) {
             if (usersDatabase[userType]) {
-                document.getElementById('username').value = userType;
-                document.getElementById('password').value = '123456';
-                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                // Fazer login direto sem passar pela tela de seleção
+                const user = usersDatabase[userType];
+                
+                // Definir usuário atual
+                currentUser = {
+                    ...user,
+                    loginTime: Date.now(),
+                    lastActivity: Date.now()
+                };
+                
+                // Salvar no localStorage (modo offline)
+                localStorage.setItem('tjspUser', JSON.stringify(currentUser));
+                
+                showNotification(`Bem-vindo(a), ${user.name}!`, 'success');
+                
+                // Determinar portal específico baseado no tipo de usuário
+                let targetPortal = '';
+                switch(userType) {
+                    case 'advogado':
+                        targetPortal = 'portal-advogado';
+                        break;
+                    case 'promotor':
+                        targetPortal = 'portal-ministerio-publico';
+                        break;
+                    case 'juiz':
+                        targetPortal = 'portal-judicial';
+                        break;
+                    case 'admin':
+                        targetPortal = 'portal-stf';
+                        break;
+                    default:
+                        setTimeout(() => showPortals(), 1000);
+                        return;
+                }
+                
+                // Ir direto para o portal específico
+                setTimeout(() => {
+                    const portal = portalsConfig[targetPortal];
+                    if (portal && portal.status === 'online') {
+                        showNotification(`Redirecionando para ${portal.title}...`, 'info');
+                        setTimeout(() => {
+                            window.location.href = portal.url;
+                        }, 1000);
+                    } else {
+                        showPortals(); // Fallback para tela de seleção
+                    }
+                }, 1000);
             }
         }
 
