@@ -45,7 +45,11 @@
         }
 
         .btn {
-            @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform;
+            padding: 1.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            transform: translateY(0);
         }
 
         .btn-primary {
@@ -59,7 +63,13 @@
         }
 
         .btn-secondary {
-            @apply bg-gray-600 hover:bg-gray-700 text-white;
+            background-color: #4b5563;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #374151;
         }
 
         .btn-danger {
@@ -158,7 +168,12 @@
         }
 
         .nav-item {
-            @apply flex items-center px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
         .nav-item:hover {
@@ -259,6 +274,16 @@
                 <div class="nav-item" data-section="relatorios">
                     <i class="fas fa-chart-bar text-green-400 w-5"></i>
                     <span class="ml-3">Relatórios</span>
+                </div>
+                <div class="nav-item" data-section="audiencias-rp">
+                    <i class="fas fa-theater-masks text-pink-400 w-5"></i>
+                    <span class="ml-3">Sistema de Audiências RP</span>
+                    <span class="ml-auto bg-pink-500 text-white text-xs rounded-full px-2 py-1">NOVO</span>
+                </div>
+                <div class="nav-item" data-section="documentos-v2">
+                    <i class="fas fa-file-contract text-indigo-400 w-5"></i>
+                    <span class="ml-3">Documentos v2.0</span>
+                    <span class="ml-auto bg-indigo-500 text-white text-xs rounded-full px-2 py-1">BETA</span>
                 </div>
 
                 <!-- Separador -->
@@ -514,6 +539,182 @@
                 <div class="card p-6">
                     <h2 class="text-2xl font-bold text-white mb-6">Relatórios</h2>
                     <!-- Conteúdo será implementado -->
+                </div>
+            </div>
+
+            <!-- Sistema de Audiências RP -->
+            <div id="audiencias-rp" class="section hidden fade-in">
+                <div class="mb-6">
+                    <h1 class="text-4xl font-bold text-white mb-2 flex items-center">
+                        <span class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-2xl mr-4 shadow-xl">
+                            🎭
+                        </span>
+                        Sistema de Audiências RP
+                        <span class="ml-4 bg-pink-500/20 text-pink-300 text-sm font-normal px-3 py-1 rounded-full border border-pink-500/30">
+                            ROLEPLAY ASSISTANT
+                        </span>
+                    </h1>
+                    <p class="text-gray-300 text-lg">Ferramentas para melhorar o roleplay jurídico em audiências</p>
+                </div>
+
+                <!-- Menu de Ferramentas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="card p-6 hover:shadow-xl transition-all cursor-pointer" onclick="abrirAssistenteAudiencia()">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                <i class="fas fa-microphone text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-white font-bold text-lg mb-2">Assistente de Audiência</h3>
+                            <p class="text-gray-300 text-sm">Roteiros e diálogos para audiências</p>
+                        </div>
+                    </div>
+
+                    <div class="card p-6 hover:shadow-xl transition-all cursor-pointer" onclick="abrirCronometroAudiencia()">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                <i class="fas fa-stopwatch text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-white font-bold text-lg mb-2">Cronômetro RP</h3>
+                            <p class="text-gray-300 text-sm">Controle de tempo das fases</p>
+                        </div>
+                    </div>
+
+                    <div class="card p-6 hover:shadow-xl transition-all cursor-pointer" onclick="abrirChecklistProcessual()">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                <i class="fas fa-tasks text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-white font-bold text-lg mb-2">Checklist Processual</h3>
+                            <p class="text-gray-300 text-sm">Verificações obrigatórias</p>
+                        </div>
+                    </div>
+
+                    <div class="card p-6 hover:shadow-xl transition-all cursor-pointer" onclick="abrirBibliotecaFrases()">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                                <i class="fas fa-quote-left text-2xl text-white"></i>
+                            </div>
+                            <h3 class="text-white font-bold text-lg mb-2">Biblioteca de Frases</h3>
+                            <p class="text-gray-300 text-sm">Frases jurídicas para RP</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Área do Conteúdo Dinâmico -->
+                <div id="audiencia-content" class="space-y-6">
+                    <div class="card p-8 text-center">
+                        <div class="mb-6">
+                            <i class="fas fa-theater-masks text-6xl text-pink-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold text-white mb-2">Bem-vindo ao Sistema de Audiências RP!</h3>
+                            <p class="text-gray-300 text-lg">Selecione uma das ferramentas acima para começar</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                            <div class="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
+                                <i class="fas fa-lightbulb text-blue-400 text-2xl mb-2"></i>
+                                <h4 class="text-white font-semibold mb-1">Dicas de RP</h4>
+                                <p class="text-gray-400 text-sm">Sugestões para melhorar sua interpretação</p>
+                            </div>
+                            <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
+                                <i class="fas fa-clock text-green-400 text-2xl mb-2"></i>
+                                <h4 class="text-white font-semibold mb-1">Controle de Tempo</h4>
+                                <p class="text-gray-400 text-sm">Gerencie as fases da audiência</p>
+                            </div>
+                            <div class="bg-purple-500/10 p-4 rounded-lg border border-purple-500/20">
+                                <i class="fas fa-book text-purple-400 text-2xl mb-2"></i>
+                                <h4 class="text-white font-semibold mb-1">Biblioteca Jurídica</h4>
+                                <p class="text-gray-400 text-sm">Frases e termos técnicos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sistema de Documentos v2.0 -->
+            <div id="documentos-v2" class="section hidden fade-in">
+                <div class="mb-6">
+                    <h1 class="text-4xl font-bold text-white mb-2 flex items-center">
+                        <span class="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-2xl mr-4 shadow-xl">
+                            📄
+                        </span>
+                        Sistema de Documentos v2.0
+                        <span class="ml-4 bg-indigo-500/20 text-indigo-300 text-sm font-normal px-3 py-1 rounded-full border border-indigo-500/30">
+                            BETA VERSION
+                        </span>
+                    </h1>
+                    <p class="text-gray-300 text-lg">Sistema avançado com integração aos processos e funcionalidades expandidas</p>
+                </div>
+
+                <!-- Comparação de Sistemas -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="card p-6 border-green-500/30">
+                        <h3 class="text-green-400 font-bold text-xl mb-4 flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Sistema Atual (Portal Advogado)
+                        </h3>
+                        <ul class="space-y-2 text-gray-300">
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>11 tipos de documentos</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>Campos editáveis</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>Geração de PDF</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>Captura de foto HD</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>Templates prontos</li>
+                        </ul>
+                        <button onclick="window.open('portal-advogado.html', '_blank')" class="btn btn-primary w-full mt-4">
+                            <i class="fas fa-external-link-alt mr-2"></i>Acessar Sistema Atual
+                        </button>
+                    </div>
+
+                    <div class="card p-6 border-indigo-500/30">
+                        <h3 class="text-indigo-400 font-bold text-xl mb-4 flex items-center">
+                            <i class="fas fa-star mr-2"></i>
+                            Sistema v2.0 (Novo)
+                        </h3>
+                        <ul class="space-y-2 text-gray-300">
+                            <li class="flex items-center"><i class="fas fa-plus text-indigo-400 mr-2"></i>Integração com processos</li>
+                            <li class="flex items-center"><i class="fas fa-plus text-indigo-400 mr-2"></i>Assinatura digital</li>
+                            <li class="flex items-center"><i class="fas fa-plus text-indigo-400 mr-2"></i>Histórico completo</li>
+                            <li class="flex items-center"><i class="fas fa-plus text-indigo-400 mr-2"></i>Templates judiciais</li>
+                            <li class="flex items-center"><i class="fas fa-plus text-indigo-400 mr-2"></i>Envio automático</li>
+                        </ul>
+                        <button onclick="iniciarDocumentosV2()" class="btn bg-gradient-to-r from-indigo-500 to-purple-600 text-white w-full mt-4">
+                            <i class="fas fa-rocket mr-2"></i>Testar Sistema v2.0
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Área do Sistema v2.0 -->
+                <div id="documentos-v2-content" class="space-y-6">
+                    <div class="card p-8 text-center">
+                        <div class="mb-6">
+                            <i class="fas fa-file-contract text-6xl text-indigo-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold text-white mb-2">Sistema de Documentos v2.0</h3>
+                            <p class="text-gray-300 text-lg">Clique em "Testar Sistema v2.0" para começar</p>
+                        </div>
+                        
+                        <div class="bg-yellow-500/10 p-6 rounded-lg border border-yellow-500/20 max-w-2xl mx-auto">
+                            <i class="fas fa-info-circle text-yellow-400 text-2xl mb-3"></i>
+                            <h4 class="text-white font-semibold mb-2">Status de Desenvolvimento</h4>
+                            <p class="text-gray-300 text-sm mb-4">Este sistema está em desenvolvimento paralelo ao sistema atual. Após os testes, decidiremos qual sistema manter.</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 text-left">
+                                <div>
+                                    <h5 class="text-green-400 font-semibold mb-1">Implementado:</h5>
+                                    <ul class="text-sm text-gray-300 space-y-1">
+                                        <li>• Interface base</li>
+                                        <li>• Comparação de sistemas</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="text-orange-400 font-semibold mb-1">Em desenvolvimento:</h5>
+                                    <ul class="text-sm text-gray-300 space-y-1">
+                                        <li>• Integração com processos</li>
+                                        <li>• Templates avançados</li>
+                                        <li>• Assinatura digital</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1009,6 +1210,1585 @@
             setTimeout(() => {
                 showNotification('✅ Distribuição realizada!', 'success');
             }, 2000);
+        }
+
+        // === SISTEMA DE AUDIÊNCIAS RP ===
+        let audienciaTimer = null;
+        let audienciaSeconds = 0;
+        let audienciaIsRunning = false;
+
+        function abrirAssistenteAudiencia() {
+            document.getElementById('audiencia-content').innerHTML = `
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-white flex items-center">
+                            <i class="fas fa-microphone text-blue-400 mr-3"></i>
+                            Assistente de Audiência RP
+                        </h3>
+                        <button onclick="voltarMenuAudiencia()" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Seleção de Tipo -->
+                        <div class="space-y-4">
+                            <h4 class="text-white font-semibold text-lg mb-4">Selecione o Tipo de Audiência:</h4>
+                            
+                            <div class="space-y-3">
+                                <button onclick="carregarRoteiro('inicial')" class="w-full card p-4 hover:bg-blue-500/10 transition-all text-left">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-play-circle text-blue-400 text-2xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Audiência Inicial</h5>
+                                            <p class="text-gray-400 text-sm">Primeira audiência do processo</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="carregarRoteiro('instrucao')" class="w-full card p-4 hover:bg-green-500/10 transition-all text-left">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-search text-green-400 text-2xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Audiência de Instrução</h5>
+                                            <p class="text-gray-400 text-sm">Coleta de provas e depoimentos</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="carregarRoteiro('debates')" class="w-full card p-4 hover:bg-purple-500/10 transition-all text-left">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-comments text-purple-400 text-2xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Debates Orais</h5>
+                                            <p class="text-gray-400 text-sm">Argumentação final das partes</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="carregarRoteiro('sentenca')" class="w-full card p-4 hover:bg-orange-500/10 transition-all text-left">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gavel text-orange-400 text-2xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Prolação de Sentença</h5>
+                                            <p class="text-gray-400 text-sm">Leitura da decisão final</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Área de Preview -->
+                        <div class="bg-slate-800/50 rounded-lg p-6">
+                            <h4 class="text-white font-semibold mb-4 flex items-center">
+                                <i class="fas fa-eye text-gray-400 mr-2"></i>
+                                Preview do Roteiro
+                            </h4>
+                            <div id="roteiro-preview" class="text-gray-400 text-center py-8">
+                                <i class="fas fa-theater-masks text-4xl mb-3"></i>
+                                <p>Selecione um tipo de audiência para ver o roteiro</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function carregarRoteiro(tipo) {
+            const roteiros = {
+                inicial: {
+                    titulo: 'Audiência Inicial',
+                    fases: [
+                        {
+                            fase: 'Abertura',
+                            tempo: '2 min',
+                            dialogo: '"Declaro aberta a presente audiência. Estão presentes as partes e seus respectivos advogados."'
+                        },
+                        {
+                            fase: 'Identificação',
+                            tempo: '3 min',
+                            dialogo: '"Solicito que as partes se identifiquem para os autos."'
+                        },
+                        {
+                            fase: 'Conciliação',
+                            tempo: '10 min',
+                            dialogo: '"Antes de prosseguirmos, pergunto às partes se há possibilidade de acordo."'
+                        },
+                        {
+                            fase: 'Prosseguimento',
+                            tempo: '5 min',
+                            dialogo: '"Não havendo acordo, designo audiência de instrução e julgamento."'
+                        }
+                    ]
+                },
+                instrucao: {
+                    titulo: 'Audiência de Instrução',
+                    fases: [
+                        {
+                            fase: 'Abertura',
+                            tempo: '2 min',
+                            dialogo: '"Declaro aberta a audiência de instrução e julgamento."'
+                        },
+                        {
+                            fase: 'Depoimento Pessoal',
+                            tempo: '15 min',
+                            dialogo: '"Chamo o autor/réu para prestar depoimento pessoal."'
+                        },
+                        {
+                            fase: 'Oitiva de Testemunhas',
+                            tempo: '20 min',
+                            dialogo: '"Passo à oitiva das testemunhas arroladas pelas partes."'
+                        },
+                        {
+                            fase: 'Debates',
+                            tempo: '10 min',
+                            dialogo: '"Concedo a palavra aos advogados para alegações finais orais."'
+                        }
+                    ]
+                },
+                debates: {
+                    titulo: 'Debates Orais',
+                    fases: [
+                        {
+                            fase: 'Abertura',
+                            tempo: '2 min',
+                            dialogo: '"Iniciamos os debates orais. Cada parte terá 15 minutos."'
+                        },
+                        {
+                            fase: 'Autor',
+                            tempo: '15 min',
+                            dialogo: '"Concedo a palavra ao advogado do autor."'
+                        },
+                        {
+                            fase: 'Réu',
+                            tempo: '15 min',
+                            dialogo: '"Agora, concedo a palavra ao advogado do réu."'
+                        },
+                        {
+                            fase: 'Tréplica',
+                            tempo: '5 min',
+                            dialogo: '"Se necessário, concedo tempo para tréplica."'
+                        }
+                    ]
+                },
+                sentenca: {
+                    titulo: 'Prolação de Sentença',
+                    fases: [
+                        {
+                            fase: 'Abertura',
+                            tempo: '2 min',
+                            dialogo: '"Reunidas as condições, passo a proferir sentença."'
+                        },
+                        {
+                            fase: 'Relatório',
+                            tempo: '5 min',
+                            dialogo: '"Relatório: As partes litigam sobre..."'
+                        },
+                        {
+                            fase: 'Fundamentação',
+                            tempo: '10 min',
+                            dialogo: '"Fundamentação: Analisando as provas..."'
+                        },
+                        {
+                            fase: 'Dispositivo',
+                            tempo: '3 min',
+                            dialogo: '"Dispositivo: Julgo procedente/improcedente o pedido."'
+                        }
+                    ]
+                }
+            };
+
+            const roteiro = roteiros[tipo];
+            document.getElementById('roteiro-preview').innerHTML = `
+                <div class="text-left">
+                    <h5 class="text-white font-bold text-lg mb-4 flex items-center">
+                        <i class="fas fa-scroll text-blue-400 mr-2"></i>
+                        ${roteiro.titulo}
+                    </h5>
+                    
+                    <div class="space-y-4">
+                        ${roteiro.fases.map((fase, index) => `
+                            <div class="bg-slate-700/50 p-4 rounded-lg border-l-4 border-blue-400">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h6 class="text-white font-semibold">${index + 1}. ${fase.fase}</h6>
+                                    <span class="text-blue-300 text-sm bg-blue-500/20 px-2 py-1 rounded">${fase.tempo}</span>
+                                </div>
+                                <p class="text-gray-300 italic text-sm">${fase.dialogo}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="mt-6 flex space-x-3">
+                        <button onclick="iniciarAudienciaRP('${tipo}')" class="btn btn-primary flex-1">
+                            <i class="fas fa-play mr-2"></i>Iniciar Audiência
+                        </button>
+                        <button onclick="baixarRoteiro('${tipo}')" class="btn btn-secondary">
+                            <i class="fas fa-download mr-2"></i>Baixar Roteiro
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function abrirCronometroAudiencia() {
+            document.getElementById('audiencia-content').innerHTML = `
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-white flex items-center">
+                            <i class="fas fa-stopwatch text-green-400 mr-3"></i>
+                            Cronômetro de Audiência RP
+                        </h3>
+                        <button onclick="voltarMenuAudiencia()" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Cronômetro Principal -->
+                        <div class="text-center">
+                            <div class="bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-2xl p-8 border border-green-500/30 mb-6">
+                                <div id="cronometro-display" class="text-6xl font-mono font-bold text-white mb-4">00:00:00</div>
+                                <div id="fase-atual" class="text-green-300 text-lg font-semibold">Aguardando início</div>
+                            </div>
+
+                            <div class="flex space-x-3 justify-center">
+                                <button id="btn-play" onclick="toggleCronometro()" class="btn btn-primary">
+                                    <i class="fas fa-play mr-2"></i>Iniciar
+                                </button>
+                                <button onclick="pausarCronometro()" class="btn btn-warning">
+                                    <i class="fas fa-pause mr-2"></i>Pausar
+                                </button>
+                                <button onclick="resetarCronometro()" class="btn btn-secondary">
+                                    <i class="fas fa-stop mr-2"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Fases da Audiência -->
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Fases da Audiência:</h4>
+                            <div id="fases-cronometro" class="space-y-3">
+                                <div class="fase-item bg-slate-700/50 p-4 rounded-lg border-l-4 border-gray-500" data-fase="abertura">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-white font-semibold">1. Abertura</span>
+                                        <span class="text-gray-400">2 min</span>
+                                    </div>
+                                    <div class="text-gray-400 text-sm mt-1">Identificação e formalidades</div>
+                                </div>
+                                
+                                <div class="fase-item bg-slate-700/50 p-4 rounded-lg border-l-4 border-gray-500" data-fase="conciliacao">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-white font-semibold">2. Tentativa de Conciliação</span>
+                                        <span class="text-gray-400">10 min</span>
+                                    </div>
+                                    <div class="text-gray-400 text-sm mt-1">Busca por acordo entre as partes</div>
+                                </div>
+
+                                <div class="fase-item bg-slate-700/50 p-4 rounded-lg border-l-4 border-gray-500" data-fase="instrucao">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-white font-semibold">3. Instrução</span>
+                                        <span class="text-gray-400">25 min</span>
+                                    </div>
+                                    <div class="text-gray-400 text-sm mt-1">Depoimentos e provas</div>
+                                </div>
+
+                                <div class="fase-item bg-slate-700/50 p-4 rounded-lg border-l-4 border-gray-500" data-fase="debates">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-white font-semibold">4. Debates</span>
+                                        <span class="text-gray-400">15 min</span>
+                                    </div>
+                                    <div class="text-gray-400 text-sm mt-1">Alegações finais</div>
+                                </div>
+
+                                <div class="fase-item bg-slate-700/50 p-4 rounded-lg border-l-4 border-gray-500" data-fase="decisao">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-white font-semibold">5. Decisão</span>
+                                        <span class="text-gray-400">8 min</span>
+                                    </div>
+                                    <div class="text-gray-400 text-sm mt-1">Prolação da sentença</div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                                <h5 class="text-yellow-300 font-semibold mb-2 flex items-center">
+                                    <i class="fas fa-lightbulb mr-2"></i>Dica de RP
+                                </h5>
+                                <p class="text-gray-300 text-sm">Use o cronômetro para manter o ritmo da audiência e garantir que todas as fases sejam respeitadas no roleplay.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            resetarCronometro();
+        }
+
+        function toggleCronometro() {
+            if (audienciaIsRunning) {
+                pausarCronometro();
+            } else {
+                iniciarCronometro();
+            }
+        }
+
+        function iniciarCronometro() {
+            audienciaIsRunning = true;
+            document.getElementById('btn-play').innerHTML = '<i class="fas fa-pause mr-2"></i>Pausar';
+            document.getElementById('fase-atual').textContent = 'Audiência em andamento';
+            
+            audienciaTimer = setInterval(() => {
+                audienciaSeconds++;
+                atualizarDisplayCronometro();
+                verificarFases();
+            }, 1000);
+        }
+
+        function pausarCronometro() {
+            audienciaIsRunning = false;
+            clearInterval(audienciaTimer);
+            document.getElementById('btn-play').innerHTML = '<i class="fas fa-play mr-2"></i>Continuar';
+            document.getElementById('fase-atual').textContent = 'Audiência pausada';
+        }
+
+        function resetarCronometro() {
+            audienciaIsRunning = false;
+            audienciaSeconds = 0;
+            clearInterval(audienciaTimer);
+            document.getElementById('btn-play').innerHTML = '<i class="fas fa-play mr-2"></i>Iniciar';
+            document.getElementById('cronometro-display').textContent = '00:00:00';
+            document.getElementById('fase-atual').textContent = 'Aguardando início';
+            
+            // Reset das fases
+            document.querySelectorAll('.fase-item').forEach(item => {
+                item.style.borderLeftColor = '#6b7280';
+                item.classList.remove('fase-ativa');
+            });
+        }
+
+        function atualizarDisplayCronometro() {
+            const hours = Math.floor(audienciaSeconds / 3600);
+            const minutes = Math.floor((audienciaSeconds % 3600) / 60);
+            const seconds = audienciaSeconds % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('cronometro-display').textContent = display;
+        }
+
+        function verificarFases() {
+            const fases = [
+                { nome: 'abertura', inicio: 0, fim: 120 }, // 2 min
+                { nome: 'conciliacao', inicio: 120, fim: 720 }, // 10 min
+                { nome: 'instrucao', inicio: 720, fim: 2220 }, // 25 min
+                { nome: 'debates', inicio: 2220, fim: 3120 }, // 15 min
+                { nome: 'decisao', inicio: 3120, fim: 3600 } // 8 min
+            ];
+
+            fases.forEach((fase, index) => {
+                const elemento = document.querySelector(`[data-fase="${fase.nome}"]`);
+                if (elemento) {
+                    if (audienciaSeconds >= fase.inicio && audienciaSeconds < fase.fim) {
+                        elemento.style.borderLeftColor = '#10b981';
+                        elemento.classList.add('fase-ativa');
+                        document.getElementById('fase-atual').textContent = `Fase ${index + 1}: ${elemento.querySelector('.text-white').textContent.substr(3)}`;
+                    } else if (audienciaSeconds >= fase.fim) {
+                        elemento.style.borderLeftColor = '#059669';
+                        elemento.classList.remove('fase-ativa');
+                    }
+                }
+            });
+        }
+
+        function abrirChecklistProcessual() {
+            document.getElementById('audiencia-content').innerHTML = `
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-white flex items-center">
+                            <i class="fas fa-tasks text-purple-400 mr-3"></i>
+                            Checklist Processual RP
+                        </h3>
+                        <button onclick="voltarMenuAudiencia()" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Checklist Principal -->
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Verificações Obrigatórias:</h4>
+                            
+                            <div class="space-y-3" id="checklist-items">
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Verificar presença das partes</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Confirmar se autor e réu estão presentes ou representados</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Verificar procurações dos advogados</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Confirmar poderes de representação nos autos</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Tentar conciliação</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Obrigatória em todas as audiências iniciais</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Documentar depoimentos</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Registrar todas as declarações nos autos</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Ouvir testemunhas arroladas</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Respeitar ordem de oitiva e tempo de cada depoimento</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Garantir contraditório</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Permitir que as partes se manifestem sobre provas</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Designar próximos atos</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Marcar datas futuras se necessário</p>
+                                </div>
+
+                                <div class="checklist-item bg-slate-700/50 p-4 rounded-lg">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" class="mr-3 w-4 h-4 text-purple-600 rounded" onchange="atualizarProgresso()">
+                                        <span class="text-white">Encerrar ata de audiência</span>
+                                    </label>
+                                    <p class="text-gray-400 text-sm mt-2 ml-7">Registrar todos os atos praticados</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progresso e Dicas -->
+                        <div>
+                            <div class="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-lg p-6 border border-purple-500/30 mb-6">
+                                <h4 class="text-white font-semibold text-lg mb-4 flex items-center">
+                                    <i class="fas fa-chart-pie text-purple-400 mr-2"></i>
+                                    Progresso da Audiência
+                                </h4>
+                                
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-300">Completo:</span>
+                                        <span id="progresso-texto" class="text-white font-semibold">0/8 (0%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-3">
+                                        <div id="progresso-barra" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div id="status-audiencia" class="text-center text-gray-300">
+                                    <i class="fas fa-hourglass-start text-2xl mb-2"></i>
+                                    <p>Audiência não iniciada</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
+                                    <h5 class="text-blue-300 font-semibold mb-2 flex items-center">
+                                        <i class="fas fa-info-circle mr-2"></i>Dica Legal
+                                    </h5>
+                                    <p class="text-gray-300 text-sm">O juiz deve sempre garantir o contraditório e a ampla defesa durante toda a audiência.</p>
+                                </div>
+
+                                <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
+                                    <h5 class="text-green-300 font-semibold mb-2 flex items-center">
+                                        <i class="fas fa-lightbulb mr-2"></i>Dica de RP
+                                    </h5>
+                                    <p class="text-gray-300 text-sm">Mantenha a solenidade e formalidade adequadas ao ambiente judicial.</p>
+                                </div>
+
+                                <div class="bg-orange-500/10 p-4 rounded-lg border border-orange-500/20">
+                                    <h5 class="text-orange-300 font-semibold mb-2 flex items-center">
+                                        <i class="fas fa-clock mr-2"></i>Gestão de Tempo
+                                    </h5>
+                                    <p class="text-gray-300 text-sm">Audiências devem durar entre 30-60 minutos para manter o interesse dos participantes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function atualizarProgresso() {
+            const checkboxes = document.querySelectorAll('#checklist-items input[type="checkbox"]');
+            const marcados = document.querySelectorAll('#checklist-items input[type="checkbox"]:checked');
+            
+            const total = checkboxes.length;
+            const completos = marcados.length;
+            const porcentagem = Math.round((completos / total) * 100);
+
+            document.getElementById('progresso-texto').textContent = `${completos}/${total} (${porcentagem}%)`;
+            document.getElementById('progresso-barra').style.width = `${porcentagem}%`;
+
+            const statusElement = document.getElementById('status-audiencia');
+            
+            if (porcentagem === 0) {
+                statusElement.innerHTML = `
+                    <i class="fas fa-hourglass-start text-2xl mb-2"></i>
+                    <p>Audiência não iniciada</p>
+                `;
+            } else if (porcentagem < 50) {
+                statusElement.innerHTML = `
+                    <i class="fas fa-hourglass-half text-yellow-400 text-2xl mb-2"></i>
+                    <p class="text-yellow-300">Audiência em andamento</p>
+                `;
+            } else if (porcentagem < 100) {
+                statusElement.innerHTML = `
+                    <i class="fas fa-hourglass-end text-orange-400 text-2xl mb-2"></i>
+                    <p class="text-orange-300">Finalizando audiência</p>
+                `;
+            } else {
+                statusElement.innerHTML = `
+                    <i class="fas fa-check-circle text-green-400 text-2xl mb-2"></i>
+                    <p class="text-green-300">Audiência concluída!</p>
+                `;
+            }
+        }
+
+        function abrirBibliotecaFrases() {
+            document.getElementById('audiencia-content').innerHTML = `
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-white flex items-center">
+                            <i class="fas fa-quote-left text-orange-400 mr-3"></i>
+                            Biblioteca de Frases Jurídicas
+                        </h3>
+                        <button onclick="voltarMenuAudiencia()" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Categorias -->
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Selecione a Categoria:</h4>
+                            
+                            <div class="space-y-3">
+                                <button onclick="mostrarFrases('abertura')" class="w-full card p-4 hover:bg-orange-500/10 transition-all text-left categoria-btn">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-door-open text-orange-400 text-xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Abertura de Audiência</h5>
+                                            <p class="text-gray-400 text-sm">Frases para iniciar audiências</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="mostrarFrases('conciliacao')" class="w-full card p-4 hover:bg-blue-500/10 transition-all text-left categoria-btn">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-handshake text-blue-400 text-xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Conciliação</h5>
+                                            <p class="text-gray-400 text-sm">Tentativas de acordo</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="mostrarFrases('instrucao')" class="w-full card p-4 hover:bg-green-500/10 transition-all text-left categoria-btn">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-search text-green-400 text-xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Instrução Processual</h5>
+                                            <p class="text-gray-400 text-sm">Coleta de provas</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="mostrarFrases('decisao')" class="w-full card p-4 hover:bg-purple-500/10 transition-all text-left categoria-btn">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gavel text-purple-400 text-xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Decisões e Sentenças</h5>
+                                            <p class="text-gray-400 text-sm">Prolação de decisões</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button onclick="mostrarFrases('encerramento')" class="w-full card p-4 hover:bg-red-500/10 transition-all text-left categoria-btn">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-door-closed text-red-400 text-xl mr-4"></i>
+                                        <div>
+                                            <h5 class="text-white font-semibold">Encerramento</h5>
+                                            <p class="text-gray-400 text-sm">Finalização de audiências</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lista de Frases -->
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Frases Disponíveis:</h4>
+                            
+                            <div id="lista-frases" class="bg-slate-800/50 rounded-lg p-6 min-h-96">
+                                <div class="text-center text-gray-400 py-12">
+                                    <i class="fas fa-quote-left text-4xl mb-3"></i>
+                                    <p>Selecione uma categoria para ver as frases</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function mostrarFrases(categoria) {
+            const frases = {
+                abertura: [
+                    "Declaro aberta a presente audiência.",
+                    "Estão presentes as partes e seus respectivos advogados.",
+                    "Para os devidos fins, declaro iniciados os trabalhos desta audiência.",
+                    "Havendo condições para o prosseguimento, declaro aberta esta audiência.",
+                    "Presentes as partes, passo aos atos da presente solenidade."
+                ],
+                conciliacao: [
+                    "Antes de prosseguirmos, pergunto às partes se há possibilidade de acordo.",
+                    "Existe interesse das partes em buscar uma solução consensual?",
+                    "Concedo alguns minutos para que as partes avaliem uma proposta de acordo.",
+                    "A conciliação é sempre a melhor solução para as partes.",
+                    "Não havendo acordo, prosseguiremos com a instrução processual."
+                ],
+                instrucao: [
+                    "Passo à oitiva das testemunhas arroladas pelas partes.",
+                    "Chamo o autor para prestar depoimento pessoal.",
+                    "Solicito que a testemunha se identifique e preste compromisso legal.",
+                    "A defesa pode fazer as perguntas que julgar pertinentes.",
+                    "Concedo a palavra ao Ministério Público para suas considerações."
+                ],
+                decisao: [
+                    "Tendo em vista as provas coligidas aos autos, passo a decidir.",
+                    "Considerando os elementos de convicção, profiro a seguinte decisão:",
+                    "Analisando detidamente as alegações das partes...",
+                    "Com base no conjunto probatório, julgo procedente o pedido.",
+                    "Diante do exposto, julgo improcedente a ação."
+                ],
+                encerramento: [
+                    "Nada mais havendo a ser tratado, declaro encerrada a audiência.",
+                    "Lavrada a presente ata, dou por encerrados os trabalhos.",
+                    "Registrados os atos, declaro finalizada esta audiência.",
+                    "Cumpridas as formalidades legais, encerro a presente solenidade.",
+                    "Nada mais havendo, declaro encerrada a audiência."
+                ]
+            };
+
+            const listaElement = document.getElementById('lista-frases');
+            const frasesCategoria = frases[categoria] || [];
+
+            listaElement.innerHTML = `
+                <div class="space-y-3">
+                    ${frasesCategoria.map((frase, index) => `
+                        <div class="bg-slate-700/50 p-4 rounded-lg border-l-4 border-orange-400">
+                            <div class="flex justify-between items-start">
+                                <p class="text-white italic flex-1">"${frase}"</p>
+                                <button onclick="copiarFrase('${frase}')" class="ml-3 text-orange-400 hover:text-orange-300 transition-colors">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="mt-6 p-4 bg-orange-500/10 rounded-lg border border-orange-500/20">
+                    <h5 class="text-orange-300 font-semibold mb-2 flex items-center">
+                        <i class="fas fa-tips mr-2"></i>Como usar
+                    </h5>
+                    <p class="text-gray-300 text-sm">Clique no ícone de copiar para adicionar a frase à área de transferência. Use essas frases como base e adapte conforme necessário para seu RP.</p>
+                </div>
+            `;
+        }
+
+        function copiarFrase(frase) {
+            navigator.clipboard.writeText(frase).then(() => {
+                showNotification('✅ Frase copiada para a área de transferência!', 'success');
+            }).catch(err => {
+                showNotification('❌ Erro ao copiar frase', 'error');
+            });
+        }
+
+        function voltarMenuAudiencia() {
+            document.getElementById('audiencia-content').innerHTML = `
+                <div class="card p-8 text-center">
+                    <div class="mb-6">
+                        <i class="fas fa-theater-masks text-6xl text-pink-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-2">Bem-vindo ao Sistema de Audiências RP!</h3>
+                        <p class="text-gray-300 text-lg">Selecione uma das ferramentas acima para começar</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div class="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
+                            <i class="fas fa-lightbulb text-blue-400 text-2xl mb-2"></i>
+                            <h4 class="text-white font-semibold mb-1">Dicas de RP</h4>
+                            <p class="text-gray-400 text-sm">Sugestões para melhorar sua interpretação</p>
+                        </div>
+                        <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
+                            <i class="fas fa-clock text-green-400 text-2xl mb-2"></i>
+                            <h4 class="text-white font-semibold mb-1">Controle de Tempo</h4>
+                            <p class="text-gray-400 text-sm">Gerencie as fases da audiência</p>
+                        </div>
+                        <div class="bg-purple-500/10 p-4 rounded-lg border border-purple-500/20">
+                            <i class="fas fa-book text-purple-400 text-2xl mb-2"></i>
+                            <h4 class="text-white font-semibold mb-1">Biblioteca Jurídica</h4>
+                            <p class="text-gray-400 text-sm">Frases e termos técnicos</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // === SISTEMA DE DOCUMENTOS V2.0 ===
+        let documentosV2 = [];
+        let templatesSelecionados = {};
+        let processoAtual = null;
+
+        function iniciarDocumentosV2() {
+            document.getElementById('documentos-v2-content').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Header do Sistema -->
+                    <div class="card p-6 border-indigo-500/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-2xl font-bold text-white flex items-center">
+                                <i class="fas fa-rocket text-indigo-400 mr-3"></i>
+                                Sistema de Documentos v2.0 - ATIVO
+                            </h3>
+                            <div class="flex space-x-3">
+                                <span class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm border border-green-500/30">
+                                    ✓ FUNCIONAL
+                                </span>
+                                <button onclick="alternarComparacao()" class="btn btn-secondary text-sm">
+                                    <i class="fas fa-exchange-alt mr-2"></i>Comparar Sistemas
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-gray-300">Sistema avançado com integração completa aos processos e funcionalidades expandidas</p>
+                    </div>
+
+                    <!-- Seleção de Processo -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2">
+                            <div class="card p-6">
+                                <h4 class="text-white font-semibold text-lg mb-4 flex items-center">
+                                    <i class="fas fa-folder-open text-blue-400 mr-2"></i>
+                                    Selecionar Processo
+                                </h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-gray-300 text-sm mb-2">Processo:</label>
+                                        <select id="processoDocV2Select" class="w-full bg-slate-700 text-white p-3 rounded-lg border border-gray-600" onchange="selecionarProcessoV2()">
+                                            <option value="">Selecione um processo...</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-300 text-sm mb-2">Tipo de Documento:</label>
+                                        <select id="tipoDocV2Select" class="w-full bg-slate-700 text-white p-3 rounded-lg border border-gray-600" onchange="atualizarTemplatesV2()">
+                                            <option value="">Primeiro selecione um processo</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="info-processo-v2" class="hidden bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
+                                    <!-- Info do processo será carregada aqui -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-1">
+                            <div class="card p-6">
+                                <h4 class="text-white font-semibold text-lg mb-4 flex items-center">
+                                    <i class="fas fa-history text-purple-400 mr-2"></i>
+                                    Histórico Recente
+                                </h4>
+                                <div id="historico-documentos-v2" class="space-y-2 text-sm">
+                                    <div class="text-gray-400 text-center py-4">
+                                        <i class="fas fa-file-alt text-2xl mb-2"></i>
+                                        <p>Nenhum documento gerado ainda</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Editor de Documentos -->
+                    <div id="editor-documentos-v2" class="hidden">
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h4 class="text-white font-semibold text-xl flex items-center">
+                                    <i class="fas fa-edit text-indigo-400 mr-2"></i>
+                                    Editor Avançado de Documentos
+                                </h4>
+                                <div class="flex space-x-2">
+                                    <button onclick="salvarRascunhoV2()" class="btn bg-gray-600 hover:bg-gray-500 text-white text-sm">
+                                        <i class="fas fa-save mr-2"></i>Salvar Rascunho
+                                    </button>
+                                    <button onclick="previewDocumentoV2()" class="btn bg-blue-600 hover:bg-blue-500 text-white text-sm">
+                                        <i class="fas fa-eye mr-2"></i>Preview
+                                    </button>
+                                    <button onclick="finalizarDocumentoV2()" class="btn btn-primary text-sm">
+                                        <i class="fas fa-check mr-2"></i>Finalizar & Enviar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                                <!-- Formulário de Dados -->
+                                <div>
+                                    <h5 class="text-white font-semibold mb-4 flex items-center">
+                                        <i class="fas fa-form text-green-400 mr-2"></i>
+                                        Dados do Documento
+                                    </h5>
+                                    <div id="formulario-dados-v2" class="space-y-4">
+                                        <!-- Será preenchido dinamicamente -->
+                                    </div>
+                                </div>
+
+                                <!-- Preview em Tempo Real -->
+                                <div>
+                                    <h5 class="text-white font-semibold mb-4 flex items-center">
+                                        <i class="fas fa-eye text-blue-400 mr-2"></i>
+                                        Preview em Tempo Real
+                                    </h5>
+                                    <div id="preview-documento-v2" class="bg-white rounded-lg p-6 min-h-96 max-h-96 overflow-y-auto text-black">
+                                        <div class="text-center text-gray-500 py-12">
+                                            <i class="fas fa-file-alt text-4xl mb-3"></i>
+                                            <p>Preencha os dados para ver o preview</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Templates Disponíveis -->
+                    <div class="card p-6">
+                        <h4 class="text-white font-semibold text-lg mb-4 flex items-center">
+                            <i class="fas fa-layer-group text-orange-400 mr-2"></i>
+                            Templates Avançados Disponíveis
+                        </h4>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Templates Judiciais -->
+                            <div class="bg-slate-700/50 p-4 rounded-lg border border-blue-500/20">
+                                <h5 class="text-blue-300 font-semibold mb-2">Documentos Judiciais</h5>
+                                <ul class="text-gray-300 text-sm space-y-1">
+                                    <li>• Despachos Interlocutórios</li>
+                                    <li>• Sentenças Padronizadas</li>
+                                    <li>• Decisões Liminares</li>
+                                    <li>• Atas de Audiência</li>
+                                    <li>• Intimações Processuais</li>
+                                </ul>
+                            </div>
+
+                            <!-- Templates Administrativos -->
+                            <div class="bg-slate-700/50 p-4 rounded-lg border border-green-500/20">
+                                <h5 class="text-green-300 font-semibold mb-2">Administrativos</h5>
+                                <ul class="text-gray-300 text-sm space-y-1">
+                                    <li>• Ofícios Diversos</li>
+                                    <li>• Comunicações Internas</li>
+                                    <li>• Relatórios de Gestão</li>
+                                    <li>• Portarias e Regulamentos</li>
+                                    <li>• Atos Normativos</li>
+                                </ul>
+                            </div>
+
+                            <!-- Templates Especializados -->
+                            <div class="bg-slate-700/50 p-4 rounded-lg border border-purple-500/20">
+                                <h5 class="text-purple-300 font-semibold mb-2">Especializados</h5>
+                                <ul class="text-gray-300 text-sm space-y-1">
+                                    <li>• Cartas Precatórias</li>
+                                    <li>• Cartas Rogatórias</li>
+                                    <li>• Mandados de Segurança</li>
+                                    <li>• Habeas Data</li>
+                                    <li>• Ações Constitucionais</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estatísticas do Sistema -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="card p-6 text-center">
+                            <div class="text-3xl font-bold text-indigo-400 mb-2" id="total-docs-v2">0</div>
+                            <div class="text-gray-300 text-sm">Documentos Criados</div>
+                        </div>
+                        <div class="card p-6 text-center">
+                            <div class="text-3xl font-bold text-green-400 mb-2" id="docs-enviados-v2">0</div>
+                            <div class="text-gray-300 text-sm">Enviados aos Processos</div>
+                        </div>
+                        <div class="card p-6 text-center">
+                            <div class="text-3xl font-bold text-orange-400 mb-2" id="templates-v2">15</div>
+                            <div class="text-gray-300 text-sm">Templates Disponíveis</div>
+                        </div>
+                        <div class="card p-6 text-center">
+                            <div class="text-3xl font-bold text-purple-400 mb-2" id="rascunhos-v2">0</div>
+                            <div class="text-gray-300 text-sm">Rascunhos Salvos</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            carregarProcessosParaDocumentosV2();
+            atualizarEstatisticasV2();
+        }
+
+        function carregarProcessosParaDocumentosV2() {
+            const select = document.getElementById('processoDocV2Select');
+            if (!select) return;
+
+            // Carregar todos os processos disponíveis
+            const todosProcessos = [...processos, ...meusProcessos];
+            
+            select.innerHTML = '<option value="">Selecione um processo...</option>' +
+                todosProcessos.map(proc => `
+                    <option value="${proc.id}">
+                        ${proc.numero} - ${proc.tipo} (${proc.status.toUpperCase()})
+                    </option>
+                `).join('');
+        }
+
+        function selecionarProcessoV2() {
+            const select = document.getElementById('processoDocV2Select');
+            const infoDiv = document.getElementById('info-processo-v2');
+            const tipoSelect = document.getElementById('tipoDocV2Select');
+            
+            if (!select.value) {
+                infoDiv.classList.add('hidden');
+                tipoSelect.innerHTML = '<option value="">Primeiro selecione um processo</option>';
+                return;
+            }
+
+            // Encontrar o processo
+            const todosProcessos = [...processos, ...meusProcessos];
+            processoAtual = todosProcessos.find(p => p.id === select.value);
+
+            if (processoAtual) {
+                // Mostrar info do processo
+                infoDiv.classList.remove('hidden');
+                infoDiv.innerHTML = `
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-1">
+                            <h6 class="text-blue-300 font-semibold mb-2">Processo Selecionado:</h6>
+                            <p class="text-white font-mono">${processoAtual.numero}</p>
+                            <p class="text-gray-300">${processoAtual.tipo} - ${processoAtual.status.toUpperCase()}</p>
+                        </div>
+                        <div class="flex-1">
+                            <h6 class="text-blue-300 font-semibold mb-2">Detalhes:</h6>
+                            <p class="text-gray-300 text-sm">Data: ${formatDate(processoAtual.dataDistribuicao)}</p>
+                            <p class="text-gray-300 text-sm">Urgência: ${processoAtual.urgencia?.toUpperCase() || 'NORMAL'}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Carregar tipos de documento baseados no tipo do processo
+                carregarTiposDocumentoPorProcesso(processoAtual);
+            }
+        }
+
+        function carregarTiposDocumentoPorProcesso(processo) {
+            const tipoSelect = document.getElementById('tipoDocV2Select');
+            
+            const tiposBase = [
+                { value: 'despacho', label: 'Despacho Interlocutório', icon: 'fas fa-file-signature' },
+                { value: 'intimacao', label: 'Intimação', icon: 'fas fa-bell' },
+                { value: 'oficio', label: 'Ofício', icon: 'fas fa-envelope' },
+                { value: 'ata', label: 'Ata de Audiência', icon: 'fas fa-microphone' }
+            ];
+
+            const tiposCiveis = [
+                { value: 'sentenca-civil', label: 'Sentença Cível', icon: 'fas fa-gavel' },
+                { value: 'decisao-liminar', label: 'Decisão Liminar', icon: 'fas fa-bolt' },
+                { value: 'carta-precatoria', label: 'Carta Precatória', icon: 'fas fa-mail-bulk' }
+            ];
+
+            const tiposPenais = [
+                { value: 'sentenca-penal', label: 'Sentença Penal', icon: 'fas fa-balance-scale' },
+                { value: 'decisao-prisao', label: 'Decisão de Prisão', icon: 'fas fa-lock' },
+                { value: 'alvara-soltura', label: 'Alvará de Soltura', icon: 'fas fa-key' }
+            ];
+
+            let tiposDisponiveis = [...tiposBase];
+
+            if (processo.tipo.toLowerCase().includes('civil')) {
+                tiposDisponiveis.push(...tiposCiveis);
+            } else if (processo.tipo.toLowerCase().includes('criminal') || processo.tipo.toLowerCase().includes('penal')) {
+                tiposDisponiveis.push(...tiposPenais);
+            }
+
+            tipoSelect.innerHTML = '<option value="">Selecione o tipo de documento...</option>' +
+                tiposDisponiveis.map(tipo => `
+                    <option value="${tipo.value}">
+                        ${tipo.label}
+                    </option>
+                `).join('');
+        }
+
+        function atualizarTemplatesV2() {
+            const tipoSelect = document.getElementById('tipoDocV2Select');
+            const editorDiv = document.getElementById('editor-documentos-v2');
+
+            if (!tipoSelect.value || !processoAtual) {
+                editorDiv.classList.add('hidden');
+                return;
+            }
+
+            editorDiv.classList.remove('hidden');
+            carregarFormularioDocumentoV2(tipoSelect.value);
+        }
+
+        function carregarFormularioDocumentoV2(tipoDoc) {
+            const formularioDiv = document.getElementById('formulario-dados-v2');
+            const templates = getTemplateDocumentoV2(tipoDoc);
+
+            formularioDiv.innerHTML = `
+                <div class="space-y-4">
+                    ${templates.campos.map(campo => `
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">${campo.label}:</label>
+                            ${campo.tipo === 'textarea' ? 
+                                `<textarea id="campo-${campo.nome}" rows="${campo.rows || 3}" 
+                                    class="w-full bg-slate-700 text-white p-3 rounded-lg border border-gray-600" 
+                                    placeholder="${campo.placeholder || ''}"
+                                    onkeyup="atualizarPreviewV2()">${campo.valor || ''}</textarea>` :
+                                `<input type="${campo.tipo}" id="campo-${campo.nome}" 
+                                    class="w-full bg-slate-700 text-white p-3 rounded-lg border border-gray-600" 
+                                    placeholder="${campo.placeholder || ''}"
+                                    value="${campo.valor || ''}"
+                                    onkeyup="atualizarPreviewV2()">`
+                            }
+                        </div>
+                    `).join('')}
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Data do Documento:</label>
+                            <input type="date" id="campo-data" 
+                                class="w-full bg-slate-700 text-white p-3 rounded-lg border border-gray-600" 
+                                value="${new Date().toISOString().split('T')[0]}"
+                                onchange="atualizarPreviewV2()">
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Assinatura Digital:</label>
+                            <select id="campo-assinatura" class="w-full bg-slate-700 text-white p-3 rounded-lg border border-gray-600" onchange="atualizarPreviewV2()">
+                                <option value="juiz">Juiz Responsável</option>
+                                <option value="secretario">Secretário Judicial</option>
+                                <option value="escrivao">Escrivão</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Preencher dados do processo automaticamente
+            preencherDadosProcessoAutomaticamente();
+            
+            // Atualizar preview inicial
+            setTimeout(atualizarPreviewV2, 100);
+        }
+
+        function preencherDadosProcessoAutomaticamente() {
+            if (processoAtual) {
+                const campoProcesso = document.getElementById('campo-numeroProcesso');
+                const campoTipo = document.getElementById('campo-tipoProcesso');
+                
+                if (campoProcesso) campoProcesso.value = processoAtual.numero;
+                if (campoTipo) campoTipo.value = processoAtual.tipo;
+            }
+        }
+
+        function atualizarPreviewV2() {
+            const tipoSelect = document.getElementById('tipoDocV2Select');
+            const previewDiv = document.getElementById('preview-documento-v2');
+            
+            if (!tipoSelect.value) return;
+
+            const template = getTemplateDocumentoV2(tipoSelect.value);
+            const dados = coletarDadosFormularioV2();
+            
+            const documentoHtml = gerarDocumentoHtmlV2(template, dados);
+            previewDiv.innerHTML = documentoHtml;
+        }
+
+        function coletarDadosFormularioV2() {
+            const dados = {};
+            
+            // Coletar todos os campos do formulário
+            document.querySelectorAll('#formulario-dados-v2 input, #formulario-dados-v2 textarea, #formulario-dados-v2 select').forEach(campo => {
+                if (campo.id.startsWith('campo-')) {
+                    const nomeCampo = campo.id.replace('campo-', '');
+                    dados[nomeCampo] = campo.value;
+                }
+            });
+
+            // Adicionar dados do processo atual
+            if (processoAtual) {
+                dados.numeroProcessoAtual = processoAtual.numero;
+                dados.tipoProcessoAtual = processoAtual.tipo;
+                dados.statusProcesso = processoAtual.status;
+            }
+
+            return dados;
+        }
+
+        function getTemplateDocumentoV2(tipo) {
+            const templates = {
+                'despacho': {
+                    titulo: 'Despacho Interlocutório',
+                    campos: [
+                        { nome: 'numeroProcesso', label: 'Número do Processo', tipo: 'text', valor: processoAtual?.numero || '' },
+                        { nome: 'requerente', label: 'Requerente', tipo: 'text', placeholder: 'Nome do requerente' },
+                        { nome: 'requerido', label: 'Requerido', tipo: 'text', placeholder: 'Nome do requerido' },
+                        { nome: 'fundamentacao', label: 'Fundamentação', tipo: 'textarea', rows: 4, placeholder: 'Fundamentos do despacho...' },
+                        { nome: 'decisao', label: 'Decisão', tipo: 'textarea', rows: 3, placeholder: 'Decisão tomada...' }
+                    ]
+                },
+                'intimacao': {
+                    titulo: 'Intimação Processual',
+                    campos: [
+                        { nome: 'numeroProcesso', label: 'Número do Processo', tipo: 'text', valor: processoAtual?.numero || '' },
+                        { nome: 'intimado', label: 'Nome do Intimado', tipo: 'text', placeholder: 'Quem será intimado' },
+                        { nome: 'qualificacao', label: 'Qualificação', tipo: 'text', placeholder: 'Qualificação completa' },
+                        { nome: 'finalidade', label: 'Finalidade da Intimação', tipo: 'textarea', rows: 3, placeholder: 'Para que fica intimado...' },
+                        { nome: 'prazo', label: 'Prazo', tipo: 'text', placeholder: 'Ex: 15 dias' }
+                    ]
+                },
+                'sentenca-civil': {
+                    titulo: 'Sentença Cível',
+                    campos: [
+                        { nome: 'numeroProcesso', label: 'Número do Processo', tipo: 'text', valor: processoAtual?.numero || '' },
+                        { nome: 'autor', label: 'Autor', tipo: 'text', placeholder: 'Nome do autor' },
+                        { nome: 'reu', label: 'Réu', tipo: 'text', placeholder: 'Nome do réu' },
+                        { nome: 'relatorio', label: 'Relatório', tipo: 'textarea', rows: 4, placeholder: 'Resumo dos fatos...' },
+                        { nome: 'fundamentacao', label: 'Fundamentação', tipo: 'textarea', rows: 5, placeholder: 'Fundamentos legais...' },
+                        { nome: 'dispositivo', label: 'Dispositivo', tipo: 'textarea', rows: 3, placeholder: 'Julgo procedente/improcedente...' }
+                    ]
+                },
+                'oficio': {
+                    titulo: 'Ofício',
+                    campos: [
+                        { nome: 'numeroOficio', label: 'Número do Ofício', tipo: 'text', placeholder: 'Ex: 001/2025' },
+                        { nome: 'destinatario', label: 'Destinatário', tipo: 'text', placeholder: 'Nome/Cargo do destinatário' },
+                        { nome: 'orgao', label: 'Órgão', tipo: 'text', placeholder: 'Órgão destinatário' },
+                        { nome: 'assunto', label: 'Assunto', tipo: 'text', placeholder: 'Assunto do ofício' },
+                        { nome: 'conteudo', label: 'Conteúdo', tipo: 'textarea', rows: 5, placeholder: 'Conteúdo do ofício...' }
+                    ]
+                }
+            };
+
+            return templates[tipo] || templates['despacho'];
+        }
+
+        function gerarDocumentoHtmlV2(template, dados) {
+            const dataFormatada = dados.data ? new Date(dados.data).toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+            
+            const cabecalho = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1e40af; padding-bottom: 20px;">
+                    <h1 style="color: #1e40af; margin: 0; font-size: 24px; font-weight: bold;">TRIBUNAL DE JUSTIÇA DE SÃO PAULO</h1>
+                    <h2 style="color: #1e40af; margin: 5px 0 0 0; font-size: 18px;">Comarca de Brasilândia</h2>
+                    <p style="margin: 10px 0 0 0; color: #666; font-size: 12px;">Sistema de Documentos v2.0 - Portal Judicial</p>
+                </div>
+            `;
+
+            switch(template.titulo) {
+                case 'Despacho Interlocutório':
+                    return cabecalho + `
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="text-align: center; color: #1e40af; font-size: 18px; margin-bottom: 20px;">DESPACHO INTERLOCUTÓRIO</h3>
+                            <p><strong>Processo nº:</strong> ${dados.numeroProcesso || 'N/A'}</p>
+                            <p><strong>Requerente:</strong> ${dados.requerente || 'N/A'}</p>
+                            <p><strong>Requerido:</strong> ${dados.requerido || 'N/A'}</p>
+                        </div>
+                        
+                        <div style="margin: 20px 0; text-align: justify; line-height: 1.6;">
+                            <p><strong>FUNDAMENTAÇÃO:</strong></p>
+                            <p style="margin-left: 20px;">${dados.fundamentacao || 'Não informado'}</p>
+                            
+                            <p><strong>DECISÃO:</strong></p>
+                            <p style="margin-left: 20px;">${dados.decisao || 'Não informado'}</p>
+                        </div>
+                        
+                        <div style="text-align: right; margin-top: 40px;">
+                            <p>Brasilândia, ${dataFormatada}</p>
+                            <p style="margin-top: 40px;">___________________________</p>
+                            <p><strong>${obterNomeAssinatura(dados.assinatura)}</strong></p>
+                            <p>Juiz de Direito</p>
+                        </div>
+                    `;
+
+                case 'Intimação Processual':
+                    return cabecalho + `
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="text-align: center; color: #1e40af; font-size: 18px; margin-bottom: 20px;">INTIMAÇÃO</h3>
+                            <p><strong>Processo nº:</strong> ${dados.numeroProcesso || 'N/A'}</p>
+                        </div>
+                        
+                        <div style="margin: 20px 0; text-align: justify; line-height: 1.6;">
+                            <p>Fica intimado <strong>${dados.intimado || 'N/A'}</strong>, ${dados.qualificacao || 'qualificação não informada'}, ${dados.finalidade || 'finalidade não informada'}.</p>
+                            
+                            <p><strong>PRAZO:</strong> ${dados.prazo || 'A ser definido'}</p>
+                        </div>
+                        
+                        <div style="text-align: right; margin-top: 40px;">
+                            <p>Brasilândia, ${dataFormatada}</p>
+                            <p style="margin-top: 40px;">___________________________</p>
+                            <p><strong>${obterNomeAssinatura(dados.assinatura)}</strong></p>
+                            <p>Escrivão Judicial</p>
+                        </div>
+                    `;
+
+                case 'Sentença Cível':
+                    return cabecalho + `
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="text-align: center; color: #1e40af; font-size: 18px; margin-bottom: 20px;">SENTENÇA CÍVEL</h3>
+                            <p><strong>Processo nº:</strong> ${dados.numeroProcesso || 'N/A'}</p>
+                            <p><strong>Autor:</strong> ${dados.autor || 'N/A'}</p>
+                            <p><strong>Réu:</strong> ${dados.reu || 'N/A'}</p>
+                        </div>
+                        
+                        <div style="margin: 20px 0; text-align: justify; line-height: 1.6;">
+                            <h4 style="color: #1e40af;">I - RELATÓRIO</h4>
+                            <p>${dados.relatorio || 'Não informado'}</p>
+                            
+                            <h4 style="color: #1e40af;">II - FUNDAMENTAÇÃO</h4>
+                            <p>${dados.fundamentacao || 'Não informado'}</p>
+                            
+                            <h4 style="color: #1e40af;">III - DISPOSITIVO</h4>
+                            <p>${dados.dispositivo || 'Não informado'}</p>
+                        </div>
+                        
+                        <div style="text-align: right; margin-top: 40px;">
+                            <p>Brasilândia, ${dataFormatada}</p>
+                            <p style="margin-top: 40px;">___________________________</p>
+                            <p><strong>${obterNomeAssinatura(dados.assinatura)}</strong></p>
+                            <p>Juiz de Direito</p>
+                        </div>
+                    `;
+
+                case 'Ofício':
+                    return cabecalho + `
+                        <div style="margin-bottom: 20px;">
+                            <p><strong>Ofício nº:</strong> ${dados.numeroOficio || 'N/A'}</p>
+                            <p><strong>Destinatário:</strong> ${dados.destinatario || 'N/A'}</p>
+                            <p><strong>Órgão:</strong> ${dados.orgao || 'N/A'}</p>
+                            <p><strong>Assunto:</strong> ${dados.assunto || 'N/A'}</p>
+                        </div>
+                        
+                        <div style="margin: 30px 0; text-align: justify; line-height: 1.6;">
+                            <p>Excelentíssimo Senhor,</p>
+                            <p>${dados.conteudo || 'Conteúdo não informado'}</p>
+                            <p>Atenciosamente,</p>
+                        </div>
+                        
+                        <div style="text-align: right; margin-top: 40px;">
+                            <p>Brasilândia, ${dataFormatada}</p>
+                            <p style="margin-top: 40px;">___________________________</p>
+                            <p><strong>${obterNomeAssinatura(dados.assinatura)}</strong></p>
+                            <p>Juiz de Direito</p>
+                        </div>
+                    `;
+
+                default:
+                    return cabecalho + '<p>Template não encontrado.</p>';
+            }
+        }
+
+        function obterNomeAssinatura(tipo) {
+            const assinaturas = {
+                'juiz': 'Dr. João Silva Santos',
+                'secretario': 'Maria Oliveira Costa',
+                'escrivao': 'Pedro Alves Ferreira'
+            };
+            return assinaturas[tipo] || 'Autoridade Competente';
+        }
+
+        function salvarRascunhoV2() {
+            const dados = coletarDadosFormularioV2();
+            const tipoSelect = document.getElementById('tipoDocV2Select');
+            
+            const rascunho = {
+                id: 'RASC' + Date.now(),
+                processo: processoAtual?.id,
+                tipo: tipoSelect.value,
+                dados: dados,
+                dataCriacao: new Date().toISOString(),
+                status: 'rascunho'
+            };
+
+            // Salvar no localStorage (simular banco)
+            let rascunhos = JSON.parse(localStorage.getItem('rascunhosV2') || '[]');
+            rascunhos.push(rascunho);
+            localStorage.setItem('rascunhosV2', JSON.stringify(rascunhos));
+            
+            atualizarEstatisticasV2();
+            showNotification('✅ Rascunho salvo com sucesso!', 'success');
+        }
+
+        function previewDocumentoV2() {
+            const previewDiv = document.getElementById('preview-documento-v2');
+            
+            // Criar modal de preview em tela cheia
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Preview do Documento</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="border rounded p-4">
+                        ${previewDiv.innerHTML}
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-4">
+                        <button onclick="baixarPDFV2()" class="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded">
+                            <i class="fas fa-file-pdf mr-2"></i>Baixar PDF
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function finalizarDocumentoV2() {
+            const dados = coletarDadosFormularioV2();
+            const tipoSelect = document.getElementById('tipoDocV2Select');
+            
+            if (!processoAtual || !tipoSelect.value) {
+                showNotification('❌ Selecione um processo e tipo de documento', 'error');
+                return;
+            }
+
+            // Criar documento finalizado
+            const documento = {
+                id: 'DOC' + Date.now(),
+                processo: processoAtual.id,
+                numeroProcesso: processoAtual.numero,
+                tipo: tipoSelect.value,
+                dados: dados,
+                dataCriacao: new Date().toISOString(),
+                status: 'finalizado',
+                assinatura: dados.assinatura
+            };
+
+            // Salvar documento
+            documentosV2.push(documento);
+            
+            // Atualizar histórico
+            atualizarHistoricoV2();
+            
+            // Simular envio para o processo
+            setTimeout(() => {
+                showNotification('✅ Documento finalizado e enviado ao processo!', 'success');
+                
+                // Limpar formulário
+                document.getElementById('editor-documentos-v2').classList.add('hidden');
+                document.getElementById('processoDocV2Select').value = '';
+                document.getElementById('tipoDocV2Select').innerHTML = '<option value="">Primeiro selecione um processo</option>';
+                document.getElementById('info-processo-v2').classList.add('hidden');
+                
+                atualizarEstatisticasV2();
+            }, 1500);
+            
+            showNotification('📤 Processando e enviando documento...', 'info');
+        }
+
+        function atualizarHistoricoV2() {
+            const historicoDiv = document.getElementById('historico-documentos-v2');
+            
+            if (documentosV2.length === 0) {
+                historicoDiv.innerHTML = `
+                    <div class="text-gray-400 text-center py-4">
+                        <i class="fas fa-file-alt text-2xl mb-2"></i>
+                        <p>Nenhum documento gerado ainda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const ultimosDocumentos = documentosV2.slice(-5).reverse();
+            
+            historicoDiv.innerHTML = ultimosDocumentos.map(doc => `
+                <div class="bg-slate-700/50 p-3 rounded-lg border-l-4 border-indigo-400">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h6 class="text-white font-semibold text-sm">${obterTituloTipo(doc.tipo)}</h6>
+                            <p class="text-gray-300 text-xs">${doc.numeroProcesso}</p>
+                            <p class="text-gray-400 text-xs">${formatDate(doc.dataCriacao.split('T')[0])}</p>
+                        </div>
+                        <span class="bg-green-500/20 text-green-300 text-xs px-2 py-1 rounded">
+                            ${doc.status.toUpperCase()}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function obterTituloTipo(tipo) {
+            const titulos = {
+                'despacho': 'Despacho',
+                'intimacao': 'Intimação',
+                'sentenca-civil': 'Sentença Cível',
+                'oficio': 'Ofício',
+                'decisao-liminar': 'Decisão Liminar'
+            };
+            return titulos[tipo] || tipo;
+        }
+
+        function atualizarEstatisticasV2() {
+            const rascunhos = JSON.parse(localStorage.getItem('rascunhosV2') || '[]');
+            
+            document.getElementById('total-docs-v2').textContent = documentosV2.length;
+            document.getElementById('docs-enviados-v2').textContent = documentosV2.filter(d => d.status === 'finalizado').length;
+            document.getElementById('rascunhos-v2').textContent = rascunhos.length;
+        }
+
+        function baixarPDFV2() {
+            const previewContent = document.querySelector('#preview-documento-v2').innerHTML;
+            
+            if (typeof window.jsPDF !== 'undefined') {
+                const doc = new window.jsPDF();
+                doc.html(previewContent, {
+                    callback: function (doc) {
+                        doc.save(`documento_v2_${Date.now()}.pdf`);
+                    }
+                });
+            } else {
+                // Fallback: baixar como HTML
+                const blob = new Blob([previewContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `documento_v2_${Date.now()}.html`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            
+            showNotification('📄 Download do documento iniciado!', 'success');
+        }
+
+        function alternarComparacao() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-slate-800 rounded-lg p-6 max-w-6xl max-h-[90vh] overflow-auto border border-gray-600">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-white">Comparação de Sistemas</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Sistema Atual -->
+                        <div class="bg-green-500/10 p-6 rounded-lg border border-green-500/30">
+                            <h4 class="text-green-400 font-bold text-xl mb-4 flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i>Sistema Atual
+                            </h4>
+                            
+                            <div class="space-y-3">
+                                <h5 class="text-white font-semibold">✅ Pontos Fortes:</h5>
+                                <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                                    <li>• Interface simples e intuitiva</li>
+                                    <li>• 11 tipos de documentos prontos</li>
+                                    <li>• Geração de PDF funcional</li>
+                                    <li>• Captura de foto HD</li>
+                                    <li>• Campos editáveis diretos</li>
+                                    <li>• Sistema estável e testado</li>
+                                </ul>
+                                
+                                <h5 class="text-white font-semibold mt-4">⚠️ Limitações:</h5>
+                                <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                                    <li>• Sem integração com processos</li>
+                                    <li>• Sem histórico de documentos</li>
+                                    <li>• Sem assinatura digital</li>
+                                    <li>• Templates básicos</li>
+                                    <li>• Sem controle de versões</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Sistema v2.0 -->
+                        <div class="bg-indigo-500/10 p-6 rounded-lg border border-indigo-500/30">
+                            <h4 class="text-indigo-400 font-bold text-xl mb-4 flex items-center">
+                                <i class="fas fa-star mr-2"></i>Sistema v2.0
+                            </h4>
+                            
+                            <div class="space-y-3">
+                                <h5 class="text-white font-semibold">🚀 Novas Funcionalidades:</h5>
+                                <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                                    <li>• Integração total com processos</li>
+                                    <li>• Templates específicos por tipo</li>
+                                    <li>• Assinatura digital avançada</li>
+                                    <li>• Histórico completo</li>
+                                    <li>• Preview em tempo real</li>
+                                    <li>• Auto-preenchimento de dados</li>
+                                    <li>• Salvar rascunhos</li>
+                                    <li>• Envio automático aos processos</li>
+                                    <li>• Estatísticas detalhadas</li>
+                                </ul>
+                                
+                                <h5 class="text-white font-semibold mt-4">⚠️ Status Atual:</h5>
+                                <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                                    <li>• Interface: 100% funcional</li>
+                                    <li>• Templates: 4 tipos prontos</li>
+                                    <li>• Integração: Básica implementada</li>
+                                    <li>• Histórico: Funcionando</li>
+                                    <li>• PDF: Integrado com sistema atual</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                        <h5 class="text-yellow-300 font-semibold mb-2 flex items-center">
+                            <i class="fas fa-lightbulb mr-2"></i>Recomendação
+                        </h5>
+                        <p class="text-gray-300 text-sm">
+                            <strong>Para uso imediato:</strong> Continue com o sistema atual que é estável e completo.<br>
+                            <strong>Para futuro:</strong> O sistema v2.0 oferece funcionalidades mais avançadas e integração melhor com os processos.
+                        </p>
+                    </div>
+
+                    <div class="flex justify-center space-x-4 mt-6">
+                        <button onclick="window.open('portal-advogado.html', '_blank')" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt mr-2"></i>Acessar Sistema Atual
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="btn btn-secondary">
+                            Continuar no v2.0
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
         }
     </script>
 </body>
