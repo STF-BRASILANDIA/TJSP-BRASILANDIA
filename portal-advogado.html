@@ -13,19 +13,14 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
-            --primary-color: #10b981;
-            --primary-dark: #059669;
-            --secondary-color: #3b82f6;
-            --accent-red: #ef4444;
+            --primary-blue: #000;
+            --secondary-blue: #3b82f6;
+            --accent-red: #000;
             --dark-bg: #0f172a;
-            --surface-dark: #1e293b;
-            --card-bg: rgba(30, 41, 59, 0.95);
-            --hover-bg: rgba(16, 185, 129, 0.1);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(255, 255, 255, 0.15);
             --sidebar-width: 280px;
             --sidebar-collapsed: 70px;
-            --border-color: rgba(16, 185, 129, 0.2);
         }
         
         * {
@@ -36,305 +31,23 @@
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #10b981 50%, #059669 75%, #064e3b 100%) fixed;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%) fixed;
             min-height: 100vh;
             line-height: 1.6;
-            overflow-x: hidden;
         }
         
-        /* === SIDEBAR MODERNO REFORMULADO === */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             width: var(--sidebar-width);
-            background: linear-gradient(180deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
-            backdrop-filter: blur(30px);
-            border-right: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
             z-index: 1000;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .sidebar.collapsed {
-            width: var(--sidebar-collapsed);
-        }
-
-        /* Sidebar Header */
-        .sidebar-header {
-            padding: 24px 20px;
-            border-bottom: 1px solid var(--border-color);
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 78, 59, 0.1) 100%);
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-logo:hover {
-            transform: translateY(-1px);
-        }
-
-        .sidebar-logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-logo:hover .sidebar-logo-icon {
-            transform: rotate(5deg) scale(1.05);
-            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.4);
-        }
-
-        .sidebar-logo-text {
-            color: var(--text-primary);
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar-logo-text .font-bold {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .sidebar-logo-text .text-xs {
-            font-size: 11px;
-            color: var(--text-secondary);
-            opacity: 0.8;
-        }
-
-        .sidebar.collapsed .sidebar-logo-text {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar-nav {
-            padding: 16px 0;
-            height: calc(100vh - 120px);
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        /* Scrollbar personalizada */
-        .sidebar-nav::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .sidebar-nav::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar-nav::-webkit-scrollbar-thumb {
-            background: rgba(16, 185, 129, 0.3);
-            border-radius: 2px;
-        }
-
-        .sidebar-nav::-webkit-scrollbar-thumb:hover {
-            background: rgba(16, 185, 129, 0.5);
-        }
-
-        /* Navigation Sections */
-        .nav-section {
-            margin-bottom: 32px;
-        }
-
-        .nav-section-title {
-            color: var(--text-secondary);
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 0 20px 12px 20px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar.collapsed .nav-section-title {
-            opacity: 0;
-            height: 0;
-            padding: 0;
-            margin: 0;
-            border: none;
-        }
-
-        /* Navigation Items */
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 20px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            position: relative;
-            margin: 0 12px 4px 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background: var(--hover-bg);
-            color: var(--primary-color);
-            transform: translateX(4px);
-        }
-
-        .nav-item.active {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
-            color: var(--primary-color);
-            border-left: 3px solid var(--primary-color);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
-        }
-
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--primary-color);
-            border-radius: 0 2px 2px 0;
-        }
-
-        .nav-item-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 14px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item:hover .nav-item-icon {
-            transform: scale(1.1);
-        }
-
-        .nav-item-text {
-            flex: 1;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed .nav-item {
-            padding: 14px;
-            margin: 0 8px 4px 8px;
-            justify-content: center;
-        }
-
-        .sidebar.collapsed .nav-item-text {
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-        }
-
-        .sidebar.collapsed .nav-item-icon {
-            margin-right: 0;
-        }
-
-        /* Navigation Badges */
-        .nav-item-badge {
-            background: linear-gradient(135deg, var(--accent-red), #dc2626);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: auto;
-            min-width: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-        }
-
-        .sidebar.collapsed .nav-item-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            transform: scale(0.8);
-        }
-
-        /* Tooltip para sidebar collapsed */
-        .sidebar.collapsed .nav-item {
-            position: relative;
-        }
-
-        .sidebar.collapsed .nav-item::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: calc(100% + 12px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(30, 41, 59, 0.95);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            pointer-events: none;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .sidebar.collapsed .nav-item:hover::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Toggle Button Moderno */
-        .sidebar-toggle {
-            position: fixed;
-            top: 20px;
-            left: calc(var(--sidebar-width) - 20px);
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .sidebar-toggle:hover {
-            background: linear-gradient(135deg, #34d399, var(--primary-color));
-            transform: scale(1.1);
-            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.4);
-        }
-
-        .sidebar.collapsed + .sidebar-toggle {
-            left: calc(var(--sidebar-collapsed) - 20px);
-            transform: rotate(180deg);
-        }
-
-        .sidebar.collapsed + .sidebar-toggle:hover {
-            transform: rotate(180deg) scale(1.1);
-        }
             overflow-y: auto;
             overflow-x: hidden;
         }
@@ -487,67 +200,19 @@
         .main-content {
             margin-left: var(--sidebar-width);
             min-height: 100vh;
-            transition: margin-left 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
-            background: rgba(15, 23, 42, 0.5);
+            transition: margin-left 0.3s ease;
         }
 
-        .sidebar.collapsed + .sidebar-toggle + .main-content,
-        .sidebar.collapsed ~ .main-content {
+        .sidebar.collapsed ~ .main-content,
+        .sidebar.collapsed ~ .sidebar-toggle ~ .main-content {
             margin-left: var(--sidebar-collapsed);
         }
 
-        /* Cards e Elementos */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        .sidebar.collapsed ~ .sidebar-toggle {
+            left: calc(var(--sidebar-collapsed) - 20px);
         }
 
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(16, 185, 129, 0.4);
-            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #34d399, var(--primary-color));
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--surface-dark);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background: var(--hover-bg);
-            border-color: var(--primary-color);
-        }
-
-        /* Responsividade */
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -562,62 +227,13 @@
             }
 
             .sidebar-toggle {
-                left: 20px;
-                top: 20px;
+                left: 1rem;
+                top: 1rem;
             }
 
-            .sidebar.collapsed + .sidebar-toggle {
-                left: 20px;
-                transform: none;
+            .sidebar.collapsed ~ .sidebar-toggle {
+                left: 1rem;
             }
-
-            .card {
-                margin: 12px;
-            }
-        }
-
-        /* Animações */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Grid responsivo */
-        .grid-responsive {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        /* Utility classes */
-        .hidden {
-            display: none !important;
-        }
-
-        .section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
         }
         
         /* Layout Responsivo */
@@ -1038,7 +654,7 @@
             <!-- Main Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Principal</div>
-                <a href="#" class="nav-item active" onclick="showSection('dashboard')" data-tooltip="Dashboard">
+                <a href="#" class="nav-item active" onclick="showSection('dashboard')">
                     <i class="nav-item-icon fas fa-home"></i>
                     <span class="nav-item-text">Dashboard</span>
                 </a>
@@ -1047,16 +663,16 @@
             <!-- Cases Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Processos</div>
-                <a href="#" class="nav-item" onclick="showSection('casos')" data-tooltip="Meus Casos">
+                <a href="#" class="nav-item" onclick="showSection('casos')">
                     <i class="nav-item-icon fas fa-folder-open"></i>
                     <span class="nav-item-text">Meus Casos</span>
                     <span class="nav-item-badge" id="casos-badge">24</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('novo-caso')" data-tooltip="Novo Caso">
+                <a href="#" class="nav-item" onclick="showSection('novo-caso')">
                     <i class="nav-item-icon fas fa-plus-circle"></i>
                     <span class="nav-item-text">Novo Caso</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('agenda')" data-tooltip="Agenda">
+                <a href="#" class="nav-item" onclick="showSection('agenda')">
                     <i class="nav-item-icon fas fa-calendar-alt"></i>
                     <span class="nav-item-text">Agenda</span>
                     <span class="nav-item-badge" id="agenda-badge">3</span>
@@ -1066,15 +682,15 @@
             <!-- Documents Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Documentos</div>
-                <a href="#" class="nav-item" onclick="showSection('documentos')" data-tooltip="Gerador de Documentos">
+                <a href="#" class="nav-item" onclick="showSection('documentos')">
                     <i class="nav-item-icon fas fa-file-alt"></i>
                     <span class="nav-item-text">Gerador</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('modelos')" data-tooltip="Modelos de Documentos">
+                <a href="#" class="nav-item" onclick="showSection('modelos')">
                     <i class="nav-item-icon fas fa-folder-open"></i>
                     <span class="nav-item-text">Modelos</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('assinaturas')" data-tooltip="Assinaturas Digitais">
+                <a href="#" class="nav-item" onclick="showSection('assinaturas')">
                     <i class="nav-item-icon fas fa-signature"></i>
                     <span class="nav-item-text">Assinaturas</span>
                 </a>
@@ -1083,49 +699,32 @@
             <!-- Tools Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Ferramentas</div>
-                <a href="#" class="nav-item" onclick="showSection('calculadora')" data-tooltip="Calculadora Jurídica">
+                <a href="#" class="nav-item" onclick="showSection('calculadora')">
                     <i class="nav-item-icon fas fa-calculator"></i>
                     <span class="nav-item-text">Calculadora</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('prazos')" data-tooltip="Controle de Prazos">
+                <a href="#" class="nav-item" onclick="showSection('prazos')">
                     <i class="nav-item-icon fas fa-clock"></i>
                     <span class="nav-item-text">Prazos</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('hierarquia')" data-tooltip="Hierarquia Judicial">
+                <a href="#" class="nav-item" onclick="showSection('hierarquia')">
                     <i class="nav-item-icon fas fa-sitemap"></i>
                     <span class="nav-item-text">Hierarquia</span>
-                </a>
-            </div>
-
-            <!-- Admin Section (Only for administrators) -->
-            <div class="nav-section" id="admin-section" style="display: none;">
-                <div class="nav-section-title">Administração</div>
-                <a href="portal-judicial.html" class="nav-item" data-tooltip="Portal Judicial">
-                    <i class="nav-item-icon fas fa-balance-scale text-green-400"></i>
-                    <span class="nav-item-text">Portal Judicial</span>
-                </a>
-                <a href="portal-ministerio-publico.html" class="nav-item" data-tooltip="Portal Ministério Público">
-                    <i class="nav-item-icon fas fa-university text-red-400"></i>
-                    <span class="nav-item-text">Portal MP</span>
-                </a>
-                <a href="portal-stf.html" class="nav-item" data-tooltip="Portal STF">
-                    <i class="nav-item-icon fas fa-crown text-yellow-400"></i>
-                    <span class="nav-item-text">Portal STF</span>
                 </a>
             </div>
 
             <!-- System Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Sistema</div>
-                <a href="#" class="nav-item" onclick="showSection('configuracoes')" data-tooltip="Configurações">
+                <a href="#" class="nav-item" onclick="showSection('configuracoes')">
                     <i class="nav-item-icon fas fa-cog"></i>
                     <span class="nav-item-text">Configurações</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showSection('ajuda')" data-tooltip="Ajuda e Suporte">
+                <a href="#" class="nav-item" onclick="showSection('ajuda')">
                     <i class="nav-item-icon fas fa-question-circle"></i>
                     <span class="nav-item-text">Ajuda</span>
                 </a>
-                <a href="index.html" class="nav-item" data-tooltip="Sair do Sistema">
+                <a href="index.html" class="nav-item">
                     <i class="nav-item-icon fas fa-sign-out-alt"></i>
                     <span class="nav-item-text">Sair</span>
                 </a>
