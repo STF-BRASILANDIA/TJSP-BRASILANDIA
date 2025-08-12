@@ -564,14 +564,37 @@
 
             <!-- Oficial Section (Oficial only) -->
             <div class="nav-section" id="oficial-tools" style="display: none;">
-                <div class="nav-section-title">Operacional</div>
+                <div class="nav-section-title">🔨 Operações de Justiça</div>
                 <a href="#" class="nav-item" onclick="showSection('mandados')">
                     <i class="nav-item-icon fas fa-file-signature"></i>
-                    <span class="nav-item-text">Mandados</span>
+                    <span class="nav-item-text">Mandados de Prisão</span>
+                    <span class="nav-badge" id="mandados-count">0</span>
                 </a>
                 <a href="#" class="nav-item" onclick="showSection('diligencias')">
                     <i class="nav-item-icon fas fa-route"></i>
                     <span class="nav-item-text">Diligências</span>
+                    <span class="nav-badge" id="diligencias-count">0</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('citacoes')">
+                    <i class="nav-item-icon fas fa-bell"></i>
+                    <span class="nav-item-text">Citações</span>
+                    <span class="nav-badge" id="citacoes-count">0</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('cumprimentos')">
+                    <i class="nav-item-icon fas fa-check-circle"></i>
+                    <span class="nav-item-text">Cumprimentos</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('busca-apreensao')">
+                    <i class="nav-item-icon fas fa-search"></i>
+                    <span class="nav-item-text">Busca e Apreensão</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('intimacoes')">
+                    <i class="nav-item-icon fas fa-envelope"></i>
+                    <span class="nav-item-text">Intimações</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('relatorio-operacional')">
+                    <i class="nav-item-icon fas fa-clipboard-list"></i>
+                    <span class="nav-item-text">Relatório Operacional</span>
                 </a>
             </div>
 
@@ -1232,6 +1255,464 @@
             </div>
         </section>
 
+        <!-- ========================================== -->
+        <!-- SEÇÕES ESPECÍFICAS DOS OFICIAIS DE JUSTIÇA -->
+        <!-- ========================================== -->
+
+        <!-- Seção Citações -->
+        <section id="citacoes" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-bell text-red-400 mr-3"></i>
+                            Sistema de Citações
+                        </h2>
+                        <p class="text-red-200 mt-2">Controle de citações judiciais - Oficial de Justiça</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Citações Pendentes -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-clock text-yellow-400 mr-2"></i>
+                            Citações Pendentes
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                                <div class="text-white font-medium">Processo nº 1000001-12.2024</div>
+                                <div class="text-yellow-300 text-sm">Réu: João Silva Santos</div>
+                                <div class="text-yellow-300 text-xs">Endereço: Rua A, 123 - Brasilândia</div>
+                                <div class="text-yellow-300 text-xs">Prazo: 48h</div>
+                                <div class="mt-2 flex gap-2">
+                                    <button class="btn btn-primary text-xs" onclick="cumprirCitacao('001')">
+                                        <i class="fas fa-check mr-1"></i>Cumprir
+                                    </button>
+                                    <button class="btn btn-secondary text-xs">
+                                        <i class="fas fa-eye mr-1"></i>Detalhes
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                                <div class="text-white font-medium">Processo nº 1000002-12.2024</div>
+                                <div class="text-red-300 text-sm">Réu: Maria Costa Lima</div>
+                                <div class="text-red-300 text-xs">Endereço: Av. B, 456 - Centro</div>
+                                <div class="text-red-300 text-xs">⚠️ URGENTE - Vence hoje!</div>
+                                <div class="mt-2 flex gap-2">
+                                    <button class="btn btn-danger text-xs" onclick="cumprirCitacao('002')">
+                                        <i class="fas fa-exclamation mr-1"></i>Cumprir Urgente
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cumprimento de Citação -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-edit text-green-400 mr-2"></i>
+                            Relatório de Cumprimento
+                        </h3>
+                        <form class="space-y-4" id="citacaoForm">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Processo</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600" id="processoSelect">
+                                    <option value="">Selecione o processo...</option>
+                                    <option value="1000001">1000001-12.2024 - João Silva</option>
+                                    <option value="1000002">1000002-12.2024 - Maria Costa</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Status</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600" id="statusSelect">
+                                    <option value="cumprido">✅ Citação Cumprida</option>
+                                    <option value="nao_encontrado">❌ Pessoa Não Encontrada</option>
+                                    <option value="recusou">⚠️ Recusou-se a Receber</option>
+                                    <option value="endereco_incorreto">📍 Endereço Incorreto</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Data/Hora do Cumprimento</label>
+                                <input type="datetime-local" class="form-input w-full bg-gray-800 text-white border-gray-600" id="dataHora">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Observações</label>
+                                <textarea rows="3" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Descreva como foi realizada a citação..." id="observacoes"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-save mr-2"></i>Registrar Cumprimento
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Busca e Apreensão -->
+        <section id="busca-apreensao" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-search text-red-400 mr-3"></i>
+                            Busca e Apreensão
+                        </h2>
+                        <p class="text-red-200 mt-2">Cumprimento de mandados de busca - Oficial de Justiça</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Mandados Pendentes -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-hourglass-half text-yellow-400 mr-2"></i>
+                            Mandados Pendentes
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                                <div class="text-white font-medium">MBA nº 001/2024</div>
+                                <div class="text-yellow-300 text-sm">Local: Rua das Flores, 789</div>
+                                <div class="text-yellow-300 text-xs">Objeto: Documentos fiscais</div>
+                                <button class="btn btn-primary text-xs mt-2 w-full" onclick="cumprirBusca('001')">
+                                    <i class="fas fa-play mr-1"></i>Iniciar Busca
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulário de Cumprimento -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-clipboard-check text-green-400 mr-2"></i>
+                            Cumprimento
+                        </h3>
+                        <form class="space-y-4" id="buscaForm">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Mandado</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                    <option value="">Selecione o mandado...</option>
+                                    <option value="001">MBA 001/2024 - Rua das Flores</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Resultado</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                    <option value="cumprido">✅ Busca Realizada com Sucesso</option>
+                                    <option value="nao_encontrado">❌ Objeto Não Encontrado</option>
+                                    <option value="resistencia">⚠️ Houve Resistência</option>
+                                    <option value="local_inexistente">📍 Local Inexistente</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Itens Apreendidos</label>
+                                <textarea rows="3" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Liste os itens encontrados e apreendidos..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-check mr-2"></i>Finalizar Busca
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Histórico -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-history text-blue-400 mr-2"></i>
+                            Histórico Recente
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                                <div class="text-white text-sm font-medium">MBA 045/2024</div>
+                                <div class="text-green-300 text-xs">✅ Cumprido com sucesso</div>
+                                <div class="text-green-300 text-xs">10/08/2025 - 14:30</div>
+                            </div>
+                            <div class="p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                                <div class="text-white text-sm font-medium">MBA 044/2024</div>
+                                <div class="text-blue-300 text-xs">ℹ️ Objeto não encontrado</div>
+                                <div class="text-blue-300 text-xs">09/08/2025 - 10:15</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Intimações -->
+        <section id="intimacoes" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-envelope text-red-400 mr-3"></i>
+                            Sistema de Intimações
+                        </h2>
+                        <p class="text-red-200 mt-2">Controle de intimações judiciais - Oficial de Justiça</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Lista de Intimações -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-list text-blue-400 mr-2"></i>
+                            Intimações do Dia
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                                <div class="text-white font-medium">INT-001/2024</div>
+                                <div class="text-blue-300 text-sm">Intimado: Dr. Carlos Silva</div>
+                                <div class="text-blue-300 text-xs">Para: Audiência em 15/08/2025</div>
+                                <div class="text-blue-300 text-xs">📍 Escritório: Rua A, 100</div>
+                                <div class="mt-2 flex gap-2">
+                                    <button class="btn btn-primary text-xs" onclick="cumprirIntimacao('INT001')">
+                                        <i class="fas fa-paper-plane mr-1"></i>Intimar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-purple-500/20 border border-purple-500/30 rounded-lg">
+                                <div class="text-white font-medium">INT-002/2024</div>
+                                <div class="text-purple-300 text-sm">Intimado: Dra. Ana Santos</div>
+                                <div class="text-purple-300 text-xs">Para: Apresentar documentos</div>
+                                <div class="text-purple-300 text-xs">📍 Residência: Av. B, 250</div>
+                                <div class="mt-2 flex gap-2">
+                                    <button class="btn btn-primary text-xs" onclick="cumprirIntimacao('INT002')">
+                                        <i class="fas fa-paper-plane mr-1"></i>Intimar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registro de Intimação -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-pen text-green-400 mr-2"></i>
+                            Registro de Cumprimento
+                        </h3>
+                        <form class="space-y-4" id="intimacaoForm">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Intimação</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                    <option value="">Selecione a intimação...</option>
+                                    <option value="INT001">INT-001/2024 - Dr. Carlos Silva</option>
+                                    <option value="INT002">INT-002/2024 - Dra. Ana Santos</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Forma de Intimação</label>
+                                <select class="form-input w-full bg-gray-800 text-white border-gray-600">
+                                    <option value="pessoal">👤 Pessoalmente</option>
+                                    <option value="representante">🤝 Por Representante</option>
+                                    <option value="vizinho">🏠 Com Vizinho</option>
+                                    <option value="correspondencia">📬 Via Correspondência</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Data/Hora</label>
+                                <input type="datetime-local" class="form-input w-full bg-gray-800 text-white border-gray-600">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Pessoa que Recebeu</label>
+                                <input type="text" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Nome completo de quem recebeu">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Observações</label>
+                                <textarea rows="3" class="form-input w-full bg-gray-800 text-white border-gray-600" placeholder="Detalhes sobre a intimação..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-check mr-2"></i>Registrar Intimação
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Cumprimentos -->
+        <section id="cumprimentos" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-check-circle text-red-400 mr-3"></i>
+                            Cumprimento de Ordens
+                        </h2>
+                        <p class="text-red-200 mt-2">Execução de ordens judiciais - Oficial de Justiça</p>
+                    </div>
+                    <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </button>
+                </div>
+
+                <div class="grid gap-6">
+                    <!-- Estatísticas de Cumprimento -->
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <div class="card p-4 text-center">
+                            <div class="text-3xl font-bold text-green-400">23</div>
+                            <div class="text-white text-sm">Cumpridas Hoje</div>
+                        </div>
+                        <div class="card p-4 text-center">
+                            <div class="text-3xl font-bold text-yellow-400">7</div>
+                            <div class="text-white text-sm">Pendentes</div>
+                        </div>
+                        <div class="card p-4 text-center">
+                            <div class="text-3xl font-bold text-blue-400">156</div>
+                            <div class="text-white text-sm">Total do Mês</div>
+                        </div>
+                        <div class="card p-4 text-center">
+                            <div class="text-3xl font-bold text-purple-400">95%</div>
+                            <div class="text-white text-sm">Taxa de Sucesso</div>
+                        </div>
+                    </div>
+
+                    <!-- Ordens Recentes -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-clock text-orange-400 mr-2"></i>
+                            Ordens Recentes
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-green-500/20 border border-green-500/30 rounded-lg flex items-center justify-between">
+                                <div>
+                                    <div class="text-white font-medium">Ordem nº 045/2024</div>
+                                    <div class="text-green-300 text-sm">Mandado de Busca e Apreensão</div>
+                                    <div class="text-green-300 text-xs">✅ Cumprida em 11/08/2025 às 14:30</div>
+                                </div>
+                                <button class="btn btn-secondary text-xs">Ver Relatório</button>
+                            </div>
+                            <div class="p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg flex items-center justify-between">
+                                <div>
+                                    <div class="text-white font-medium">Ordem nº 046/2024</div>
+                                    <div class="text-yellow-300 text-sm">Citação para Audiência</div>
+                                    <div class="text-yellow-300 text-xs">⏳ Em andamento</div>
+                                </div>
+                                <button class="btn btn-primary text-xs" onclick="continuarCumprimento('046')">Continuar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Relatório Operacional -->
+        <section id="relatorio-operacional" class="section">
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-clipboard-list text-red-400 mr-3"></i>
+                            Relatório Operacional
+                        </h2>
+                        <p class="text-red-200 mt-2">Relatório completo das atividades do Oficial de Justiça</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="gerarRelatorio()" class="btn btn-primary">
+                            <i class="fas fa-download mr-2"></i>Gerar PDF
+                        </button>
+                        <button onclick="showSection('dashboard')" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Voltar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Resumo Mensal -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-calendar text-blue-400 mr-2"></i>
+                            Resumo Mensal - Agosto 2025
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-2 bg-slate-700/30 rounded">
+                                <span class="text-white">Mandados de Prisão</span>
+                                <span class="text-green-400 font-bold">12</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-700/30 rounded">
+                                <span class="text-white">Busca e Apreensão</span>
+                                <span class="text-blue-400 font-bold">8</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-700/30 rounded">
+                                <span class="text-white">Citações</span>
+                                <span class="text-yellow-400 font-bold">34</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-700/30 rounded">
+                                <span class="text-white">Intimações</span>
+                                <span class="text-purple-400 font-bold">67</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-slate-700/30 rounded border-t-2 border-red-500">
+                                <span class="text-white font-bold">TOTAL</span>
+                                <span class="text-red-400 font-bold text-xl">121</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Performance -->
+                    <div class="card p-4">
+                        <h3 class="text-white font-bold mb-4 flex items-center">
+                            <i class="fas fa-chart-bar text-green-400 mr-2"></i>
+                            Performance Semanal
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-sm">Segunda-feira</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 bg-gray-700 rounded-full h-2 mr-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                    <span class="text-green-400 text-sm font-bold">18</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-sm">Terça-feira</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 bg-gray-700 rounded-full h-2 mr-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                    <span class="text-blue-400 text-sm font-bold">15</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-sm">Quarta-feira</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 bg-gray-700 rounded-full h-2 mr-2">
+                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span class="text-yellow-400 text-sm font-bold">17</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-sm">Quinta-feira</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 bg-gray-700 rounded-full h-2 mr-2">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                    <span class="text-purple-400 text-sm font-bold">19</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-white text-sm">Sexta-feira</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 bg-gray-700 rounded-full h-2 mr-2">
+                                        <div class="bg-red-500 h-2 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                    <span class="text-red-400 text-sm font-bold">14</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Seção Hierarquia -->
         <section id="hierarquia" class="section">
             <div class="card p-6">
@@ -1284,10 +1765,10 @@
         // === SISTEMA DE USUÁRIO E PERMISSÕES ===
         
         let currentUser = {
-            id: 'mp001',
-            name: 'Dr. Marcos Silva',
-            position: 'promotor', // promotor | procurador | oficial
-            level: 1,
+            id: 'oficial001',
+            name: 'João Paulo Santos',
+            position: 'oficial', // promotor | procurador | oficial
+            level: 3,
             permissions: []
         };
 
@@ -2837,6 +3318,206 @@
 
         function refreshDashboard() {
             updateCaseCounters();
+        }
+
+        // ========================================
+        // FUNCÕES ESPECÍFICAS DOS OFICIAIS DE JUSTIÇA
+        // ========================================
+
+        // Sistema de Citações
+        function cumprirCitacao(citacaoId) {
+            showNotification(`Iniciando cumprimento da citação ${citacaoId}`, 'info');
+            
+            // Simular dados
+            const citacao = {
+                '001': { numero: '1000001-12.2024', reu: 'João Silva Santos', endereco: 'Rua A, 123' },
+                '002': { numero: '1000002-12.2024', reu: 'Maria Costa Lima', endereco: 'Av. B, 456' }
+            }[citacaoId];
+
+            if (citacao) {
+                const form = document.getElementById('citacaoForm');
+                const processoSelect = document.getElementById('processoSelect');
+                if (processoSelect) {
+                    processoSelect.value = citacao.numero.substring(0, 7);
+                }
+                
+                showSection('citacoes');
+                showNotification(`Dados carregados para ${citacao.reu}`, 'success');
+            }
+        }
+
+        // Sistema de Busca e Apreensão
+        function cumprirBusca(mandadoId) {
+            showNotification(`Iniciando cumprimento da busca ${mandadoId}`, 'info');
+            showSection('busca-apreensao');
+        }
+
+        // Sistema de Intimações
+        function cumprirIntimacao(intimacaoId) {
+            showNotification(`Preparando intimação ${intimacaoId}`, 'info');
+            
+            const intimacao = {
+                'INT001': { nome: 'Dr. Carlos Silva', motivo: 'Audiência em 15/08/2025' },
+                'INT002': { nome: 'Dra. Ana Santos', motivo: 'Apresentar documentos' }
+            }[intimacaoId];
+
+            if (intimacao) {
+                showSection('intimacoes');
+                showNotification(`Intimação para ${intimacao.nome} - ${intimacao.motivo}`, 'success');
+            }
+        }
+
+        // Continuação de Cumprimento
+        function continuarCumprimento(ordemId) {
+            showNotification(`Continuando cumprimento da ordem ${ordemId}`, 'info');
+            showSection('cumprimentos');
+        }
+
+        // Geração de Relatórios
+        function gerarRelatorio() {
+            showNotification('Gerando relatório operacional...', 'info');
+            
+            setTimeout(() => {
+                showNotification('📄 Relatório gerado com sucesso!', 'success');
+                
+                // Simular download
+                const link = document.createElement('a');
+                link.href = '#';
+                link.download = `relatorio_oficial_${new Date().getTime()}.pdf`;
+                link.textContent = 'Download do Relatório';
+                showNotification('Download do relatório iniciado', 'info');
+            }, 2000);
+        }
+
+        // Formulários dos Oficiais
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form de Citação
+            const citacaoForm = document.getElementById('citacaoForm');
+            if (citacaoForm) {
+                citacaoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const processo = document.getElementById('processoSelect').value;
+                    const status = document.getElementById('statusSelect').value;
+                    const dataHora = document.getElementById('dataHora').value;
+                    const observacoes = document.getElementById('observacoes').value;
+
+                    if (processo && status && dataHora) {
+                        showNotification('✅ Citação registrada com sucesso!', 'success');
+                        
+                        // Integração com Sistema Unificado
+                        if (window.TJSP) {
+                            window.TJSP.createNotification({
+                                type: 'citacao_cumprida',
+                                title: 'Citação Cumprida',
+                                message: `Citação do processo ${processo} foi ${status === 'cumprido' ? 'cumprida com sucesso' : 'registrada com ocorrência'}`,
+                                targetPortals: ['portal-judicial', 'portal-stf']
+                            });
+                        }
+                        
+                        citacaoForm.reset();
+                        updateOficialCounters();
+                    } else {
+                        showNotification('❌ Preencha todos os campos obrigatórios', 'error');
+                    }
+                });
+            }
+
+            // Form de Busca e Apreensão
+            const buscaForm = document.getElementById('buscaForm');
+            if (buscaForm) {
+                buscaForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    showNotification('✅ Busca e apreensão registrada!', 'success');
+                    
+                    // Integração com Sistema Unificado
+                    if (window.TJSP) {
+                        window.TJSP.createNotification({
+                            type: 'busca_cumprida',
+                            title: 'Busca e Apreensão Cumprida',
+                            message: 'Mandado de busca e apreensão foi executado',
+                            targetPortals: ['portal-judicial', 'portal-stf']
+                        });
+                    }
+                    
+                    buscaForm.reset();
+                    updateOficialCounters();
+                });
+            }
+
+            // Form de Intimação
+            const intimacaoForm = document.getElementById('intimacaoForm');
+            if (intimacaoForm) {
+                intimacaoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    showNotification('✅ Intimação registrada com sucesso!', 'success');
+                    
+                    // Integração com Sistema Unificado
+                    if (window.TJSP) {
+                        window.TJSP.createNotification({
+                            type: 'intimacao_cumprida',
+                            title: 'Intimação Cumprida',
+                            message: 'Nova intimação foi registrada no sistema',
+                            targetPortals: ['portal-judicial', 'portal-stf']
+                        });
+                    }
+                    
+                    intimacaoForm.reset();
+                    updateOficialCounters();
+                });
+            }
+
+            // Atualizar contadores se for oficial
+            if (currentUser.position === 'oficial') {
+                updateOficialCounters();
+            }
+        });
+
+        // Atualizar Contadores dos Oficiais
+        function updateOficialCounters() {
+            // Simular dados dinâmicos
+            const mandadosCount = Math.floor(Math.random() * 10) + 5;
+            const diligenciasCount = Math.floor(Math.random() * 15) + 8;
+            const citacoesCount = Math.floor(Math.random() * 25) + 12;
+            
+            const mandadosBadge = document.getElementById('mandados-count');
+            const diligenciasBadge = document.getElementById('diligencias-count');
+            const citacoesBadge = document.getElementById('citacoes-count');
+            
+            if (mandadosBadge) mandadosBadge.textContent = mandadosCount;
+            if (diligenciasBadge) diligenciasBadge.textContent = diligenciasCount;
+            if (citacoesBadge) citacoesBadge.textContent = citacoesCount;
+        }
+
+        // Integração com Sistema Unificado
+        if (window.TJSP) {
+            // Escutar eventos do sistema unificado
+            window.TJSP.addEventListener('process_created', function(data) {
+                if (currentUser.position === 'oficial') {
+                    // Verificar se precisa de ação do oficial
+                    const process = data.process;
+                    if (process.needsOfficialAction) {
+                        showNotification(`📋 Novo processo requer ação: ${process.numero}`, 'info');
+                        updateOficialCounters();
+                    }
+                }
+            });
+
+            window.TJSP.addEventListener('notification_created', function(data) {
+                const notification = data.notification;
+                if (notification.targetPortals?.includes('portal-ministerio-publico') || 
+                    notification.targetPortals?.includes('all')) {
+                    
+                    if (currentUser.position === 'oficial') {
+                        // Mostrar notificações relevantes para oficiais
+                        if (notification.type.includes('mandado') || 
+                            notification.type.includes('citacao') || 
+                            notification.type.includes('intimacao')) {
+                            showNotification(`🔔 ${notification.title}: ${notification.message}`, 'info');
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>
