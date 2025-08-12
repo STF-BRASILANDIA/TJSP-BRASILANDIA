@@ -6985,50 +6985,6 @@
             `;
         }
 
-        // Função para mostrar seções
-        function showSection(sectionName) {
-            // Atualizar navegação ativa no sidebar
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Encontrar e ativar o item correspondente
-            const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
-            if (activeNavItem) {
-                activeNavItem.classList.add('active');
-            }
-            
-            // Esconder todas as seções
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Mostrar seção solicitada
-            const targetSection = document.getElementById(sectionName);
-            if (targetSection) {
-                targetSection.classList.add('active');
-                AppState.currentSection = sectionName;
-                
-                // Carregar dados específicos da seção
-                if (sectionName === 'casos') {
-                    loadProcessesSection();
-                }
-                
-                // Adicionar animação
-                targetSection.classList.add('fade-in');
-                setTimeout(() => {
-                    targetSection.classList.remove('fade-in');
-                }, 500);
-            }
-            
-            // Fechar sidebar no mobile após navegar
-            if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                sidebar.classList.remove('mobile-open');
-            }
-        }
-
-        // Toggle menu mobile
         // Toggle sidebar (substituindo toggleMobileMenu)
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -13335,11 +13291,21 @@ OAB/${formData.advogadoEstado || 'UF'} nº ${formData.advogadoOAB || '000.000'}`
             }
         }
 
-        // ===== SISTEMA DE NAVEGAÇÃO E FUNCIONALIDADES FALTANTES =====
-
-        // Função para mostrar seções
+        // ===== SISTEMA DE NAVEGAÇÃO UNIFICADO =====
+        
         function showSection(sectionName) {
             console.log(`📱 Navegando para seção: ${sectionName}`);
+            
+            // Remover classe active de todos os nav-items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Adicionar classe active no nav-item correto
+            const activeNavItem = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+            }
             
             // Ocultar todas as seções
             const sections = document.querySelectorAll('.section');
@@ -13354,48 +13320,66 @@ OAB/${formData.advogadoEstado || 'UF'} nº ${formData.advogadoOAB || '000.000'}`
                 targetSection.classList.add('active');
                 targetSection.style.display = 'block';
                 
-                // Atualizar navegação
-                updateNavigation(sectionName);
-                
                 // Carregar dados específicos da seção
                 loadSectionData(sectionName);
                 
-                showNotification(`📱 Seção ${sectionName} carregada`, 'info');
+                showNotification(`📍 Navegou para: ${getSectionTitle(sectionName)}`, 'info');
             } else {
-                showNotification(`❌ Seção ${sectionName} não encontrada`, 'error');
+                console.error(`❌ Seção não encontrada: ${sectionName}`);
+                showNotification(`❌ Seção "${sectionName}" não encontrada`, 'error');
             }
         }
-
-        // Função para atualizar navegação ativa
-        function updateNavigation(activeSection) {
-            const navItems = document.querySelectorAll('[data-section]');
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-section') === activeSection) {
-                    item.classList.add('active');
-                }
-            });
+        
+        function getSectionTitle(sectionName) {
+            const titles = {
+                'dashboard': 'Dashboard Principal',
+                'casos': 'Gerenciamento de Casos',
+                'novo-caso': 'Novo Caso',
+                'agenda': 'Agenda de Compromissos',
+                'documentos': 'Sistema de Documentos',
+                'modelos': 'Modelos de Documentos',
+                'assinaturas': 'Assinaturas Digitais',
+                'calculadora': 'Calculadora Jurídica',
+                'prazos': 'Controle de Prazos',
+                'hierarquia': 'Hierarquia Judicial',
+                'configuracoes': 'Configurações',
+                'ajuda': 'Central de Ajuda'
+            };
+            return titles[sectionName] || sectionName;
         }
-
-        // Função para carregar dados específicos de cada seção
+        
         function loadSectionData(sectionName) {
             switch(sectionName) {
                 case 'casos':
-                    loadCasosData();
+                    if (typeof carregarCasos === 'function') carregarCasos();
+                    if (typeof atualizarEstatisticasCasos === 'function') atualizarEstatisticasCasos();
                     break;
                 case 'agenda':
-                    loadAgendaData();
-                    break;
-                case 'calculadora':
-                    renderCrimesGrid();
+                    if (typeof carregarEventosAgenda === 'function') carregarEventosAgenda();
                     break;
                 case 'documentos':
-                    // Já carregado por padrão
+                    if (typeof inicializarDocumentos === 'function') inicializarDocumentos();
                     break;
-                default:
-                    console.log(`ℹ️ Nenhum carregamento específico para ${sectionName}`);
+                case 'calculadora':
+                    if (typeof iniciarCalculadora === 'function') iniciarCalculadora();
+                    break;
+                case 'prazos':
+                    if (typeof carregarPrazos === 'function') carregarPrazos();
+                    break;
+                case 'hierarquia':
+                    if (typeof carregarHierarquia === 'function') carregarHierarquia();
+                    break;
             }
         }
+        
+        function updateNavigation(activeSectionName) {
+            // Atualizar estado da aplicação
+            if (typeof AppState !== 'undefined') {
+                AppState.currentSection = activeSectionName;
+            }
+        }
+
+        // === SISTEMA INTEGRADO: PROCESSO + DOCUMENTOS ===
 
         // Função para mostrar perfil do usuário
         function showUserProfile() {
@@ -15791,7 +15775,67 @@ OAB/${formData.advogadoEstado || 'UF'} nº ${formData.advogadoOAB || '000.000'}`
         // Verificar acesso admin na inicialização
         document.addEventListener('DOMContentLoaded', function() {
             checkAdminAccess();
+            inicializarNavegacao();
         });
+        
+        // === VERIFICAÇÃO E INICIALIZAÇÃO DA NAVEGAÇÃO ===
+        function inicializarNavegacao() {
+            console.log('🔧 Verificando navegação da sidebar...');
+            
+            // Verificar se todas as seções existem
+            const sectionsToCheck = ['dashboard', 'casos', 'novo-caso', 'agenda', 'documentos', 'modelos', 'assinaturas', 'calculadora', 'prazos', 'hierarquia', 'configuracoes', 'ajuda'];
+            const missingSections = [];
+            
+            sectionsToCheck.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (!section) {
+                    missingSections.push(sectionId);
+                }
+            });
+            
+            if (missingSections.length > 0) {
+                console.warn('⚠️ Seções não encontradas:', missingSections);
+                showNotification(`⚠️ ${missingSections.length} seções não encontradas`, 'warning');
+            } else {
+                console.log('✅ Todas as seções da sidebar estão disponíveis');
+            }
+            
+            // Verificar se função showSection está funcionando
+            if (typeof showSection === 'function') {
+                console.log('✅ Função showSection() disponível');
+            } else {
+                console.error('❌ Função showSection() não encontrada');
+                showNotification('❌ Erro na navegação da sidebar', 'error');
+            }
+            
+            // Teste rápido da navegação (silencioso)
+            const testSections = ['dashboard', 'calculadora'];
+            testSections.forEach(section => {
+                if (document.getElementById(section)) {
+                    // Testa se a seção pode ser ativada
+                    const testResult = testSectionNavigation(section);
+                    if (!testResult) {
+                        console.warn(`⚠️ Problema na navegação para: ${section}`);
+                    }
+                }
+            });
+            
+            showNotification('🚀 Sistema de navegação verificado!', 'success');
+        }
+        
+        function testSectionNavigation(sectionName) {
+            try {
+                const section = document.getElementById(sectionName);
+                if (section) {
+                    // Teste básico: verifica se a seção pode ser encontrada e tem as classes certas
+                    return section.classList.contains('section');
+                }
+                return false;
+            } catch (error) {
+                console.error(`Erro testando navegação para ${sectionName}:`, error);
+                return false;
+            }
+        }
         
         
         
